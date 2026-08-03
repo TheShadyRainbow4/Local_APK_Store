@@ -8,18 +8,17 @@
 #include <thread>
 #include <fstream>
 #include <filesystem>
+#include <algorithm>
 #include "httplib.h"
 #include "json.hpp"
 #include <gdiplus.h>
 
-#pragma comment(linker,""/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"")
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "gdiplus.lib")
-
-using namespace Gdiplus;
-
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "ws2_32.lib")
 
+using namespace Gdiplus;
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 
@@ -28,17 +27,24 @@ namespace fs = std::filesystem;
 #define ID_TRAY_EXIT_CONTEXT_MENU_ITEM 3000
 #define ID_TRAY_OPEN_CONTEXT_MENU_ITEM 3001
 
-HWND hwndApps, hwndName, hwndPackage, hwndVersion, hwndDesc, hwndCat, hwndTags, hwndApkLabel, hwndApkLabelBar;
+HWND hwndApps, hwndName, hwndPackage, hwndVersion, hwndDesc, hwndCat, hwndTags, hwndApkLabel, hwndStatusBar;
 HWND btnBrowse, btnApply, btnExit, btnDelete, btnClearForm;
 HWND btnAddScreenshot, btnClearScreenshots, lstScreenshots;
+HWND hwndPreview;
+
 char filePath[MAX_PATH] = "";
 std::vector<std::string> screenshots;
 json dbCache;
 int selectedAppIndex = -1;
 int serverPort = 8552;
-HWND hwndPreview;
+
 HBITMAP hPreviewBitmap = NULL;
 ULONG_PTR gdiplusToken;
+
+std::string dbFile = "db.json";
+std::string apkDir = "apks";
+std::string imgDir = "images";
+std::string configFile = "config.json";
 
 void UpdatePreviewImage(std::string path) {
     if (hPreviewBitmap) { DeleteObject(hPreviewBitmap); hPreviewBitmap = NULL; }
@@ -49,9 +55,9 @@ void UpdatePreviewImage(std::string path) {
             int w = bmp->GetWidth();
             int h = bmp->GetHeight();
             int maxDim = 100;
-            float scale = min((float)maxDim/w, (float)maxDim/h);
-            int newW = max(1, (int)(w * scale));
-            int newH = max(1, (int)(h * scale));
+            float scale = std::min((float)maxDim/w, (float)maxDim/h);
+            int newW = std::max(1, (int)(w * scale));
+            int newH = std::max(1, (int)(h * scale));
             Bitmap* resized = new Bitmap(newW, newH, PixelFormat32bppARGB);
             Graphics g(resized);
             g.SetInterpolationMode(InterpolationModeHighQualityBicubic);
@@ -63,11 +69,6 @@ void UpdatePreviewImage(std::string path) {
     }
     SendMessage(hwndPreview, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hPreviewBitmap);
 }
-
-std::string dbFile = "db.json";
-std::string apkDir = "apks";
-std::string imgDir = "images";
-std::string configFile = "config.json";
 
 void InitTrayIcon(HWND hwnd) {
     NOTIFYICONDATA nid = {};
@@ -119,7 +120,6 @@ void saveDb(const json& j) {
 
 void RefreshAppList() {
     dbCache = loadDb();
-
     bool dbUpdated = false;
     if (fs::exists(apkDir)) {
         for (const auto& entry : fs::directory_iterator(apkDir)) {
@@ -219,9 +219,7 @@ void DeleteSelectedApp() {
     if (selectedAppIndex >= 0 && selectedAppIndex < dbCache["apps"].size()) {
         if (MessageBox(NULL, "Delete app?", "Confirm", MB_YESNO) == IDYES) {
             dbCache["apps"].erase(dbCache["apps"].begin() + selectedAppIndex);
-            saveDb(dbCache); ClearForm();         hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
-        SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)"Ready");
-        RefreshAppList();
+            saveDb(dbCache); ClearForm(); RefreshAppList();
         }
     }
 }
@@ -328,15 +326,13 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
         newApp["screenshots"] = copiedScreenshots; newApp["reviews"] = json::array();
         db["apps"].push_back(newApp);
     }
-    saveDb(db);         hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
-        SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)"Ready");
-        RefreshAppList();
+    saveDb(db); RefreshAppList();
     MessageBox(NULL, "App Processed!", "Success", MB_OK);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
-        case WM_SIZE: {
+    case WM_SIZE: {
         int w = LOWORD(lParam);
         int h = HIWORD(lParam);
 
@@ -347,7 +343,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         
         MoveWindow(hwndApps, 15, 70, 200, h - 70 - sh - 15, TRUE);
 
-        int editW = max(100, w - 330 - 20);
+        int editW = std::max(100, w - 330 - 20);
         MoveWindow(hwndName, 330, 70, editW, 20, TRUE);
         MoveWindow(hwndPackage, 330, 100, editW, 20, TRUE);
         MoveWindow(hwndVersion, 330, 130, editW, 20, TRUE);
@@ -377,6 +373,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
         HFONT hFontBold = CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
         
+        hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
+        SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)"Ready");
+
         HWND hBannerIcon = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | SS_ICON, 10, 4, 32, 32, hwnd, NULL, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
         SendMessage(hBannerIcon, STM_SETICON, (WPARAM)LoadIcon((HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), MAKEINTRESOURCE(101)), 0);
         HWND hBanner = CreateWindow("STATIC", ("        Elite App Marketplace - Server Manager (Running on port " + std::to_string(serverPort) + ")").c_str(), WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE, 0, 0, 850, 40, hwnd, NULL, NULL, NULL);
@@ -404,19 +403,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 360, 120, 30, hwnd, (HMENU)4, NULL, NULL);
         CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE, 230, 410, 90, 20, hwnd, NULL, NULL, NULL);
         hwndApkLabel = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | SS_LEFT, 330, 450, 250, 22, hwnd, NULL, NULL, NULL);
-        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 405, 120, 30, hwnd, (HMENU)1, NULL, NULL);
-        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 230, 450, 130, 30, hwnd, (HMENU)6, NULL, NULL);
-        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 370, 450, 130, 30, hwnd, (HMENU)5, NULL, NULL);
+        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 445, 120, 30, hwnd, (HMENU)1, NULL, NULL);
+        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 330, 485, 130, 30, hwnd, (HMENU)6, NULL, NULL);
+        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 470, 485, 130, 30, hwnd, (HMENU)5, NULL, NULL);
 
-        CreateWindowEx(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDHORZ, 0, 500, 850, 2, hwnd, NULL, NULL, NULL);
         btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 590, 515, 100, 30, hwnd, (HMENU)2, NULL, NULL);
         btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
 
-        HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndApkLabel, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit, hwndPreview };
+        HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndApkLabel, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit };
         for (HWND w : windows) SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
 
-                hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
-        SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)"Ready");
         RefreshAppList();
         InitTrayIcon(hwnd);
         break;
@@ -478,12 +474,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             if (GetOpenFileName(&ofn)) {
                 screenshots.push_back(imgPath);
                 SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)fs::path(imgPath).filename().string().c_str());
+                UpdatePreviewImage(screenshots.back());
             }
         }
-        else if (wmId == 4) { screenshots.clear(); SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0); }
+        else if (wmId == 4) { screenshots.clear(); SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0); UpdatePreviewImage(""); }
         else if (wmId == 5) ClearForm();
         else if (wmId == 6) DeleteSelectedApp();
-        else if (wmId == 7) ShowWindow(hwnd, SW_HIDE); // Hide instead of exit
+        else if (wmId == 7) ShowWindow(hwnd, SW_HIDE);
         else if (wmId == 2) {
             char n[256], p[256], v[256], d[4096], c[256], t[512];
             GetWindowText(hwndName, n, 256); GetWindowText(hwndPackage, p, 256);
@@ -495,7 +492,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         break;
     }
     case WM_CLOSE:
-        ShowWindow(hwnd, SW_HIDE); // Intercept close to minimize to tray
+        ShowWindow(hwnd, SW_HIDE);
         return 0;
     case WM_CTLCOLORSTATIC: {
         HDC hdcStatic = (HDC)wParam;
