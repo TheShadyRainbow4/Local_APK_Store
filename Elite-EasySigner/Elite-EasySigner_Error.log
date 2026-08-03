@@ -1,0 +1,647 @@
+[2026-06-05 05:11:39] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-05 05:12:00] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-05 05:12:56] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-05 06:55:11] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 06:55:11] [WARNING] Ignored S:\Projects\PowerShell-ExecutionPolicy\ExecPolToggle.ps1. Extension .ps1 is not elite enough.
+[2026-06-05 06:57:27] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 06:57:29] [SUCCESS] Successfully signed ExecPolToggle.ps1. Pristine original backed up.
+[2026-06-05 07:01:22] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 07:01:23] [SUCCESS] Successfully signed QuickCompile-EasySigner.exe. Pristine original backed up.
+[2026-06-05 07:01:57] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-05 07:02:28] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 07:02:29] [SUCCESS] Successfully signed ExecPolToggle.ps1. Pristine original backed up.
+[2026-06-05 08:24:08] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:24:08] [INFO] Stripped Read-Only attribute from ControlPanel-Tool.exe for digital ink application.
+[2026-06-05 08:24:09] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\EliteSoftware\ControlPanel-Manager\ControlPanel-Tool.exe' because it is being used by another process.
+[2026-06-05 08:24:22] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:24:23] [ERROR] Native auth failed for ControlPanel-Tool.exe. Reason: The certificate is not valid for the requested usage. The cryptography gods say no.
+[2026-06-05 08:24:23] [WARNING] Restored ControlPanel-Tool.exe to its original unsigned state. No backup created.
+[2026-06-05 08:25:35] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:25:35] [ERROR] Native auth failed for ControlPanel-Tool.exe. Reason: The certificate is not valid for the requested usage. The cryptography gods say no.
+[2026-06-05 08:25:35] [WARNING] Restored ControlPanel-Tool.exe to its original unsigned state. No backup created.
+[2026-06-05 08:41:32] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:41:33] [ERROR] Native auth failed for wmplayer.exe. Reason: The certificate is not valid for the requested usage. The cryptography gods say no.
+[2026-06-05 08:41:33] [WARNING] Restored wmplayer.exe to its original unsigned state. No backup created.
+[2026-06-05 08:41:49] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:41:50] [ERROR] Native auth failed for wmplayer - Copy.exe. Reason: The certificate is not valid for the requested usage. The cryptography gods say no.
+[2026-06-05 08:41:50] [WARNING] Restored wmplayer - Copy.exe to its original unsigned state. No backup created.
+[2026-06-05 08:46:33] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:46:34] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'S:\Projects\PowerShell-ExecutionPolicy\ExecPolToggle_x64.exe' because it is being used by another process.
+[2026-06-05 08:46:47] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:46:48] [ERROR] Native auth failed for ExecPolToggle_x64.exe. Reason: The certificate is not valid for the requested usage. The cryptography gods say no.
+[2026-06-05 08:46:48] [WARNING] Restored ExecPolToggle_x64.exe to its original unsigned state. No backup created.
+[2026-06-05 08:48:14] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 08:48:15] [SUCCESS] Successfully signed CplMgrPref.exe. Pristine original backed up.
+[2026-06-05 09:29:15] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 09:29:16] [SUCCESS] Successfully signed CplMgrPref.exe. Pristine original backed up.
+[2026-06-05 09:29:16] [SUCCESS] Successfully signed EliteCplMgr.Engine.dll. Pristine original backed up.
+[2026-06-05 09:32:14] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 09:32:15] [SUCCESS] Successfully signed CplMgrPref.exe. Pristine original backed up.
+[2026-06-05 09:32:15] [SUCCESS] Successfully signed EliteCplMgr.Engine.dll. Pristine original backed up.
+[2026-06-05 09:42:34] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 09:42:35] [SUCCESS] Successfully signed EliteCplMgr.Engine.dll. Pristine original backed up.
+[2026-06-05 09:42:35] [SUCCESS] Successfully signed CplMgrPref.exe. Pristine original backed up.
+[2026-06-05 20:42:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 20:42:38] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\Everything\Everything.exe' because it is being used by another process.
+[2026-06-05 20:43:00] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 20:43:00] [ERROR] Native auth failed for Everything - Copy.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-05 20:43:00] [WARNING] Restored Everything - Copy.exe to its original unsigned state. No backup created.
+[2026-06-05 20:43:00] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\Everything\Everything.exe' because it is being used by another process.
+[2026-06-05 20:43:07] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 20:43:08] [ERROR] Native auth failed for Everything - Copy.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-05 20:43:08] [WARNING] Restored Everything - Copy.exe to its original unsigned state. No backup created.
+[2026-06-05 20:44:04] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 20:44:04] [ERROR] Native auth failed for Everything.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-05 20:44:04] [WARNING] Restored Everything.exe to its original unsigned state. No backup created.
+[2026-06-05 20:44:24] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 20:44:24] [ERROR] Native auth failed for Everything.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-05 20:44:24] [WARNING] Restored Everything.exe to its original unsigned state. No backup created.
+[2026-06-05 20:51:03] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-05 23:01:48] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 23:01:48] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Users\zwhiteman\Desktop\Vista-Simple-OSK\Alt-Vista-Simple-OSK.exe' because it is being used by another process.
+[2026-06-05 23:02:11] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 23:02:11] [SUCCESS] Successfully signed Alt-Vista-Simple-OSK.exe. Pristine original backed up.
+[2026-06-05 23:35:20] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-05 23:35:20] [SUCCESS] Successfully signed WIMInstaller.exe. Pristine original backed up.
+[2026-06-06 04:19:26] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 04:19:27] [SUCCESS] Successfully signed taskmgrxp.exe. Pristine original backed up.
+[2026-06-06 06:34:02] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 06:34:03] [SUCCESS] Successfully signed METADATA_EDITOR_APP.exe. Pristine original backed up.
+[2026-06-06 06:34:03] [SUCCESS] Successfully signed unins000.exe. Pristine original backed up.
+[2026-06-06 06:34:03] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\ShellExtensions\MetadataEditor\METADATA_EDITOR_ENGINE.dll' because it is being used by another process.
+[2026-06-06 07:22:02] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 07:22:03] [SUCCESS] Successfully signed ServerManager.exe. Pristine original backed up.
+[2026-06-06 07:22:19] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 07:22:20] [SUCCESS] Successfully signed ServerManager.exe. Pristine original backed up.
+[2026-06-06 07:53:15] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 07:53:16] [SUCCESS] Successfully signed EliteExtensionManager.ps1. Pristine original backed up.
+[2026-06-06 08:09:11] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 08:09:12] [SUCCESS] Successfully signed EliteExtensionManager.ps1. Pristine original backed up.
+[2026-06-06 22:29:39] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-06 22:29:39] [SUCCESS] Successfully signed ElitePwrToolbars.dll. Pristine original backed up.
+[2026-06-07 00:02:09] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-07 00:02:10] [SUCCESS] Successfully signed EliteRestart.dll. Pristine original backed up.
+[2026-06-07 00:02:10] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Users\zwhiteman\Projects\Elite-Simple_PwrState-Toolbar\bin\EliteShutdown.dll' because it is being used by another process.
+[2026-06-07 00:02:46] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-07 00:02:46] [SUCCESS] Successfully signed EliteShutdown - Copy.dll. Pristine original backed up.
+[2026-06-07 00:02:47] [SUCCESS] Successfully signed EliteSleep - Copy.dll. Pristine original backed up.
+[2026-06-07 00:02:47] [SUCCESS] Successfully signed EliteLock - Copy.dll. Pristine original backed up.
+[2026-06-07 00:02:47] [SUCCESS] Successfully signed EliteLogOff - Copy.dll. Pristine original backed up.
+[2026-06-07 00:02:47] [SUCCESS] Successfully signed ElitePwrToolbars - Copy.dll. Pristine original backed up.
+[2026-06-07 00:02:47] [SUCCESS] Successfully signed EliteRestart - Copy.dll. Pristine original backed up.
+[2026-06-12 20:46:03] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 20:46:03] [ERROR] Native auth failed for elevate-shim.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-12 20:46:04] [WARNING] Restored elevate-shim.exe to its original unsigned state. No backup created.
+[2026-06-12 20:46:04] [ERROR] Native auth failed for wt.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-12 20:46:04] [WARNING] Restored wt.exe to its original unsigned state. No backup created.
+[2026-06-12 20:46:04] [SUCCESS] Successfully signed OpenConsole.exe. Pristine original backed up.
+[2026-06-12 20:46:04] [ERROR] Native auth failed for WindowsTerminal.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-12 20:46:04] [WARNING] Restored WindowsTerminal.exe to its original unsigned state. No backup created.
+[2026-06-12 20:46:35] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 20:46:35] [ERROR] Native auth failed for WindowsTerminal.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-12 20:46:35] [WARNING] Restored WindowsTerminal.exe to its original unsigned state. No backup created.
+[2026-06-12 20:47:12] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 20:47:12] [ERROR] Native auth failed for Terminal.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-12 20:47:12] [WARNING] Restored Terminal.exe to its original unsigned state. No backup created.
+[2026-06-12 20:47:30] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-12 20:47:38] [INFO] Added 1 file(s) to the queue.
+[2026-06-12 20:47:41] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-12 20:47:42] [ERROR] SignTool vehemently rejected Terminal.exe (Exit code: 1).
+[2026-06-12 20:47:42] [WARNING] Restored Terminal.exe to its original unsigned state. No backup created.
+[2026-06-12 20:47:42] [INFO] Batch run complete. Queue emptied.
+[2026-06-12 20:48:56] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 20:48:58] [SUCCESS] Successfully signed cmd.exe. Pristine original backed up.
+[2026-06-12 21:02:56] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 21:02:58] [ERROR] SignTool vehemently rejected 7zFM.exe (Exit code: 1).
+[2026-06-12 21:02:58] [WARNING] Restored 7zFM.exe to its original unsigned state. No backup created.
+[2026-06-12 22:00:08] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 22:00:09] [ERROR] SignTool vehemently rejected ProcessLasso.exe (Exit code: 1).
+[2026-06-12 22:00:09] [WARNING] Restored ProcessLasso.exe to its original unsigned state. No backup created.
+[2026-06-12 22:12:45] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 22:12:46] [ERROR] SignTool vehemently rejected BootICE.exe (Exit code: 1).
+[2026-06-12 22:14:13] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 22:14:14] [SUCCESS] Successfully signed BootICE.exe. Pristine original backed up.
+[2026-06-12 22:14:23] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-12 22:14:25] [SUCCESS] Successfully signed BootICE.exe. Pristine original backed up.
+[2026-06-13 02:03:57] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 02:03:58] [ERROR] SignTool vehemently rejected Everything.exe (Exit code: 1).
+[2026-06-13 02:04:11] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 02:04:12] [ERROR] SignTool vehemently rejected Everything.exe (Exit code: 1).
+[2026-06-13 02:04:37] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 02:04:38] [ERROR] SignTool vehemently rejected Everything - Copy.exe (Exit code: 1).
+[2026-06-13 02:04:38] [WARNING] Restored Everything - Copy.exe to its original unsigned state. No backup created.
+[2026-06-13 02:48:19] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 02:48:20] [SUCCESS] Successfully signed Win32Explorer.exe. Pristine original backed up.
+[2026-06-13 02:48:46] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 02:48:47] [SUCCESS] Successfully signed vistamspaint.exe. Pristine original backed up.
+[2026-06-13 22:42:29] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\AeroByDesign.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\aerolite.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Plain8.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Plain10.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Vista Aero.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\VistaVS Start.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\W7Aero.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\W7Basic.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\W7Classic.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Windows 7 2017.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Windows 7.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Windows Vista Basic (Round).msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Aero 8.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\aero.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Aero8.1Square.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:42:30] [WARNING] Ignored C:\Programs\StartIsBack\Styles\Aero8.1Square2.msstyles. Extension .msstyles is not elite enough.
+[2026-06-13 22:46:53] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 22:46:54] [ERROR] SignTool vehemently rejected DWMBlurGlassGUI.exe (Exit code: 1).
+[2026-06-13 22:46:55] [WARNING] Restored DWMBlurGlassGUI.exe to its original unsigned state. No backup created.
+[2026-06-13 22:50:05] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 22:50:07] [SUCCESS] Successfully signed DWMBlurGlassGUI.exe. Pristine original backed up.
+[2026-06-13 22:50:16] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-13 22:50:17] [SUCCESS] Successfully signed Wpf.Ui.dll. Pristine original backed up.
+[2026-06-13 22:50:18] [SUCCESS] Successfully signed CommunityToolkit.Mvvm.dll. Pristine original backed up.
+[2026-06-13 22:50:19] [SUCCESS] Successfully signed dbghelp.dll. Pristine original backed up.
+[2026-06-13 22:50:20] [SUCCESS] Successfully signed DWMBlurGlassExt.dll. Pristine original backed up.
+[2026-06-13 22:50:21] [SUCCESS] Successfully signed DWMBlurGlassGUI.dll. Pristine original backed up.
+[2026-06-13 22:50:22] [SUCCESS] Successfully signed DWMBlurGlassHost.dll. Pristine original backed up.
+[2026-06-13 22:50:23] [SUCCESS] Successfully signed Microsoft.Extensions.DependencyInjection.Abstractions.dll. Pristine original backed up.
+[2026-06-13 22:50:24] [SUCCESS] Successfully signed Microsoft.Extensions.DependencyInjection.dll. Pristine original backed up.
+[2026-06-13 22:50:25] [SUCCESS] Successfully signed Microsoft.Win32.TaskScheduler.dll. Pristine original backed up.
+[2026-06-13 22:50:26] [SUCCESS] Successfully signed symsrv.dll. Pristine original backed up.
+[2026-06-13 22:50:27] [SUCCESS] Successfully signed Wpf.Ui.Abstractions.dll. Pristine original backed up.
+[2026-06-14 03:05:15] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 03:05:16] [SUCCESS] Successfully signed origpowershell.exe. Pristine original backed up.
+[2026-06-14 03:05:17] [SUCCESS] Successfully signed Origpowershell_ise.exe. Pristine original backed up.
+[2026-06-14 03:05:18] [SUCCESS] Successfully signed powershell.exe. Pristine original backed up.
+[2026-06-14 03:05:19] [SUCCESS] Successfully signed powershell_ise.exe. Pristine original backed up.
+[2026-06-14 03:05:20] [SUCCESS] Successfully signed CompiledComposition.Microsoft.PowerShell.GPowerShell.dll. Pristine original backed up.
+[2026-06-14 03:05:22] [SUCCESS] Successfully signed PSEvents.dll. Pristine original backed up.
+[2026-06-14 03:05:23] [SUCCESS] Successfully signed pspluginwkr.dll. Pristine original backed up.
+[2026-06-14 03:05:24] [SUCCESS] Successfully signed pspluginwkr-v3.dll. Pristine original backed up.
+[2026-06-14 03:05:25] [SUCCESS] Successfully signed pwrshmsg.dll. Pristine original backed up.
+[2026-06-14 03:05:26] [SUCCESS] Successfully signed pwrshsip.dll. Pristine original backed up.
+[2026-06-14 03:08:24] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 03:08:26] [SUCCESS] Successfully signed powershell_ise.exe. Pristine original backed up.
+[2026-06-14 03:08:27] [SUCCESS] Successfully signed CompiledComposition.Microsoft.PowerShell.GPowerShell.dll. Pristine original backed up.
+[2026-06-14 03:08:28] [SUCCESS] Successfully signed PSEvents.dll. Pristine original backed up.
+[2026-06-14 03:08:29] [SUCCESS] Successfully signed pspluginwkr.dll. Pristine original backed up.
+[2026-06-14 03:08:30] [SUCCESS] Successfully signed pspluginwkr-v3.dll. Pristine original backed up.
+[2026-06-14 03:08:31] [SUCCESS] Successfully signed pwrshmsg.dll. Pristine original backed up.
+[2026-06-14 03:08:32] [ERROR] SignTool vehemently rejected pwrshsip.dll (Exit code: 1).
+[2026-06-14 03:08:32] [WARNING] Restored pwrshsip.dll to its original unsigned state. No backup created.
+[2026-06-14 03:08:33] [SUCCESS] Successfully signed powershell.exe. Pristine original backed up.
+[2026-06-14 03:45:25] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 03:45:26] [ERROR] SignTool vehemently rejected WinaeroTweaker.exe (Exit code: 1).
+[2026-06-14 03:45:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 03:45:39] [ERROR] SignTool vehemently rejected WinaeroTweaker.exe (Exit code: 1).
+[2026-06-14 03:45:39] [WARNING] Restored WinaeroTweaker.exe to its original unsigned state. No backup created.
+[2026-06-14 06:02:24] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 06:02:26] [ERROR] SignTool vehemently rejected NTMU.exe (Exit code: 1).
+[2026-06-14 06:02:26] [WARNING] Restored NTMU.exe to its original unsigned state. No backup created.
+[2026-06-14 06:04:01] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 06:04:02] [SUCCESS] Successfully signed NTMU.exe. Pristine original backed up.
+[2026-06-14 06:08:44] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 06:08:46] [ERROR] SignTool vehemently rejected Everything.exe (Exit code: 1).
+[2026-06-14 06:08:46] [WARNING] Restored Everything.exe to its original unsigned state. No backup created.
+[2026-06-14 06:09:33] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 06:09:35] [ERROR] SignTool vehemently rejected Everything.exe (Exit code: 1).
+[2026-06-14 06:09:35] [WARNING] Restored Everything.exe to its original unsigned state. No backup created.
+[2026-06-14 06:10:09] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-14 06:10:11] [ERROR] SignTool vehemently rejected 7zFM.exe (Exit code: 1).
+[2026-06-14 06:10:11] [WARNING] Restored 7zFM.exe to its original unsigned state. No backup created.
+[2026-06-14 06:11:04] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-14 06:11:10] [INFO] Added 1 file(s) to the queue.
+[2026-06-14 06:11:14] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-14 06:11:15] [SUCCESS] Successfully signed 7zFM.exe. Pristine original backed up.
+[2026-06-14 06:11:15] [INFO] Batch run complete. Queue emptied.
+[2026-06-14 06:11:35] [INFO] Added 8 file(s) to the queue.
+[2026-06-14 06:11:37] [INFO] Processing 8 file(s) with local Admin power...
+[2026-06-14 06:11:37] [SUCCESS] Successfully signed 7-zip32.dll. Pristine original backed up.
+[2026-06-14 06:11:37] [SUCCESS] Successfully signed 7z.exe. Pristine original backed up.
+[2026-06-14 06:11:37] [SUCCESS] Successfully signed 7zFM.exe. Pristine original backed up.
+[2026-06-14 06:11:38] [SUCCESS] Successfully signed 7zG.exe. Pristine original backed up.
+[2026-06-14 06:11:38] [SUCCESS] Successfully signed 7Zip-FrutigerAero-Edition.exe. Pristine original backed up.
+[2026-06-14 06:11:38] [SUCCESS] Successfully signed unins000.exe. Pristine original backed up.
+[2026-06-14 06:11:38] [SUCCESS] Successfully signed 7z.dll. Pristine original backed up.
+[2026-06-14 06:11:38] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\7-Zip\7-zip.dll' because it is being used by another process.
+[2026-06-14 06:12:33] [INFO] Queue completely cleared.
+[2026-06-14 06:12:35] [INFO] Added 1 file(s) to the queue.
+[2026-06-14 06:12:48] [INFO] Queue completely cleared.
+[2026-06-14 06:12:52] [INFO] Added 1 file(s) to the queue.
+[2026-06-14 06:13:05] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-14 06:13:07] [INFO] Added 1 file(s) to the queue.
+[2026-06-14 06:13:08] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-14 06:13:09] [SUCCESS] Successfully signed 7-zip.dll. Pristine original backed up.
+[2026-06-14 06:13:09] [INFO] Batch run complete. Queue emptied.
+[2026-06-14 06:28:18] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-17 06:24:41] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-17 06:24:41] [INFO] Stripped Read-Only attribute from Batch DLL ResourceExtracter (2026_05_11 06_51_38 UTC).exe for digital ink application.
+[2026-06-17 06:24:42] [ERROR] SignTool vehemently rejected Batch DLL ResourceExtracter (2026_05_11 06_51_38 UTC).exe (Exit code: 1).
+[2026-06-17 06:24:42] [WARNING] Restored Batch DLL ResourceExtracter (2026_05_11 06_51_38 UTC).exe to its original unsigned state. No backup created.
+[2026-06-17 07:02:14] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-17 07:02:15] [SUCCESS] Successfully signed ResourceRedirector.dll. Pristine original backed up.
+[2026-06-17 07:02:16] [SUCCESS] Successfully signed ResourceRedirectApp.exe. Pristine original backed up.
+[2026-06-17 07:02:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-17 07:02:40] [SUCCESS] Successfully signed ResourceRedirector.dll. Pristine original backed up.
+[2026-06-17 07:02:41] [SUCCESS] Successfully signed RedirectHost.exe. Pristine original backed up.
+[2026-06-17 07:02:42] [SUCCESS] Successfully signed ResourceRedirectApp.exe. Pristine original backed up.
+[2026-06-17 07:19:40] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-17 07:19:42] [SUCCESS] Successfully signed ResourceRedirector.dll. Pristine original backed up.
+[2026-06-17 07:19:43] [SUCCESS] Successfully signed Install.exe. Pristine original backed up.
+[2026-06-17 07:19:44] [SUCCESS] Successfully signed RedirectHost.exe. Pristine original backed up.
+[2026-06-17 07:19:45] [SUCCESS] Successfully signed ResourceRedirectApp.exe. Pristine original backed up.
+[2026-06-17 07:20:29] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-17 07:20:30] [SUCCESS] Successfully signed ResourceRedirector.dll. Pristine original backed up.
+[2026-06-17 07:20:31] [SUCCESS] Successfully signed RedirectHost.exe. Pristine original backed up.
+[2026-06-17 07:20:32] [SUCCESS] Successfully signed ResourceRedirectApp.exe. Pristine original backed up.
+[2026-06-25 13:07:38] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 20:38:18] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 21:05:41] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 21:05:41] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Windows\regedit.exe' because it is being used by another process.
+[2026-06-25 21:05:56] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 21:06:01] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 21:06:07] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 21:06:07] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-25 21:32:32] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 21:32:32] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-25 21:32:33] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-25 21:32:53] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 21:32:53] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-25 21:32:53] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-25 21:33:45] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 21:33:53] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 21:33:55] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 21:33:55] [SUCCESS] Successfully signed explorer.exe. Pristine original backed up.
+[2026-06-25 21:33:55] [INFO] Batch run complete. Queue emptied.
+[2026-06-25 22:18:57] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 22:19:17] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 22:19:21] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 22:19:24] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 22:19:24] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-25 22:19:24] [WARNING] Restored NetworkTray.exe to its original unsigned state. No backup created.
+[2026-06-25 22:19:24] [INFO] Batch run complete. Queue emptied.
+[2026-06-25 22:19:27] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 22:19:30] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 22:19:30] [SUCCESS] Successfully signed NetworkTray.exe. Pristine original backed up.
+[2026-06-25 22:19:30] [INFO] Batch run complete. Queue emptied.
+[2026-06-25 23:10:47] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:10:47] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\7-Zip\7zFM.exe' because it is being used by another process.
+[2026-06-25 23:10:53] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 23:11:05] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:11:06] [SUCCESS] Successfully signed 7zFM.exe. Pristine original backed up.
+[2026-06-25 23:14:24] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:14:43] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:14:50] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:14:53] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 23:15:04] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 23:15:05] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 23:15:05] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\NirSoft\ExplorerToolbarEditor\Windows 7 x64\ExplorerToolbarEditor.exe' because it is being used by another process.
+[2026-06-25 23:15:12] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 23:15:17] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 23:15:20] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 23:15:21] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 23:15:21] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\NirSoft\ExplorerToolbarEditor\Windows 7 x64\ExplorerToolbarEditor.exe' because it is being used by another process.
+[2026-06-25 23:15:58] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:15:58] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-25 23:15:58] [WARNING] Restored ExplorerToolbarEditor.exe to its original unsigned state. No backup created.
+[2026-06-25 23:16:07] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:16:16] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-25 23:16:17] [INFO] Added 1 file(s) to the queue.
+[2026-06-25 23:16:19] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-25 23:16:20] [SUCCESS] Successfully signed ExplorerToolbarEditor.exe. Pristine original backed up.
+[2026-06-25 23:16:20] [INFO] Batch run complete. Queue emptied.
+[2026-06-25 23:41:05] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:41:05] [SUCCESS] Successfully signed mmc.exe. Pristine original backed up.
+[2026-06-25 23:41:13] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-25 23:41:14] [SUCCESS] Successfully signed mmc.exe. Pristine original backed up.
+[2026-06-26 00:32:41] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 02:38:52] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 02:39:03] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 02:39:07] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 02:39:31] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 02:39:32] [SUCCESS] Successfully signed TakeOwnershipEx.exe. Pristine original backed up.
+[2026-06-26 02:39:32] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 03:02:29] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 03:02:29] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Windows\explorer.exe' because it is being used by another process.
+[2026-06-26 03:03:04] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 03:03:04] [ERROR] Native auth failed for explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 03:03:04] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 03:03:04] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 03:03:05] [SUCCESS] Successfully signed 3explorer.exe. Pristine original backed up.
+[2026-06-26 03:44:51] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 03:44:51] [SUCCESS] Successfully signed Elite-RES-Converter.PS1. Pristine original backed up.
+[2026-06-26 05:26:43] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 05:26:43] [ERROR] Native auth failed for PsExec64.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 05:26:44] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:27:08] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 05:27:08] [ERROR] Native auth failed for PsExec64.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 05:27:09] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:27:14] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 05:27:15] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 05:27:17] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 05:27:17] [ERROR] Native auth failed for PsExec64.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 05:27:18] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:27:18] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 05:27:23] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 05:27:23] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 05:27:23] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 05:27:24] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:27:24] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 05:27:54] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 05:27:54] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 05:27:54] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:28:00] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 05:28:03] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 05:28:03] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 05:28:04] [ERROR] Native auth failed for PsExec64.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 05:28:04] [WARNING] Restored PsExec64.exe to its original unsigned state. No backup created.
+[2026-06-26 05:28:04] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 05:33:09] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 05:33:10] [SUCCESS] Successfully signed PsExec64-Launcher.ps1. Pristine original backed up.
+[2026-06-26 09:40:14] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 09:40:27] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 09:40:34] [INFO] Added 4 file(s) to the queue.
+[2026-06-26 11:07:57] [INFO] Processing 4 file(s) with local Admin power...
+[2026-06-26 11:07:57] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:07:57] [WARNING] Restored CaptureWizard.exe to its original unsigned state. No backup created.
+[2026-06-26 11:07:57] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:08:16] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 11:08:24] [INFO] Added 4 file(s) to the queue.
+[2026-06-26 11:08:26] [INFO] Processing 4 file(s) with local Admin power...
+[2026-06-26 11:08:27] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:08:27] [WARNING] Restored MOVIEMK.exe to its original unsigned state. No backup created.
+[2026-06-26 11:08:27] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:08:27] [WARNING] Restored VideoCameraAutoPlayManager.exe to its original unsigned state. No backup created.
+[2026-06-26 11:08:27] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:08:27] [WARNING] Restored CaptureWizard.exe to its original unsigned state. No backup created.
+[2026-06-26 11:08:27] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 11:08:34] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 11:08:36] [INFO] Added 4 file(s) to the queue.
+[2026-06-26 11:08:41] [INFO] Processing 4 file(s) with local Admin power...
+[2026-06-26 11:08:41] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Program Files\Movie Maker\DVDMaker.exe' because it is being used by another process.
+[2026-06-26 11:08:53] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 11:08:56] [INFO] Added 4 file(s) to the queue.
+[2026-06-26 11:08:58] [INFO] Processing 4 file(s) with local Admin power...
+[2026-06-26 11:09:09] [SUCCESS] Successfully signed CaptureWizard.exe. Pristine original backed up.
+[2026-06-26 11:09:10] [SUCCESS] Successfully signed DVDMaker.exe. Pristine original backed up.
+[2026-06-26 11:09:10] [SUCCESS] Successfully signed MOVIEMK.exe. Pristine original backed up.
+[2026-06-26 11:09:10] [SUCCESS] Successfully signed VideoCameraAutoPlayManager.exe. Pristine original backed up.
+[2026-06-26 11:09:10] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 16:48:07] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 16:48:24] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 16:48:34] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 16:48:43] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 16:48:49] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 16:48:52] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 16:48:53] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 16:48:57] [SUCCESS] Successfully signed Twinkle Tray.exe. Pristine original backed up.
+[2026-06-26 16:48:57] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 16:49:16] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 17:50:43] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 17:50:44] [ERROR] Native auth failed for explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 17:50:45] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 17:51:04] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 17:51:05] [ERROR] Native auth failed for explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 17:51:05] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 17:51:26] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-26 17:51:26] [ERROR] Native auth failed for explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 17:51:26] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 17:51:32] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-26 17:51:33] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 17:51:34] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 17:51:35] [ERROR] Native auth failed for explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-06-26 17:51:35] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 17:51:35] [INFO] Batch run complete. Queue emptied.
+[2026-06-26 17:51:39] [INFO] Added 1 file(s) to the queue.
+[2026-06-26 17:51:41] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-26 17:51:41] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-06-26 17:51:42] [WARNING] Restored explorer.exe to its original unsigned state. No backup created.
+[2026-06-26 17:51:42] [INFO] Batch run complete. Queue emptied.
+[2026-06-27 01:05:56] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-27 01:06:05] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-27 01:06:10] [INFO] Added 1 file(s) to the queue.
+[2026-06-27 01:06:11] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-27 01:06:23] [SUCCESS] Successfully signed WindowsPhotoGallery.exe. Pristine original backed up.
+[2026-06-27 01:06:23] [INFO] Batch run complete. Queue emptied.
+[2026-06-27 01:14:27] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-27 01:14:49] [SUCCESS] Successfully signed MOVIEMK.exe. Pristine original backed up.
+[2026-06-28 16:33:26] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 00:17:54] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 06:40:12] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 07:05:10] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 07:05:28] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 07:05:42] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-06-30 07:05:54] [INFO] Added 1 file(s) to the queue.
+[2026-06-30 07:05:55] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-30 07:05:55] [ERROR] Native auth failed for regedit.exe. Reason: There are no more endpoints available from the endpoint mapper. The cryptography gods say no.
+[2026-06-30 07:05:55] [WARNING] Restored regedit.exe to its original unsigned state. No backup created.
+[2026-06-30 07:05:55] [INFO] Batch run complete. Queue emptied.
+[2026-06-30 07:06:00] [INFO] Added 1 file(s) to the queue.
+[2026-06-30 07:06:01] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-30 07:06:02] [ERROR] SignTool vehemently rejected regedit.exe (Exit code: 1).
+[2026-06-30 07:06:02] [WARNING] Restored regedit.exe to its original unsigned state. No backup created.
+[2026-06-30 07:06:02] [INFO] Batch run complete. Queue emptied.
+[2026-06-30 07:07:21] [INFO] Added 1 file(s) to the queue.
+[2026-06-30 07:07:21] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-30 07:07:22] [ERROR] SignTool vehemently rejected notepad.exe (Exit code: 1).
+[2026-06-30 07:07:22] [WARNING] Restored notepad.exe to its original unsigned state. No backup created.
+[2026-06-30 07:07:22] [INFO] Batch run complete. Queue emptied.
+[2026-06-30 07:08:07] [INFO] Added 1 file(s) to the queue.
+[2026-06-30 07:08:09] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-30 07:08:10] [ERROR] SignTool vehemently rejected notepad.exe (Exit code: 1).
+[2026-06-30 07:08:10] [WARNING] Restored notepad.exe to its original unsigned state. No backup created.
+[2026-06-30 07:08:10] [INFO] Batch run complete. Queue emptied.
+[2026-06-30 07:08:17] [INFO] Added 1 file(s) to the queue.
+[2026-06-30 07:08:18] [INFO] Processing 1 file(s) with local Admin power...
+[2026-06-30 07:08:18] [ERROR] Native auth failed for notepad.exe. Reason: There are no more endpoints available from the endpoint mapper. The cryptography gods say no.
+[2026-06-30 07:08:18] [WARNING] Restored notepad.exe to its original unsigned state. No backup created.
+[2026-06-30 07:08:18] [INFO] Batch run complete. Queue emptied.
+[2026-06-30 08:02:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 08:02:38] [ERROR] Native auth failed for AppMonitor_x64.exe. Reason: There are no more endpoints available from the endpoint mapper. The cryptography gods say no.
+[2026-06-30 08:02:38] [WARNING] Restored AppMonitor_x64.exe to its original unsigned state. No backup created.
+[2026-06-30 08:02:59] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 08:02:59] [ERROR] Native auth failed for AppMonitor_x64.exe. Reason: There are no more endpoints available from the endpoint mapper. The cryptography gods say no.
+[2026-06-30 08:02:59] [WARNING] Restored AppMonitor_x64.exe to its original unsigned state. No backup created.
+[2026-06-30 08:03:08] [INFO] Headless mode invoked via CLI arguments.
+[2026-06-30 08:03:08] [ERROR] Native auth failed for AppMonitor_x64.exe. Reason: There are no more endpoints available from the endpoint mapper. The cryptography gods say no.
+[2026-06-30 08:03:09] [WARNING] Restored AppMonitor_x64.exe to its original unsigned state. No backup created.
+[2026-07-02 07:22:32] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-02 08:53:31] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-02 08:53:32] [SUCCESS] Successfully signed LegacySoundBackup.exe. Pristine original backed up.
+[2026-07-02 08:53:47] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-02 08:53:51] [INFO] Added 1 file(s) to the queue.
+[2026-07-02 08:53:54] [INFO] Processing 1 file(s) with local Admin power...
+[2026-07-02 08:53:54] [ERROR] SignTool crashed harder than a Vista machine on 512MB of RAM: This command cannot be run due to the error: The application has failed to start because its side-by-side configuration is incorrect. Please see the application event log or use the command-line sxstrace.exe tool for more detail.
+[2026-07-02 08:53:54] [WARNING] Restored LegacySoundBackup.exe to its original unsigned state. No backup created.
+[2026-07-02 08:53:54] [INFO] Batch run complete. Queue emptied.
+[2026-07-02 08:54:11] [INFO] Added 1 file(s) to the queue.
+[2026-07-02 08:54:12] [INFO] Processing 1 file(s) with local Admin power...
+[2026-07-02 08:54:12] [SUCCESS] Successfully signed LegacySoundBackup.exe. Pristine original backed up.
+[2026-07-02 08:54:12] [INFO] Batch run complete. Queue emptied.
+[2026-07-02 11:16:21] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-02 11:16:22] [SUCCESS] Successfully signed AutoClose-Brackets.exe. Pristine original backed up.
+[2026-07-02 12:20:15] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-02 12:20:17] [SUCCESS] Successfully signed Custom Resolution Utility.exe. Pristine original backed up.
+[2026-07-02 12:27:59] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-02 12:27:59] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Reunion7_Windows\Program Files\EliteSoftware\Simple Markdown Viewer\Simple Markdown Viewer.exe' because it is being used by another process.
+[2026-07-02 20:54:36] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-03 16:02:12] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 16:02:12] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Users\Administrator\Desktop\ImmersiveAppLauncher.exe' because it is being used by another process.
+[2026-07-03 16:04:45] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 16:04:45] [SUCCESS] Successfully signed ImmersiveAppLauncher.exe. Pristine original backed up.
+[2026-07-03 17:25:50] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:25:51] [SUCCESS] Successfully signed OpenWithView.exe. Pristine original backed up.
+[2026-07-03 17:52:37] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:58:34] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:58:37] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:58:45] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:58:49] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 17:58:53] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 23:04:13] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 23:04:13] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-03 23:04:13] [SUCCESS] Successfully signed ServerManager.exe. Pristine original backed up.
+[2026-07-03 23:04:14] [SUCCESS] Successfully signed ServerRegistrationManager.exe. Pristine original backed up.
+[2026-07-06 19:41:50] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-06 19:42:25] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-06 19:42:41] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-06 19:42:45] [INFO] Added 5 file(s) to the queue.
+[2026-07-06 19:42:47] [INFO] Processing 5 file(s) with local Admin power...
+[2026-07-06 19:42:48] [ERROR] SignTool vehemently rejected AutoPico.exe (Exit code: 1).
+[2026-07-06 19:42:48] [WARNING] Restored AutoPico.exe to its original unsigned state. No backup created.
+[2026-07-06 19:42:49] [ERROR] SignTool vehemently rejected KMSELDI.exe (Exit code: 1).
+[2026-07-06 19:43:37] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-06 19:43:39] [INFO] Added 5 file(s) to the queue.
+[2026-07-06 19:43:41] [INFO] Processing 5 file(s) with local Admin power...
+[2026-07-06 19:43:41] [ERROR] Failed to secure a temporary backup for AutoPico.exe. Aborting to save your bits. Is the file locked or running?
+[2026-07-06 19:43:41] [ERROR] Failed to secure a temporary backup for KMSELDI.exe. Aborting to save your bits. Is the file locked or running?
+[2026-07-06 19:43:41] [ERROR] Failed to secure a temporary backup for Service_KMS.exe. Aborting to save your bits. Is the file locked or running?
+[2026-07-06 19:43:42] [ERROR] SignTool vehemently rejected unins000.exe (Exit code: 1).
+[2026-07-06 19:43:42] [WARNING] Restored unins000.exe to its original unsigned state. No backup created.
+[2026-07-06 19:43:43] [ERROR] SignTool vehemently rejected UninsHs.exe (Exit code: 1).
+[2026-07-06 19:43:43] [WARNING] Restored UninsHs.exe to its original unsigned state. No backup created.
+[2026-07-06 19:43:43] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 19:44:51] [INFO] Added 2 file(s) to the queue.
+[2026-07-06 19:44:58] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-06 20:09:59] [INFO] Elite EasySigner UI Initialized. Awaiting payloads.
+[2026-07-06 20:10:03] [INFO] Added 5 file(s) to the queue.
+[2026-07-06 20:10:04] [INFO] Processing 5 file(s) with local Admin power...
+[2026-07-06 20:10:05] [ERROR] SignTool vehemently rejected AutoPico.exe (Exit code: 1).
+[2026-07-06 20:10:05] [WARNING] Restored AutoPico.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:06] [ERROR] SignTool vehemently rejected KMSELDI.exe (Exit code: 1).
+[2026-07-06 20:10:06] [WARNING] Restored KMSELDI.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:07] [ERROR] SignTool vehemently rejected Service_KMS.exe (Exit code: 1).
+[2026-07-06 20:10:07] [WARNING] Restored Service_KMS.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:08] [ERROR] SignTool vehemently rejected unins000.exe (Exit code: 1).
+[2026-07-06 20:10:08] [WARNING] Restored unins000.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:09] [ERROR] SignTool vehemently rejected UninsHs.exe (Exit code: 1).
+[2026-07-06 20:10:10] [WARNING] Restored UninsHs.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:10] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 20:10:15] [INFO] Added 5 file(s) to the queue.
+[2026-07-06 20:10:17] [INFO] Processing 5 file(s) with local Admin power...
+[2026-07-06 20:10:18] [ERROR] SignTool vehemently rejected AutoPico - Copy.exe (Exit code: 1).
+[2026-07-06 20:10:18] [WARNING] Restored AutoPico - Copy.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:19] [ERROR] SignTool vehemently rejected KMSELDI - Copy.exe (Exit code: 1).
+[2026-07-06 20:10:19] [WARNING] Restored KMSELDI - Copy.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:20] [ERROR] SignTool vehemently rejected Service_KMS - Copy.exe (Exit code: 1).
+[2026-07-06 20:10:20] [WARNING] Restored Service_KMS - Copy.exe to its original unsigned state. No backup created.
+[2026-07-06 20:10:20] [SUCCESS] Successfully signed unins000 - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:20] [SUCCESS] Successfully signed UninsHs - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:20] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 20:10:22] [INFO] Added 5 file(s) to the queue.
+[2026-07-06 20:10:23] [INFO] Processing 5 file(s) with local Admin power...
+[2026-07-06 20:10:23] [SUCCESS] Successfully signed AutoPico - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:23] [SUCCESS] Successfully signed KMSELDI - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:23] [SUCCESS] Successfully signed Service_KMS - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:24] [SUCCESS] Successfully signed unins000 - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:24] [SUCCESS] Successfully signed UninsHs - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:24] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 20:10:28] [INFO] Added 10 file(s) to the queue.
+[2026-07-06 20:10:29] [INFO] Processing 10 file(s) with local Admin power...
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed AutoPico - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed AutoPico.exe. Pristine original backed up.
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed KMSELDI - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed KMSELDI.exe. Pristine original backed up.
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed Service_KMS - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:29] [SUCCESS] Successfully signed Service_KMS.exe. Pristine original backed up.
+[2026-07-06 20:10:30] [SUCCESS] Successfully signed unins000 - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:30] [SUCCESS] Successfully signed unins000.exe. Pristine original backed up.
+[2026-07-06 20:10:30] [SUCCESS] Successfully signed UninsHs - Copy.exe. Pristine original backed up.
+[2026-07-06 20:10:30] [SUCCESS] Successfully signed UninsHs.exe. Pristine original backed up.
+[2026-07-06 20:10:30] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 20:10:45] [INFO] Added 2 file(s) to the queue.
+[2026-07-06 20:10:46] [INFO] Processing 2 file(s) with local Admin power...
+[2026-07-06 20:10:46] [SUCCESS] Successfully signed DevComponents.DotNetBar2.dll. Pristine original backed up.
+[2026-07-06 20:10:46] [SUCCESS] Successfully signed Vestris.ResourceLib.dll. Pristine original backed up.
+[2026-07-06 20:10:46] [INFO] Batch run complete. Queue emptied.
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\AddExceptions_Defender.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\AddExceptionsWD.reg (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\DisableSmartScreen.reg (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\EnableSmartScreen.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\EnableSmartScreen.reg (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\Install_Service.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\Install_Task.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\Log.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\RemoveExceptionsWD.reg (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\Restore_Watermark.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\Silent.cmd (Unsupported extension)
+[2026-07-06 20:10:53] [WARNING] File ignored: C:\Program Files\KMSpico\scripts\UnInstall_Service.cmd (Unsupported extension)
+[2026-07-06 20:11:01] [WARNING] File ignored: C:\Program Files\KMSpico\driver\Cert.cmd (Unsupported extension)
+[2026-07-06 20:11:01] [WARNING] File ignored: C:\Program Files\KMSpico\driver\certELDI.pfx (Unsupported extension)
+[2026-07-06 20:11:01] [WARNING] File ignored: C:\Program Files\KMSpico\driver\OpenVPN.cer (Unsupported extension)
+[2026-07-06 20:11:01] [WARNING] File ignored: C:\Program Files\KMSpico\driver\UnInstallDriver.cmd (Unsupported extension)
+[2026-07-06 20:11:01] [INFO] Added 1 file(s) to the queue.
+[2026-07-06 20:11:01] [INFO] Processing 1 file(s) with local Admin power...
+[2026-07-06 20:11:01] [SUCCESS] Successfully signed tap-windows-9.21.0.exe. Pristine original backed up.
+[2026-07-06 20:11:01] [INFO] Batch run complete. Queue emptied.
+[2026-07-26 17:39:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 17:39:39] [SUCCESS] Successfully signed ResourceHacker.exe. Pristine original backed up.
+[2026-07-26 20:47:31] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 20:47:31] [SUCCESS] Successfully signed Win32Explorer.exe. Pristine original backed up.
+[2026-07-26 23:20:38] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:20:39] [SUCCESS] Successfully signed EliteDLLScanner.exe. Pristine original backed up.
+[2026-07-26 23:20:43] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:20:44] [SUCCESS] Successfully signed EliteEverything.exe. Pristine original backed up.
+[2026-07-26 23:20:48] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:20:48] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Users\Administrator\Desktop\Elite-TaskBar\BuildOutput\EliteStartMenu.exe' because it is being used by another process.
+[2026-07-26 23:20:59] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:20:59] [SUCCESS] Successfully signed EliteTaskbar.exe. Pristine original backed up.
+[2026-07-26 23:21:04] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:21:04] [SUCCESS] Successfully signed test.exe. Pristine original backed up.
+[2026-07-26 23:21:09] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-26 23:21:09] [ERROR] Native auth failed for Win32Explorer.exe. Reason: %1 is not a valid Win32 application. The cryptography gods say no.
+[2026-07-26 23:21:09] [WARNING] Restored Win32Browser.exe to its original unsigned state. No backup created.
+[2026-07-26 23:21:09] [WARNING] Restored Win32Explorer.exe to its original unsigned state. No backup created.
+[2026-07-27 00:35:19] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-27 00:35:19] [INFO] Stripped Read-Only attribute from FirewallSettings.exe for digital ink application.
+[2026-07-27 00:35:20] [SUCCESS] Successfully signed FirewallSettings.exe. Pristine original backed up.
+[2026-07-27 00:35:28] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-27 00:35:28] [INFO] Stripped Read-Only attribute from FirewallControlPanel.exe for digital ink application.
+[2026-07-27 00:35:29] [SUCCESS] Successfully signed FirewallControlPanel.exe. Pristine original backed up.
+[2026-07-29 05:52:48] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 05:52:48] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Windows\System32\SnippingTool.exe' because it is being used by another process.
+[2026-07-29 14:34:40] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:34:40] [ERROR] Native auth failed for dummy_old_test.exe. Reason: The form specified for the subject is not one supported or known by the specified trust provider. The cryptography gods say no.
+[2026-07-29 14:34:48] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:34:49] [SUCCESS] Successfully signed EliteDLLScanner.exe. Pristine original backed up.
+[2026-07-29 14:34:55] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:34:56] [SUCCESS] Successfully signed EliteEverything.exe. Pristine original backed up.
+[2026-07-29 14:35:02] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:35:02] [SUCCESS] Successfully signed EliteHotkeyService.exe. Pristine original backed up.
+[2026-07-29 14:35:10] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:35:11] [SUCCESS] Successfully signed EliteSettings.cpl. Pristine original backed up.
+[2026-07-29 14:37:11] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:37:11] [SUCCESS] Successfully signed EliteStartMenu.exe. Pristine original backed up.
+[2026-07-29 14:37:40] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:37:41] [SUCCESS] Successfully signed EliteTaskbar.exe. Pristine original backed up.
+[2026-07-29 14:37:49] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:37:49] [ERROR] Native signing blew up unexpectedly. Access Denied or file lock?: The process cannot access the file 'C:\Users\Administrator\Desktop\Elite-TaskBar\BuildOutput\StartMenu.exe' because it is being used by another process.
+[2026-07-29 14:39:33] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:39:33] [SUCCESS] Successfully signed test_m2_empirical.exe. Pristine original backed up.
+[2026-07-29 14:39:52] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:39:53] [SUCCESS] Successfully signed test_m4_empirical.exe. Pristine original backed up.
+[2026-07-29 14:40:03] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:40:04] [SUCCESS] Successfully signed Win32Browser.exe. Pristine original backed up.
+[2026-07-29 14:40:05] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 14:40:06] [SUCCESS] Successfully signed Win32Explorer.exe. Pristine original backed up.
+[2026-07-29 15:12:12] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 17:02:03] [INFO] Headless mode invoked via CLI arguments.
+[2026-07-29 17:02:04] [SUCCESS] Successfully signed Start-AgentThreadServer.exe. Pristine original backed up.

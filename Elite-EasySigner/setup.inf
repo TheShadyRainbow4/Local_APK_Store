@@ -1,0 +1,35 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Tue Jun 02 05:16:27 2026           **
+;**                                                                **
+;** MakeCAB Version: 5.00                                 **
+;**                                                                **
+;*** BEGIN **********************************************************
+[disk list]
+1,Disk 1
+[cabinet list]
+1,1,Elite-EasySigner_Backup.cab
+[file list]
+1,1,backup.ps1,812
+1,1,Compile-EasySigner.exe,264928
+1,1,Compile-EasySigner.ps1,9164
+1,1,Elite-EasyScriptCompiler.exe,270560
+1,1,Elite-EasyScriptCompiler.ps1,14961
+1,1,Elite-EasySigner.ico,212442
+1,1,Elite-EasySigner.ps1,25782
+1,1,Elite-EasySigner_x64.exe,280800
+1,1,Elite-EasySigner_x86.exe,281312
+1,1,EliteSoftware_Special.cer,949
+1,1,EliteSoftware_Special.pfx,2750
+1,1,gemini.md,1501
+1,1,README.md,1095
+1,1,PS2EXE\ps2exe.ps1,96722
+1,1,PS2EXE\ps2exe.psd1,6482
+1,1,PS2EXE\ps2exe.psm1,663
+1,1,PS2EXE\Win-PS2EXE.exe,44544
+1,1,PS2EXE\Win-PS2EXE.exe.bak,31232
+;*** END ************************************************************
+;**                                                                **
+;** Automatically generated on: Tue Jun 02 05:16:27 2026           **
+;**                                                                **
+;*** END ************************************************************

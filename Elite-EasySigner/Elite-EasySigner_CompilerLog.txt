@@ -1,0 +1,70 @@
+[2026-06-05 06:56:42] ==========================================
+[2026-06-05 06:56:42]   Elite EasySigner - Automated Compiler   
+[2026-06-05 06:56:42] ==========================================
+[2026-06-05 06:56:42] Detected EasySigner version: 1.0.52.0
+[2026-06-05 06:56:42] Located SignTool: C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe
+[2026-06-05 06:56:42] ------------------------------------------
+[2026-06-05 06:56:42] Compiling x86 Architecture...
+[2026-06-05 06:56:42] Compilation of x86 succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe
+[2026-06-05 06:56:42] ------------------------------------------
+[2026-06-05 06:56:42] Compiling x64 Architecture...
+[2026-06-05 06:56:43] Compilation of x64 succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe
+[2026-06-05 06:56:43] ------------------------------------------
+[2026-06-05 06:56:43] Compiling Any Architecture...
+[2026-06-05 06:56:44] Compilation of Any succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe
+[2026-06-05 06:56:44] ------------------------------------------
+[2026-06-05 06:56:44] Compiling Any Architecture...
+[2026-06-05 06:56:44] Compilation of Any succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe
+[2026-06-05 06:56:44] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe...
+[2026-06-05 06:56:45] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe with Elite authority.
+[2026-06-05 06:56:45] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe...
+[2026-06-05 06:56:46] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe with Elite authority.
+[2026-06-05 06:56:46] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe...
+[2026-06-05 06:56:47] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe with Elite authority.
+[2026-06-05 06:56:47] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe...
+[2026-06-05 06:56:48] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe with Elite authority.
+[2026-06-05 06:56:48] 
+==========================================
+[2026-06-05 06:56:48]                BUILD SUMMARY              
+[2026-06-05 06:56:48] ==========================================
+[2026-06-05 06:56:48] Signer x86 Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 06:56:49] Signer x64 Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 06:56:49] Compiler EXE Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 06:56:49] Script Compiler Utility Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 06:56:49] ==========================================
+[2026-06-05 06:56:49] Ready.
+[2026-06-05 07:01:37] ==========================================
+[2026-06-05 07:01:37]   Elite EasySigner - Automated Compiler   
+[2026-06-05 07:01:37] ==========================================
+[2026-06-05 07:01:37] Detected EasySigner version: 1.0.52.0
+[2026-06-05 07:01:37] Located SignTool: C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe
+[2026-06-05 07:01:37] ------------------------------------------
+[2026-06-05 07:01:37] Compiling x86 Architecture...
+[2026-06-05 07:01:38] Compilation of x86 succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe
+[2026-06-05 07:01:38] ------------------------------------------
+[2026-06-05 07:01:38] Compiling x64 Architecture...
+[2026-06-05 07:01:39] Compilation of x64 succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe
+[2026-06-05 07:01:39] ------------------------------------------
+[2026-06-05 07:01:39] Compiling Any Architecture...
+[2026-06-05 07:01:39] Compilation of Any succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe
+[2026-06-05 07:01:39] ------------------------------------------
+[2026-06-05 07:01:39] Compiling Any Architecture...
+[2026-06-05 07:01:40] Compilation of Any succeeded: C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe
+[2026-06-05 07:01:40] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe...
+[2026-06-05 07:01:41] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x86.exe with Elite authority.
+[2026-06-05 07:01:41] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe...
+[2026-06-05 07:01:42] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasySigner_x64.exe with Elite authority.
+[2026-06-05 07:01:42] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe...
+[2026-06-05 07:01:43] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Compile-EasySigner.exe with Elite authority.
+[2026-06-05 07:01:43] Signing C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe...
+[2026-06-05 07:01:44] Successfully stamped C:\Users\zwhiteman\Desktop\Elite-EasySigner\Elite-EasyScriptCompiler.exe with Elite authority.
+[2026-06-05 07:01:44] 
+==========================================
+[2026-06-05 07:01:44]                BUILD SUMMARY              
+[2026-06-05 07:01:44] ==========================================
+[2026-06-05 07:01:44] Signer x86 Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 07:01:44] Signer x64 Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 07:01:44] Compiler EXE Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 07:01:44] Script Compiler Utility Build:  SUCCESS & SIGNED (CN=CN=EliteSoftwareTech Company - Zachary Whiteman)
+[2026-06-05 07:01:44] ==========================================
+[2026-06-05 07:01:44] Ready.
