@@ -6,3 +6,4 @@
 *.pfx binary
 *.cer binary
 *.p7b binary
+*.res binary
