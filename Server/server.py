@@ -52,27 +52,50 @@ def upload_app():
     package_name = request.form.get('package_name', 'com.unknown.app')
     
     if apk_file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
+        return jsonify({"error": "No selected APK file"}), 400
 
-    filename = secure_filename(apk_file.filename)
-    save_path = os.path.join(APK_DIR, filename)
-    apk_file.save(save_path)
+    apk_filename = secure_filename(apk_file.filename)
+    apk_save_path = os.path.join(APK_DIR, apk_filename)
+    apk_file.save(apk_save_path)
+    
+    # Handle Icon
+    icon_filename = ""
+    if 'icon' in request.files and request.files['icon'].filename != '':
+        icon_file = request.files['icon']
+        icon_filename = secure_filename(package_name + "_icon.png")
+        icon_file.save(os.path.join(IMG_DIR, icon_filename))
+        
+    # Handle Screenshots (multiple files)
+    screenshots = []
+    if 'screenshots' in request.files:
+        files = request.files.getlist('screenshots')
+        for f in files:
+            if f.filename != '':
+                s_name = secure_filename(f.filename)
+                f.save(os.path.join(IMG_DIR, s_name))
+                screenshots.append(s_name)
     
     db = load_db()
-    
-    # Check if app exists
     existing_app = next((a for a in db['apps'] if a['package_name'] == package_name), None)
     
     if existing_app:
-        existing_app['versions'].append({"version": version, "file": filename})
+        # Check if version already exists to avoid duplicates
+        if not any(v['version'] == version for v in existing_app['versions']):
+            existing_app['versions'].append({"version": version, "file": apk_filename})
         existing_app['description'] = description
+        if icon_filename:
+            existing_app['icon'] = icon_filename
+        if screenshots:
+            existing_app['screenshots'].extend(screenshots)
+            existing_app['screenshots'] = list(set(existing_app['screenshots'])) # remove dupes
     else:
         new_app = {
             "name": name,
             "package_name": package_name,
             "description": description,
-            "versions": [{"version": version, "file": filename}],
-            "screenshots": []
+            "versions": [{"version": version, "file": apk_filename}],
+            "icon": icon_filename,
+            "screenshots": screenshots
         }
         db['apps'].append(new_app)
         
