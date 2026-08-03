@@ -75,6 +75,11 @@ def upload_app():
                 f.save(os.path.join(IMG_DIR, s_name))
                 screenshots.append(s_name)
     
+    # Handle Tags & Categories
+    tags = request.form.get('tags', '').split(',')
+    tags = [t.strip() for t in tags if t.strip()]
+    category = request.form.get('category', 'Uncategorized')
+    
     db = load_db()
     existing_app = next((a for a in db['apps'] if a['package_name'] == package_name), None)
     
@@ -83,6 +88,9 @@ def upload_app():
         if not any(v['version'] == version for v in existing_app['versions']):
             existing_app['versions'].append({"version": version, "file": apk_filename})
         existing_app['description'] = description
+        existing_app['category'] = category
+        if tags:
+            existing_app['tags'] = list(set(existing_app.get('tags', []) + tags))
         if icon_filename:
             existing_app['icon'] = icon_filename
         if screenshots:
@@ -93,14 +101,39 @@ def upload_app():
             "name": name,
             "package_name": package_name,
             "description": description,
+            "category": category,
+            "tags": tags,
             "versions": [{"version": version, "file": apk_filename}],
             "icon": icon_filename,
-            "screenshots": screenshots
+            "screenshots": screenshots,
+            "reviews": []
         }
         db['apps'].append(new_app)
         
     save_db(db)
     return jsonify({"message": "App uploaded successfully"}), 201
+
+@app.route('/api/apps/<package_name>/reviews', methods=['POST'])
+def add_review(package_name):
+    data = request.json
+    if not data or 'user' not in data or 'comment' not in data or 'rating' not in data:
+        return jsonify({"error": "Invalid review data"}), 400
+        
+    db = load_db()
+    existing_app = next((a for a in db['apps'] if a['package_name'] == package_name), None)
+    if not existing_app:
+        return jsonify({"error": "App not found"}), 404
+        
+    review = {
+        "user": data['user'],
+        "rating": data['rating'],
+        "comment": data['comment'],
+        "timestamp": data.get('timestamp', '')
+    }
+    existing_app.setdefault('reviews', []).append(review)
+    save_db(db)
+    
+    return jsonify({"message": "Review added successfully"}), 201
 
 @app.route('/download/<filename>')
 def download_apk(filename):

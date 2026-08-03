@@ -47,12 +47,14 @@ void ParseApkMetadata(const char* path) {
     if (!icon.empty()) strcpy_s(iconPath, icon.c_str());
 }
 
-void UploadApp(std::string apk, std::string name, std::string pkg, std::string ver, std::string desc) {
+void UploadApp(std::string apk, std::string name, std::string pkg, std::string ver, std::string desc, std::string category, std::string tags) {
     std::string curlCmd = "curl.exe -s -X POST -F \"apk=@" + apk + "\" " +
                           "-F \"name=" + name + "\" " +
                           "-F \"package_name=" + pkg + "\" " +
                           "-F \"version=" + ver + "\" " +
-                          "-F \"description=" + desc + "\" ";
+                          "-F \"description=" + desc + "\" " +
+                          "-F \"category=" + category + "\" " +
+                          "-F \"tags=" + tags + "\" ";
     
     if (strlen(iconPath) > 0) {
         curlCmd += "-F \"icon=@" + std::string(iconPath) + "\" ";
@@ -74,15 +76,17 @@ void UploadApp(std::string apk, std::string name, std::string pkg, std::string v
 }
 
 void RunCLI(int argc, char** argv) {
-    std::string apk = "", desc = "CLI Upload";
+    std::string apk = "", desc = "CLI Upload", category = "Uncategorized", tags = "";
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--upload") == 0 && i + 1 < argc) apk = argv[++i];
         else if (strcmp(argv[i], "--desc") == 0 && i + 1 < argc) desc = argv[++i];
+        else if (strcmp(argv[i], "--category") == 0 && i + 1 < argc) category = argv[++i];
+        else if (strcmp(argv[i], "--tags") == 0 && i + 1 < argc) tags = argv[++i];
         else if (strcmp(argv[i], "--screenshot") == 0 && i + 1 < argc) screenshots.push_back(argv[++i]);
     }
     
     if (apk.empty()) {
-        std::cout << "Usage: ServerManager.exe --upload <file.apk> [--desc \"description\"] [--screenshot <file.png>]\n";
+        std::cout << "Usage: ServerManager.exe --upload <file.apk> [--desc \"desc\"] [--category \"cat\"] [--tags \"tag1,tag2\"] [--screenshot <file.png>]\n";
         return;
     }
     
@@ -117,7 +121,7 @@ void RunCLI(int argc, char** argv) {
     if (ver.empty()) ver = "1.0";
 
     std::cout << "Uploading " << name << " (" << pkg << ") v" << ver << "...\n";
-    UploadApp(apk, name, pkg, ver, desc);
+    UploadApp(apk, name, pkg, ver, desc, category, tags);
     std::cout << "Done.\n";
 }
 
@@ -205,7 +209,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             GetWindowText(hwndPackage, p, 256);
             GetWindowText(hwndVersion, v, 256);
             GetWindowText(hwndDesc, d, 1024);
-            UploadApp(filePath, n, p, v, d);
+            UploadApp(filePath, n, p, v, d, "Uncategorized", "");
         }
         break;
     }
