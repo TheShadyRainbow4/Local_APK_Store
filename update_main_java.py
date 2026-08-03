@@ -1,4 +1,8 @@
-package com.elitesoftware.appmarketplace;
+import os
+
+filepath = r"C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\java\com\elitesoftware\appmarketplace\MainActivity.java"
+
+new_main_java = '''package com.elitesoftware.appmarketplace;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -246,3 +250,7 @@ public class MainActivity extends Activity {
         }
     }
 }
+'''
+with open(filepath, "w") as f:
+    f.write(new_main_java)
+

@@ -1,9 +1,22 @@
 R_DEF: Internal format may change without notice
 local
 drawable ic_settings
+id btnBack
+id btnInstall
 id btnSettings
+id detailCategory
+id detailDesc
+id detailIcon
+id detailInstallBtn
+id detailName
+id detailPackage
+id ivAppIcon
 id lvApps
+id tvAppDesc
+id tvAppName
+layout activity_app_detail
 layout activity_main
+layout list_item_app
 mipmap ic_launcher
 raw elite_cert
 string app_name

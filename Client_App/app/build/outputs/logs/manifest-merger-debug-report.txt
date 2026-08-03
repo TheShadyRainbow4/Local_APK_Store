@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-37:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-37:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-37:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-37:12
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Administrator\.gradle\caches\transforms-3\658eeb8089f59ec9aaceb176bc125398\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\Administrator\.gradle\caches\transforms-3\38005d0967da2438e72a781bbeb70620\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
@@ -87,8 +87,8 @@ ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\mai
 	android:name
 		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:10:22-74
 application
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-30:19
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-30:19
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-35:19
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-35:19
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Administrator\.gradle\caches\transforms-3\658eeb8089f59ec9aaceb176bc125398\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -143,6 +143,14 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:27:17-77
 	android:name
 		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:27:27-74
+activity#com.elitesoftware.appmarketplace.AppDetailActivity
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:31:9-34:43
+	android:label
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:34:13-40
+	android:exported
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:33:13-37
+	android:name
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:32:13-46
 uses-sdk
 INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml

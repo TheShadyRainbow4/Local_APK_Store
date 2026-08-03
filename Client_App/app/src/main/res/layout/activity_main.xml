@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2E2E2E">
+    android:background="#EBEBEB">
 
-    <!-- Top Action Bar (Gingerbread Market Legacy looking) -->
+    <!-- Top Action Bar (ICS/Jelly Bean Play Store style) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#A4C639"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="#F3F3F3"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp">
@@ -18,77 +18,35 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@mipmap/ic_launcher"
-            android:contentDescription="Icon" />
+            android:padding="4dp"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:text="Market"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1.5" />
+            android:text="Play Store"
+            android:textColor="#33B5E5"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_settings"
-            android:contentDescription="Settings"
-            android:scaleType="fitCenter"
-            android:padding="10dp"/>
+            android:src="@android:drawable/ic_menu_preferences"
+            android:scaleType="centerInside" />
     </LinearLayout>
+    
+    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#33B5E5" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#111111"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="APPS"
-            android:textColor="#A4C639"
-            android:textStyle="bold"/>
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#333333"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="GAMES"
-            android:textColor="#888888"
-            android:textStyle="bold"/>
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#333333"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="DOWNLOADS"
-            android:textColor="#888888"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#A4C639" />
-
-    <!-- Content area -->
     <ListView
         android:id="@+id/lvApps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#444444"
-        android:dividerHeight="1dp" />
-
+        android:divider="#D9D9D9"
+        android:dividerHeight="1dp"
+        android:padding="8dp"
+        android:clipToPadding="false" />
 </LinearLayout>

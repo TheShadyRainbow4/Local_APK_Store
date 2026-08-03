@@ -3097,6 +3097,8 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnBack
+id btnInstall
 id btnSettings
 id buttonPanel
 id cache_measures
@@ -3149,6 +3151,12 @@ id design_menu_item_action_area
 id design_menu_item_action_area_stub
 id design_menu_item_text
 id design_navigation_view
+id detailCategory
+id detailDesc
+id detailIcon
+id detailInstallBtn
+id detailName
+id detailPackage
 id dialog_button
 id dimensions
 id direct
@@ -3226,6 +3234,7 @@ id invisible
 id inward
 id italic
 id item_touch_helper_previous_elevation
+id ivAppIcon
 id jumpToEnd
 id jumpToStart
 id labeled
@@ -3471,6 +3480,8 @@ id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
 id triangle
+id tvAppDesc
+id tvAppName
 id unchecked
 id uniform
 id unlabeled
@@ -3607,6 +3618,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_app_detail
 layout activity_main
 layout custom_dialog
 layout design_bottom_navigation_item
@@ -3624,6 +3636,7 @@ layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
+layout list_item_app
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

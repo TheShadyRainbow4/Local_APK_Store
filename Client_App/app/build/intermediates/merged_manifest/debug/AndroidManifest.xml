@@ -43,6 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.elitesoftware.appmarketplace.AppDetailActivity"
+            android:exported="false"
+            android:label="App Details" />
 
         <meta-data
             android:name="moe.shizuku.client.V3_SUPPORT"
