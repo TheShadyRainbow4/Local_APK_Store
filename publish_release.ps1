@@ -6,6 +6,7 @@ $ErrorActionPreference = 'Stop'
 
 Write-Host "Building C++ Server Manager..."
 cd Manager_App
+windres resource.rc -O coff -o resource.res
 g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp resource.res -lcomctl32 -lws2_32 -lgdiplus
 cd ..
 
