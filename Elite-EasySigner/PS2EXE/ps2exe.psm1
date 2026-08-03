@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
 ps2exe is a module to compile powershell scripts to executables.
 .NOTES
