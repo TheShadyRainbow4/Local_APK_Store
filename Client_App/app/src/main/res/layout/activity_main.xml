@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F0F0">
+
+    <!-- Top Action Bar (Legacy looking) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#669900"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="Icon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="Elite App Marketplace"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="Settings"
+            android:scaleType="fitCenter"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Content area: A ListView or GridView for apps (like old market) -->
+    <ListView
+        android:id="@+id/lvApps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#D3D3D3"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>
