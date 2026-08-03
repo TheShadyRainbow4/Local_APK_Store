@@ -1,4 +1,6 @@
+import os
 
+cpp_code = '''
 #define _WIN32_WINNT 0x0A00
 #include <winsock2.h>
 #include <windows.h>
@@ -14,7 +16,7 @@
 #include "json.hpp"
 #include <gdiplus.h>
 
-#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#pragma comment(linker,"\\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\\"")
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "ws2_32.lib")
@@ -59,7 +61,7 @@ std::string configFile = "config.json";
 
 void LogMessage(std::string msg) {
     if (!hwndLog) return;
-    std::string timestamp = "[Log] " + msg + "\r\n";
+    std::string timestamp = "[Log] " + msg + "\\r\\n";
     int len = GetWindowTextLength(hwndLog);
     SendMessage(hwndLog, EM_SETSEL, (WPARAM)len, (LPARAM)len);
     SendMessage(hwndLog, EM_REPLACESEL, 0, (LPARAM)timestamp.c_str());
@@ -211,12 +213,12 @@ void LoadAppIntoForm(int index) {
     screenshots.clear();
     if (app.contains("screenshots")) {
         for (auto& s : app["screenshots"]) {
-            std::string sPath = imgDir + "\\" + s.get<std::string>();
+            std::string sPath = imgDir + "\\\\" + s.get<std::string>();
             screenshots.push_back(sPath);
             SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)s.get<std::string>().c_str());
         }
     }
-    filePath[0] = '\0';
+    filePath[0] = '\\0';
     SetWindowText(hwndApkLabel, "No new APK selected");
     if (screenshots.size() > 0) UpdatePreviewImage(screenshots[0]);
     else UpdatePreviewImage("");
@@ -229,7 +231,7 @@ void ClearForm() {
     SetWindowText(hwndVersion, ""); SetWindowText(hwndCat, "");
     SetWindowText(hwndDesc, ""); SetWindowText(hwndTags, "");
     SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0);
-    screenshots.clear(); filePath[0] = '\0';
+    screenshots.clear(); filePath[0] = '\\0';
     SetWindowText(hwndApkLabel, "No APK selected");
     UpdatePreviewImage("");
 }
@@ -256,7 +258,7 @@ void UDPDiscoveryThread() {
     while (serverRunning) {
         int bytes = recvfrom(udpSock, buffer, 255, 0, (sockaddr*)&clientAddr, &clientLen);
         if (bytes > 0) {
-            buffer[bytes] = '\0';
+            buffer[bytes] = '\\0';
             if (strcmp(buffer, "ELITE_MARKET_DISCOVER") == 0) {
                 LogMessage("UDP Broadcast Received: Replying ELITE_MARKET_HERE");
                 const char* reply = "ELITE_MARKET_HERE";
@@ -577,8 +579,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         }
         else if (wmId == 1) {
             OPENFILENAME ofn; ZeroMemory(&ofn, sizeof(ofn)); ofn.lStructSize = sizeof(ofn);
-            ofn.hwndOwner = hwnd; ofn.lpstrFile = filePath; ofn.lpstrFile[0] = '\0';
-            ofn.nMaxFile = sizeof(filePath); ofn.lpstrFilter = "APK Files\0*.apk\0All Files\0*.*\0";
+            ofn.hwndOwner = hwnd; ofn.lpstrFile = filePath; ofn.lpstrFile[0] = '\\0';
+            ofn.nMaxFile = sizeof(filePath); ofn.lpstrFilter = "APK Files\\0*.apk\\0All Files\\0*.*\\0";
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileName(&ofn)) SetWindowText(hwndApkLabel, filePath);
         }
@@ -589,8 +591,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         else if (wmId == 3) {
             char imgPath[MAX_PATH] = "";
             OPENFILENAME ofn; ZeroMemory(&ofn, sizeof(ofn)); ofn.lStructSize = sizeof(ofn);
-            ofn.hwndOwner = hwnd; ofn.lpstrFile = imgPath; ofn.lpstrFile[0] = '\0';
-            ofn.nMaxFile = sizeof(imgPath); ofn.lpstrFilter = "Image Files\0*.png;*.jpg;*.jpeg\0All Files\0*.*\0";
+            ofn.hwndOwner = hwnd; ofn.lpstrFile = imgPath; ofn.lpstrFile[0] = '\\0';
+            ofn.nMaxFile = sizeof(imgPath); ofn.lpstrFilter = "Image Files\\0*.png;*.jpg;*.jpeg\\0All Files\\0*.*\\0";
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileName(&ofn)) {
                 screenshots.push_back(imgPath);
@@ -658,3 +660,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     GdiplusShutdown(gdiplusToken);
     return 0;
 }
+'''
+with open('Manager_App/main.cpp', 'w') as f:
+    f.write(cpp_code)
