@@ -10,4 +10,8 @@ This file tracks specific instructions and workflow behaviors that Gemini must f
 - **Rule:** Ensure all source files use `CRLF` (Windows style) line endings.
 - **Reasoning:** Standardization across the Windows-based EliteSoftware ecosystem. Enforced via `.gitattributes`.
 
+## 3. Continuous Changelog
+- **Rule:** A `changelog.md` file must be continuously updated whenever things are changed or added to the project.
+- **Reasoning:** Provides a human-readable, centralized history of new features, bug fixes, and architectural changes over time.
+
 *(These rules are strictly enforced and continuously appended by Gemini during the session.)*
