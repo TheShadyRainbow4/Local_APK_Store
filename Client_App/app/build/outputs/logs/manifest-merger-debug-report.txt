@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-29:12
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-29:12
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:2:1-32:12
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Administrator\.gradle\caches\transforms-3\658eeb8089f59ec9aaceb176bc125398\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\Administrator\.gradle\caches\transforms-3\38005d0967da2438e72a781bbeb70620\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
@@ -60,27 +60,35 @@ uses-permission#android.permission.INTERNET
 ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:4:5-67
 	android:name
 		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:4:22-64
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:5:5-76
+	android:name
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:5:22-73
+uses-permission#android.permission.CHANGE_WIFI_MULTICAST_STATE
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:6:5-86
+	android:name
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:6:22-83
 uses-permission#android.permission.REQUEST_INSTALL_PACKAGES
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:5:5-83
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:7:5-83
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:5:22-80
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:7:22-80
 uses-permission#moe.shizuku.manager.permission.API_V23
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:6:5-78
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:8:5-78
 MERGED from [dev.rikka.shizuku:provider:13.1.0] C:\Users\Administrator\.gradle\caches\transforms-3\c5139dc2b1d04c401f752c1dfa396bc2\transformed\jetified-provider-13.1.0\AndroidManifest.xml:10:5-78
 MERGED from [dev.rikka.shizuku:provider:13.1.0] C:\Users\Administrator\.gradle\caches\transforms-3\c5139dc2b1d04c401f752c1dfa396bc2\transformed\jetified-provider-13.1.0\AndroidManifest.xml:10:5-78
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:6:22-75
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:8:22-75
 uses-permission#com.rosan.dhizuku.permission.API
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:7:5-72
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:9:5-72
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:7:22-69
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:9:22-69
 uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:8:5-77
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:10:5-77
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:8:22-74
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:10:22-74
 application
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:10:5-27:19
-INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:10:5-27:19
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-30:19
+INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:5-30:19
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\008bcc2ac37c45e0b6c2af0ef0e4f592\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Administrator\.gradle\caches\transforms-3\658eeb8089f59ec9aaceb176bc125398\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -102,37 +110,39 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Ad
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] C:\Users\Administrator\.gradle\caches\transforms-3\932d3a5bfa228eca10b2b24a0d8c086c\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:15:9-35
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:17:9-35
 	android:label
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:13:9-41
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:15:9-41
 	tools:ignore
 		ADDED from [dev.rikka.shizuku:provider:13.1.0] C:\Users\Administrator\.gradle\caches\transforms-3\c5139dc2b1d04c401f752c1dfa396bc2\transformed\jetified-provider-13.1.0\AndroidManifest.xml:12:18-69
 	android:roundIcon
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:14:9-48
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:16:9-48
 	android:icon
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:12:9-43
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:14:9-43
 	android:allowBackup
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:11:9-35
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:13:9-35
 	android:theme
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:16:9-50
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:19:9-56
+	android:usesCleartextTraffic
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:18:9-44
 activity#com.elitesoftware.appmarketplace.MainActivity
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:18:9-26:20
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:21:9-29:20
 	android:label
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:21:13-45
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:24:13-45
 	android:exported
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:20:13-36
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:23:13-36
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:19:13-41
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:22:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:22:13-25:29
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:25:13-28:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:23:17-69
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:26:17-69
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:23:25-66
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:24:17-77
+ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:27:17-77
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:24:27-74
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:27:27-74
 uses-sdk
 INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml

@@ -8,7 +8,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
+import android.net.wifi.WifiManager;
+import android.content.Context;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.net.SocketTimeoutException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private ArrayList<String> serverIPs = new ArrayList<>();
     private ListView lvApps;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) getSupportActionBar().hide();
+        if (getActionBar() != null) getActionBar().hide();
         setContentView(R.layout.activity_main);
 
         ImageButton btnSettings = findViewById(R.id.btnSettings);
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             is.close();
 
             android.content.Intent intent = android.security.KeyChain.createInstallIntent();
-            intent.putExtra(android.security.KeyChain.EXTRA_CERTIFICATE, certBytes);
+            intent.putExtra(android.security.KeyChain.EXTRA_PKCS12, certBytes);
             intent.putExtra(android.security.KeyChain.EXTRA_NAME, "EliteSoftware Root CA");
             startActivity(intent);
         } catch (Exception e) {
@@ -89,7 +91,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void discoverServers() {
         executor.execute(() -> {
+            
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager.MulticastLock lock = null;
+            if (wifi != null) {
+                lock = wifi.createMulticastLock("EliteMarketplaceDiscovery");
+                lock.acquire();
+            }
             try (DatagramSocket socket = new DatagramSocket()) {
+
                 socket.setBroadcast(true);
                 socket.setSoTimeout(3000);
                 byte[] sendData = "ELITE_MARKET_DISCOVER".getBytes();
@@ -122,9 +132,14 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
+            
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (lock != null && lock.isHeld()) {
+                lock.release();
+            }
+
             
             runOnUiThread(() -> {
                 if (serverIPs.isEmpty()) {
@@ -161,9 +176,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                 });
+            
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (lock != null && lock.isHeld()) {
+                lock.release();
+            }
+
         });
     }
 }
