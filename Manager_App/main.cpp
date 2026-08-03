@@ -18,10 +18,13 @@ using json = nlohmann::json;
 namespace fs = std::filesystem;
 
 // UI Elements
-HWND hwndName, hwndPackage, hwndVersion, hwndDesc, hwndCat, hwndTags, hwndStatus;
-HWND btnBrowse, btnUpload, btnAddScreenshot, lstScreenshots;
+HWND hwndApps, hwndName, hwndPackage, hwndVersion, hwndDesc, hwndCat, hwndTags, hwndStatus;
+HWND btnBrowse, btnApply, btnExit, btnDelete, btnClearForm;
+HWND btnAddScreenshot, btnClearScreenshots, lstScreenshots;
 char filePath[MAX_PATH] = "";
 std::vector<std::string> screenshots;
+json dbCache;
+int selectedAppIndex = -1;
 
 std::string dbFile = "db.json";
 std::string apkDir = "apks";
@@ -46,6 +49,86 @@ json loadDb() {
 void saveDb(const json& j) {
     std::ofstream o(dbFile);
     o << j.dump(4);
+    dbCache = j;
+}
+
+void RefreshAppList() {
+    dbCache = loadDb();
+    SendMessage(hwndApps, LB_RESETCONTENT, 0, 0);
+    for (size_t i = 0; i < dbCache["apps"].size(); i++) {
+        std::string name = dbCache["apps"][i].value("name", "Unknown");
+        std::string pkg = dbCache["apps"][i].value("package_name", "unknown.pkg");
+        std::string display = name + " (" + pkg + ")";
+        SendMessage(hwndApps, LB_ADDSTRING, 0, (LPARAM)display.c_str());
+    }
+}
+
+void LoadAppIntoForm(int index) {
+    if (index < 0 || index >= dbCache["apps"].size()) return;
+    auto& app = dbCache["apps"][index];
+    
+    SetWindowText(hwndName, app.value("name", "").c_str());
+    SetWindowText(hwndPackage, app.value("package_name", "").c_str());
+    
+    if (app.contains("versions") && app["versions"].size() > 0) {
+        SetWindowText(hwndVersion, app["versions"].back().value("version", "").c_str());
+    } else {
+        SetWindowText(hwndVersion, "");
+    }
+    
+    SetWindowText(hwndCat, app.value("category", "").c_str());
+    SetWindowText(hwndDesc, app.value("description", "").c_str());
+    
+    std::string tagsStr = "";
+    if (app.contains("tags")) {
+        for (size_t i = 0; i < app["tags"].size(); i++) {
+            tagsStr += app["tags"][i].get<std::string>();
+            if (i < app["tags"].size() - 1) tagsStr += ", ";
+        }
+    }
+    SetWindowText(hwndTags, tagsStr.c_str());
+    
+    SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0);
+    screenshots.clear();
+    if (app.contains("screenshots")) {
+        for (auto& s : app["screenshots"]) {
+            std::string sPath = imgDir + "\\" + s.get<std::string>();
+            screenshots.push_back(sPath);
+            SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)s.get<std::string>().c_str());
+        }
+    }
+    
+    filePath[0] = '\0';
+    SetWindowText(hwndStatus, "No new APK selected (Editing Metadata)");
+}
+
+void ClearForm() {
+    selectedAppIndex = -1;
+    SendMessage(hwndApps, LB_SETCURSEL, (WPARAM)-1, 0);
+    SetWindowText(hwndName, "");
+    SetWindowText(hwndPackage, "");
+    SetWindowText(hwndVersion, "");
+    SetWindowText(hwndCat, "");
+    SetWindowText(hwndDesc, "");
+    SetWindowText(hwndTags, "");
+    SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0);
+    screenshots.clear();
+    filePath[0] = '\0';
+    SetWindowText(hwndStatus, "No APK selected");
+}
+
+void DeleteSelectedApp() {
+    if (selectedAppIndex >= 0 && selectedAppIndex < dbCache["apps"].size()) {
+        int res = MessageBox(NULL, "Are you sure you want to completely delete this app and all its versions from the store?", "Confirm Delete", MB_YESNO | MB_ICONWARNING);
+        if (res == IDYES) {
+            dbCache["apps"].erase(dbCache["apps"].begin() + selectedAppIndex);
+            saveDb(dbCache);
+            ClearForm();
+            RefreshAppList();
+        }
+    } else {
+        MessageBox(NULL, "Please select an app to delete.", "Error", MB_OK | MB_ICONERROR);
+    }
 }
 
 void ServerThread() {
@@ -55,7 +138,6 @@ void ServerThread() {
         json db = loadDb();
         if (req.has_param("q")) {
             std::string q = req.get_param_value("q");
-            // Basic lowercase search
             std::transform(q.begin(), q.end(), q.begin(), ::tolower);
             json filtered = json::array();
             for (auto& app : db["apps"]) {
@@ -72,11 +154,9 @@ void ServerThread() {
         }
     });
 
-    // We can mount the static directories
     svr.set_mount_point("/apks", apkDir.c_str());
     svr.set_mount_point("/images", imgDir.c_str());
 
-    // API to post review
     svr.Post(R"(/api/apps/(.*)/reviews)", [](const httplib::Request& req, httplib::Response& res) {
         std::string pkg = req.matches[1];
         json reqJson;
@@ -121,53 +201,66 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
     fs::create_directory(apkDir);
     fs::create_directory(imgDir);
 
-    std::string apkName = fs::path(apk).filename().string();
-    CopyFileLocal(apk, apkDir + "/" + apkName);
+    std::string apkName = "";
+    if (!apk.empty()) {
+        apkName = fs::path(apk).filename().string();
+        CopyFileLocal(apk, apkDir + "/" + apkName);
+    }
 
     std::vector<std::string> copiedScreenshots;
     for (const auto& s : screenshots) {
         std::string sName = fs::path(s).filename().string();
-        CopyFileLocal(s, imgDir + "/" + sName);
+        if (fs::exists(s) && s.find(imgDir) == std::string::npos) {
+            CopyFileLocal(s, imgDir + "/" + sName);
+        }
         copiedScreenshots.push_back(sName);
     }
 
-    // Split tags by comma
     std::vector<std::string> tags;
     size_t pos = 0;
-    while ((pos = tagsStr.find(",")) != std::string::npos) {
-        std::string token = tagsStr.substr(0, pos);
+    std::string tCopy = tagsStr;
+    while ((pos = tCopy.find(",")) != std::string::npos) {
+        std::string token = tCopy.substr(0, pos);
+        while(token.size() && token[0]==' ') token.erase(0,1);
+        while(token.size() && token.back()==' ') token.pop_back();
         if(!token.empty()) tags.push_back(token);
-        tagsStr.erase(0, pos + 1);
+        tCopy.erase(0, pos + 1);
     }
-    if(!tagsStr.empty()) tags.push_back(tagsStr);
+    while(tCopy.size() && tCopy[0]==' ') tCopy.erase(0,1);
+    while(tCopy.size() && tCopy.back()==' ') tCopy.pop_back();
+    if(!tCopy.empty()) tags.push_back(tCopy);
 
     json db = loadDb();
     bool exists = false;
     for (auto& app : db["apps"]) {
         if (app["package_name"] == pkg) {
             exists = true;
-            bool vExists = false;
-            for (auto& v : app["versions"]) {
-                if (v["version"] == ver) vExists = true;
+            if (!apkName.empty()) {
+                bool vExists = false;
+                for (auto& v : app["versions"]) {
+                    if (v["version"] == ver) {
+                        vExists = true;
+                        v["file"] = apkName; // overwrite file if same version
+                    }
+                }
+                if (!vExists) {
+                    app["versions"].push_back({{"version", ver}, {"file", apkName}});
+                }
             }
-            if (!vExists) {
-                app["versions"].push_back({{"version", ver}, {"file", apkName}});
-            }
+            app["name"] = name;
             app["description"] = desc;
             app["category"] = cat;
-            if (app.contains("tags")) {
-                for (auto t : tags) app["tags"].push_back(t);
-            } else {
-                app["tags"] = tags;
-            }
-            for (auto sc : copiedScreenshots) {
-                app["screenshots"].push_back(sc);
-            }
+            app["tags"] = tags;
+            app["screenshots"] = copiedScreenshots;
             break;
         }
     }
 
     if (!exists) {
+        if (apkName.empty()) {
+            MessageBox(NULL, "You must provide an APK file for a new app!", "Error", MB_OK | MB_ICONERROR);
+            return;
+        }
         json newApp;
         newApp["name"] = name;
         newApp["package_name"] = pkg;
@@ -181,57 +274,83 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
         db["apps"].push_back(newApp);
     }
     saveDb(db);
-    MessageBox(NULL, "App Processed & Added to Database!", "Success", MB_OK | MB_ICONINFORMATION);
+    RefreshAppList();
+    MessageBox(NULL, "App Processed & Applied to Store!", "Success", MB_OK | MB_ICONINFORMATION);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
     case WM_CREATE: {
         HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-        HWND hBanner = CreateWindow("STATIC", "Elite App Marketplace - Server & Manager", WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE | SS_CENTER, 0, 0, 480, 50, hwnd, NULL, NULL, NULL);
+        HFONT hFontBold = CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
         
-        CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE, 20, 70, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 70, 300, 20, hwnd, NULL, NULL, NULL);
+        // Title Banner
+        HWND hBanner = CreateWindow("STATIC", " Elite App Marketplace - Store Manager", WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE, 0, 0, 850, 40, hwnd, NULL, NULL, NULL);
+        SendMessage(hBanner, WM_SETFONT, (WPARAM)hFontBold, TRUE);
 
-        CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE, 20, 100, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "com.elite.", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 100, 300, 20, hwnd, NULL, NULL, NULL);
+        // Separator below banner
+        CreateWindowEx(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDHORZ, 0, 40, 850, 2, hwnd, NULL, NULL, NULL);
 
-        CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE, 20, 130, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "1.0", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 130, 300, 20, hwnd, NULL, NULL, NULL);
+        // Left ListBox for existing apps
+        CreateWindow("STATIC", "Store Inventory:", WS_CHILD | WS_VISIBLE, 15, 50, 200, 20, hwnd, NULL, NULL, NULL);
+        hwndApps = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 15, 70, 200, 390, hwnd, (HMENU)10, NULL, NULL);
 
-        CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE, 20, 160, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "Apps", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 160, 300, 20, hwnd, NULL, NULL, NULL);
+        // Right side form
+        CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE, 230, 70, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 70, 480, 20, hwnd, NULL, NULL, NULL);
 
-        CreateWindow("STATIC", "Tags (comma):", WS_CHILD | WS_VISIBLE, 20, 190, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 190, 300, 20, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE, 230, 100, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 100, 480, 20, hwnd, NULL, NULL, NULL);
 
-        CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 20, 220, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL, 130, 220, 300, 60, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE, 230, 130, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 130, 480, 20, hwnd, NULL, NULL, NULL);
 
-        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 290, 100, 30, hwnd, (HMENU)1, NULL, NULL);
-        hwndStatus = CreateWindow("STATIC", "No APK selected", WS_CHILD | WS_VISIBLE, 130, 295, 300, 20, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE, 230, 160, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 160, 480, 20, hwnd, NULL, NULL, NULL);
 
-        btnAddScreenshot = CreateWindow("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 330, 120, 30, hwnd, (HMENU)3, NULL, NULL);
-        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 150, 330, 280, 60, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Tags (CSV):", WS_CHILD | WS_VISIBLE, 230, 190, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 190, 480, 20, hwnd, NULL, NULL, NULL);
 
-        btnUpload = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 330, 410, 100, 30, hwnd, (HMENU)2, NULL, NULL);
+        CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 230, 220, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 330, 220, 480, 90, hwnd, NULL, NULL, NULL);
 
-        SendMessage(hBanner, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndName, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndPackage, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndVersion, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndCat, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndTags, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndDesc, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(btnBrowse, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(hwndStatus, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(btnAddScreenshot, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(lstScreenshots, WM_SETFONT, (WPARAM)hFont, TRUE);
-        SendMessage(btnUpload, WM_SETFONT, (WPARAM)hFont, TRUE);
+        CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 230, 320, 90, 20, hwnd, NULL, NULL, NULL);
+        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 330, 320, 350, 70, hwnd, NULL, NULL, NULL);
+        btnAddScreenshot = CreateWindow("BUTTON", "Add", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 320, 120, 30, hwnd, (HMENU)3, NULL, NULL);
+        btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 360, 120, 30, hwnd, (HMENU)4, NULL, NULL);
+
+        CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE, 230, 410, 90, 20, hwnd, NULL, NULL, NULL);
+        hwndStatus = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | SS_LEFT, 330, 410, 350, 22, hwnd, NULL, NULL, NULL);
+        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 405, 120, 30, hwnd, (HMENU)1, NULL, NULL);
+
+        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 230, 450, 130, 30, hwnd, (HMENU)6, NULL, NULL);
+        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 370, 450, 130, 30, hwnd, (HMENU)5, NULL, NULL);
+
+        // Chin separator
+        CreateWindowEx(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDHORZ, 0, 500, 850, 2, hwnd, NULL, NULL, NULL);
+        
+        // Chin background (simulated using standard controls)
+        btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 590, 515, 100, 30, hwnd, (HMENU)2, NULL, NULL);
+        btnExit = CreateWindow("BUTTON", "Exit", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
+
+        // Set Fonts
+        HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndStatus, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit };
+        for (HWND w : windows) {
+            SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
+        }
+
+        RefreshAppList();
         break;
     }
     case WM_COMMAND: {
-        if (LOWORD(wParam) == 1) { // Browse APK
+        int wmId = LOWORD(wParam);
+        int wmEvent = HIWORD(wParam);
+        
+        if (wmId == 10 && wmEvent == LBN_SELCHANGE) {
+            selectedAppIndex = SendMessage(hwndApps, LB_GETCURSEL, 0, 0);
+            LoadAppIntoForm(selectedAppIndex);
+        }
+        else if (wmId == 1) { // Browse APK
             OPENFILENAME ofn;
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
@@ -245,7 +364,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SetWindowText(hwndStatus, filePath);
             }
         }
-        else if (LOWORD(wParam) == 3) { // Add Screenshot
+        else if (wmId == 3) { // Add Screenshot
             char imgPath[MAX_PATH] = "";
             OPENFILENAME ofn;
             ZeroMemory(&ofn, sizeof(ofn));
@@ -258,24 +377,45 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileName(&ofn)) {
                 screenshots.push_back(imgPath);
-                SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)imgPath);
+                SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)fs::path(imgPath).filename().string().c_str());
             }
         }
-        else if (LOWORD(wParam) == 2) { // Apply
-            if (strlen(filePath) == 0) {
-                MessageBox(hwnd, "Please select an APK file first.", "Error", MB_OK | MB_ICONERROR);
-                break;
-            }
-            char n[256], p[256], v[256], d[1024], c[256], t[256];
+        else if (wmId == 4) { // Clear Screenshots
+            screenshots.clear();
+            SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0);
+        }
+        else if (wmId == 5) { // New App
+            ClearForm();
+        }
+        else if (wmId == 6) { // Delete
+            DeleteSelectedApp();
+        }
+        else if (wmId == 7) { // Exit
+            PostQuitMessage(0);
+        }
+        else if (wmId == 2) { // Apply
+            char n[256], p[256], v[256], d[4096], c[256], t[512];
             GetWindowText(hwndName, n, 256);
             GetWindowText(hwndPackage, p, 256);
             GetWindowText(hwndVersion, v, 256);
-            GetWindowText(hwndDesc, d, 1024);
+            GetWindowText(hwndDesc, d, 4096);
             GetWindowText(hwndCat, c, 256);
-            GetWindowText(hwndTags, t, 256);
+            GetWindowText(hwndTags, t, 512);
+            
+            if (strlen(n) == 0 || strlen(p) == 0 || strlen(v) == 0) {
+                MessageBox(hwnd, "Name, Package, and Version are required.", "Validation Error", MB_OK | MB_ICONERROR);
+                break;
+            }
             ProcessApp(filePath, n, p, v, d, c, t);
         }
         break;
+    }
+    case WM_CTLCOLORSTATIC: {
+        HDC hdcStatic = (HDC)wParam;
+        HWND hwndStatic = (HWND)lParam;
+        // Make the chin and background look native grey instead of white
+        SetBkColor(hdcStatic, GetSysColor(COLOR_BTNFACE));
+        return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
     }
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -285,13 +425,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    // Start HTTP Server in background thread
     std::thread serverThread(ServerThread);
     serverThread.detach();
 
     INITCOMMONCONTROLSEX icex;
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_WIN95_CLASSES;
+    icex.dwICC = ICC_WIN95_CLASSES | ICC_STANDARD_CLASSES;
     InitCommonControlsEx(&icex);
 
     const char* CLASS_NAME = "EliteAppMarketplaceServer";
@@ -304,9 +443,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     RegisterClass(&wc);
 
     HWND hwnd = CreateWindowEx(
-        0, CLASS_NAME, "Elite App Marketplace - Server",
+        0, CLASS_NAME, "Elite App Marketplace - Server & Manager",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT, 480, 500,
+        CW_USEDEFAULT, CW_USEDEFAULT, 850, 600,
         NULL, NULL, hInstance, NULL
     );
 
