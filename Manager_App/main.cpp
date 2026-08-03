@@ -86,6 +86,39 @@ void saveDb(const json& j) {
 
 void RefreshAppList() {
     dbCache = loadDb();
+
+    bool dbUpdated = false;
+    if (fs::exists(apkDir)) {
+        for (const auto& entry : fs::directory_iterator(apkDir)) {
+            if (entry.path().extension() == ".apk") {
+                std::string apkName = entry.path().filename().string();
+                bool found = false;
+                for (auto& app : dbCache["apps"]) {
+                    if (app.contains("versions")) {
+                        for (auto& v : app["versions"]) {
+                            if (v.value("file", "") == apkName) found = true;
+                        }
+                    }
+                }
+                if (!found) {
+                    json newApp;
+                    newApp["name"] = apkName;
+                    newApp["package_name"] = "unknown.package." + apkName;
+                    newApp["description"] = "Auto-discovered APK.";
+                    newApp["category"] = "Unknown";
+                    newApp["tags"] = json::array();
+                    newApp["versions"] = json::array();
+                    newApp["versions"].push_back({{"version", "1.0"}, {"file", apkName}});
+                    newApp["screenshots"] = json::array();
+                    newApp["reviews"] = json::array();
+                    dbCache["apps"].push_back(newApp);
+                    dbUpdated = true;
+                }
+            }
+        }
+    }
+    if (dbUpdated) saveDb(dbCache);
+
     SendMessage(hwndApps, LB_RESETCONTENT, 0, 0);
     for (size_t i = 0; i < dbCache["apps"].size(); i++) {
         std::string name = dbCache["apps"][i].value("name", "Unknown");
@@ -253,6 +286,7 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
     case WM_CREATE: {
+        RegisterHotKey(hwnd, 1, MOD_CONTROL | MOD_ALT, 'M');
         HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
         HFONT hFontBold = CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
         
@@ -296,6 +330,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         RefreshAppList();
         InitTrayIcon(hwnd);
         break;
+    }
+    case WM_HOTKEY: {
+        if (wParam == 1) {
+            if (IsWindowVisible(hwnd)) {
+                ShowWindow(hwnd, SW_HIDE);
+            } else {
+                ShowWindow(hwnd, SW_RESTORE);
+                SetForegroundWindow(hwnd);
+            }
+        }
+        return 0;
     }
     case WM_TRAYICON: {
         if (lParam == WM_RBUTTONUP || lParam == WM_LBUTTONUP) {
@@ -364,6 +409,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
     }
     case WM_DESTROY:
+        UnregisterHotKey(hwnd, 1);
         RemoveTrayIcon(hwnd);
         PostQuitMessage(0);
         return 0;
