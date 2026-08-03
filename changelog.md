@@ -16,9 +16,8 @@ All notable changes to the Local APK Store ecosystem will be documented in this 
 ### Changed
 - **Monolithic C++ Architecture:** Completely deprecated and deleted the Python Flask backend server and all Python helper scripts. The C++ `Elite_App_Marketplace-Server.exe` is now a massive monolithic application that natively hosts the HTTP API over port 8443 (via `cpp-httplib`) and manages the JSON database (via `nlohmann-json`) while running the Win32 GUI, keeping everything contained in a single compiled binary without external script dependencies.
 - **Branding Unity:** Renamed the C++ Server Manager application executable to `Elite_App_Marketplace-Server.exe` to unify the entire project's branding across the frontend client and backend manager.
-- **Architecture Shift (Android Client):** Transitioned away from standard `ACTION_VIEW` package installation intents. The client will now strictly require and rely on Shizuku/Dhizuku to facilitate true background/silent APK installations and version downgrades without user interaction prompts.
-- `Server/server.py` and `apk_parser.py` deleted.
-- `Server/server.py` now accepts multipart form data containing `icon` and multiple `screenshots` fields.
-- `Server/server.py` handles preventing duplicate versions in the `db.json` file.
-- Configured Git to auto-push to `origin` for all future modifications.
-
+### Added
+- **Formal Releases (v1.0.0):** Published `server-v1.0.0` and `client-v1.0.0` GitHub releases with attached pre-compiled binaries (`Elite_App_Marketplace-Server.exe` and `Elite_App_Marketplace-Client.apk`) for easy mobile installation.
+- **Android Client Initialization:** Built the baseline Android Studio project for the Elite App Marketplace client with a legacy "Android Market" Holo aesthetic.
+- **Built-in Certificate Deployment:** Embedded the `EliteSoftware_Special.cer` root certificate directly inside the Android app's raw resources. Implemented Android's native `KeyChain.createInstallIntent()` API to prompt users to install the trusted CA when clicking the settings icon.
+- **Application Iconography:** Embedded the custom `Elite_App_Marketplace.ico` natively into the C++ Server Manager executable using Win32 resource headers, applying it to both the Windows taskbar and internal legacy title banner. Also mapped the `Elite_App_Marketplace.png` as the Android client's primary launcher icon.
