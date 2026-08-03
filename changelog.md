@@ -4,6 +4,9 @@ All notable changes to the Local APK Store ecosystem will be documented in this 
 
 ## [Unreleased]
 ### Added
+- **Expanded Project Scope:** The client app is now named **"Elite App Marketplace"**. It will support categorization, tags, user reviews, comments, and the ability to seamlessly downgrade, upgrade, uninstall, and reinstall APK versions via Shizuku.
+- **APK Signing Pipeline:** Integrated plans to use the `Elite-EasySigner` certificate (`EliteSoftware_Special.pfx`) to strictly sign all uploaded APKs and the App Store client itself.
+- **Certificate Deployment:** Added feature scope to allow installing the `EliteSoftware_Special.cer` root certificate directly from the Elite App Marketplace's settings menu onto the Android device.
 - `apk_parser.py` to extract Android manifest metadata (package name, version, icon) using `pyaxmlparser`.
 - Support for uploading icons and multiple screenshots in the Python backend API (`server.py`).
 - `gemini.md` file to track operational instructions and automated Git pushing requirements.
