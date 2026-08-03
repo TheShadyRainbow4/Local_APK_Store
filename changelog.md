@@ -14,6 +14,7 @@ All notable changes to the Local APK Store ecosystem will be documented in this 
 - Enforced CRLF line endings via `.gitattributes`.
 
 ### Changed
+- **Branding Unity:** Renamed the C++ Server Manager application executable to `Elite_App_Marketplace-Server.exe` to unify the entire project's branding across the frontend client and backend manager.
 - **Architecture Shift (Android Client):** Transitioned away from standard `ACTION_VIEW` package installation intents. The client will now strictly require and rely on Shizuku/Dhizuku to facilitate true background/silent APK installations and version downgrades without user interaction prompts.
 - `Server/server.py` now accepts multipart form data containing `icon` and multiple `screenshots` fields.
 - `Server/server.py` handles preventing duplicate versions in the `db.json` file.

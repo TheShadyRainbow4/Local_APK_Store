@@ -86,7 +86,7 @@ void RunCLI(int argc, char** argv) {
     }
     
     if (apk.empty()) {
-        std::cout << "Usage: ServerManager.exe --upload <file.apk> [--desc \"desc\"] [--category \"cat\"] [--tags \"tag1,tag2\"] [--screenshot <file.png>]\n";
+        std::cout << "Usage: Elite_App_Marketplace-Server.exe --upload <file.apk> [--desc \"desc\"] [--category \"cat\"] [--tags \"tag1,tag2\"] [--screenshot <file.png>]\n";
         return;
     }
     

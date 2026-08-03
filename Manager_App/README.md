@@ -14,14 +14,14 @@ The tool can be fully controlled headlessly via the command line for automation 
 
 **Syntax:**
 ```cmd
-ServerManager.exe --upload <path_to_apk> [--desc "App Description"] [--screenshot <path_to_image>]
+Elite_App_Marketplace-Server.exe --upload <path_to_apk> [--desc "App Description"] [--screenshot <path_to_image>]
 ```
 
 **Example:**
 ```cmd
-ServerManager.exe --upload "C:\Downloads\MyApp_v2.apk" --desc "Major update with new features!" --screenshot "C:\Downloads\promo1.jpg" --screenshot "C:\Downloads\promo2.png"
+Elite_App_Marketplace-Server.exe --upload "C:\Downloads\MyApp_v2.apk" --desc "Major update with new features!" --screenshot "C:\Downloads\promo1.jpg" --screenshot "C:\Downloads\promo2.png"
 ```
 
 ## GUI Usage
-Simply launch `ServerManager.exe` without arguments to open the UI. 
+Simply launch `Elite_App_Marketplace-Server.exe` without arguments to open the UI. 
 Click **"Browse APK..."** to select your file, which will trigger the metadata parser to auto-fill the text fields. You can then edit the description, attach screenshots, and click **"Apply"** to push the release to the server.
