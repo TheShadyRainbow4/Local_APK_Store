@@ -14,8 +14,10 @@ All notable changes to the Local APK Store ecosystem will be documented in this 
 - Enforced CRLF line endings via `.gitattributes`.
 
 ### Changed
+- **Monolithic C++ Architecture:** Completely deprecated and deleted the Python Flask backend server and all Python helper scripts. The C++ `Elite_App_Marketplace-Server.exe` is now a massive monolithic application that natively hosts the HTTP API over port 8443 (via `cpp-httplib`) and manages the JSON database (via `nlohmann-json`) while running the Win32 GUI, keeping everything contained in a single compiled binary without external script dependencies.
 - **Branding Unity:** Renamed the C++ Server Manager application executable to `Elite_App_Marketplace-Server.exe` to unify the entire project's branding across the frontend client and backend manager.
 - **Architecture Shift (Android Client):** Transitioned away from standard `ACTION_VIEW` package installation intents. The client will now strictly require and rely on Shizuku/Dhizuku to facilitate true background/silent APK installations and version downgrades without user interaction prompts.
+- `Server/server.py` and `apk_parser.py` deleted.
 - `Server/server.py` now accepts multipart form data containing `icon` and multiple `screenshots` fields.
 - `Server/server.py` handles preventing duplicate versions in the `db.json` file.
 - Configured Git to auto-push to `origin` for all future modifications.

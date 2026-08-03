@@ -1,163 +1,227 @@
+#define _WIN32_WINNT 0x0A00
+#include <winsock2.h>
 #include <windows.h>
 #include <commctrl.h>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <thread>
+#include <fstream>
+#include <filesystem>
+#include "httplib.h"
+#include "json.hpp"
 
 #pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "ws2_32.lib")
+
+using json = nlohmann::json;
+namespace fs = std::filesystem;
 
 // UI Elements
-HWND hwndName, hwndPackage, hwndVersion, hwndDesc, hwndStatus;
+HWND hwndName, hwndPackage, hwndVersion, hwndDesc, hwndCat, hwndTags, hwndStatus;
 HWND btnBrowse, btnUpload, btnAddScreenshot, lstScreenshots;
 char filePath[MAX_PATH] = "";
-char iconPath[MAX_PATH] = "";
 std::vector<std::string> screenshots;
 
-void ParseApkMetadata(const char* path) {
-    char cmd[MAX_PATH + 50];
-    sprintf_s(cmd, "python apk_parser.py \"%s\"", path);
-    FILE* pipe = _popen(cmd, "r");
-    if (!pipe) return;
-    
-    char buffer[1024];
-    std::string result = "";
-    while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
-        result += buffer;
+std::string dbFile = "db.json";
+std::string apkDir = "apks";
+std::string imgDir = "images";
+
+json loadDb() {
+    if (!fs::exists(dbFile)) {
+        json j;
+        j["apps"] = json::array();
+        return j;
     }
-    _pclose(pipe);
-
-    // Simple hacky JSON parsing for scaffolding since we don't have nlohmann/json included
-    auto extract = [&](std::string key) -> std::string {
-        std::string search = "\"" + key + "\": \"";
-        size_t pos = result.find(search);
-        if (pos == std::string::npos) return "";
-        pos += search.length();
-        size_t end = result.find("\"", pos);
-        return result.substr(pos, end - pos);
-    };
-
-    std::string name = extract("name");
-    std::string pkg = extract("package");
-    std::string ver = extract("version");
-    std::string icon = extract("icon");
-
-    if (!name.empty()) SetWindowText(hwndName, name.c_str());
-    if (!pkg.empty()) SetWindowText(hwndPackage, pkg.c_str());
-    if (!ver.empty()) SetWindowText(hwndVersion, ver.c_str());
-    if (!icon.empty()) strcpy_s(iconPath, icon.c_str());
+    std::ifstream i(dbFile);
+    json j;
+    try {
+        i >> j;
+    } catch (...) {
+        j["apps"] = json::array();
+    }
+    return j;
 }
 
-void UploadApp(std::string apk, std::string name, std::string pkg, std::string ver, std::string desc, std::string category, std::string tags) {
-    std::string curlCmd = "curl.exe -s -X POST -F \"apk=@" + apk + "\" " +
-                          "-F \"name=" + name + "\" " +
-                          "-F \"package_name=" + pkg + "\" " +
-                          "-F \"version=" + ver + "\" " +
-                          "-F \"description=" + desc + "\" " +
-                          "-F \"category=" + category + "\" " +
-                          "-F \"tags=" + tags + "\" ";
-    
-    if (strlen(iconPath) > 0) {
-        curlCmd += "-F \"icon=@" + std::string(iconPath) + "\" ";
-    }
+void saveDb(const json& j) {
+    std::ofstream o(dbFile);
+    o << j.dump(4);
+}
 
+void ServerThread() {
+    httplib::Server svr;
+
+    svr.Get("/api/apps", [](const httplib::Request& req, httplib::Response& res) {
+        json db = loadDb();
+        if (req.has_param("q")) {
+            std::string q = req.get_param_value("q");
+            // Basic lowercase search
+            std::transform(q.begin(), q.end(), q.begin(), ::tolower);
+            json filtered = json::array();
+            for (auto& app : db["apps"]) {
+                std::string n = app.value("name", "");
+                std::transform(n.begin(), n.end(), n.begin(), ::tolower);
+                if (n.find(q) != std::string::npos) {
+                    filtered.push_back(app);
+                }
+            }
+            json out; out["apps"] = filtered;
+            res.set_content(out.dump(), "application/json");
+        } else {
+            res.set_content(db.dump(), "application/json");
+        }
+    });
+
+    // We can mount the static directories
+    svr.set_mount_point("/apks", apkDir.c_str());
+    svr.set_mount_point("/images", imgDir.c_str());
+
+    // API to post review
+    svr.Post(R"(/api/apps/(.*)/reviews)", [](const httplib::Request& req, httplib::Response& res) {
+        std::string pkg = req.matches[1];
+        json reqJson;
+        try {
+            reqJson = json::parse(req.body);
+        } catch(...) {
+            res.status = 400; return;
+        }
+        
+        json db = loadDb();
+        bool found = false;
+        for (auto& app : db["apps"]) {
+            if (app["package_name"] == pkg) {
+                json review;
+                review["user"] = reqJson.value("user", "Anonymous");
+                review["rating"] = reqJson.value("rating", 5);
+                review["comment"] = reqJson.value("comment", "");
+                if (!app.contains("reviews")) app["reviews"] = json::array();
+                app["reviews"].push_back(review);
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            saveDb(db);
+            res.set_content("{\"status\":\"success\"}", "application/json");
+        } else {
+            res.status = 404;
+        }
+    });
+
+    svr.listen("0.0.0.0", 8443);
+}
+
+void CopyFileLocal(std::string src, std::string dest) {
+    try {
+        fs::copy_file(src, dest, fs::copy_options::overwrite_existing);
+    } catch (...) {}
+}
+
+void ProcessApp(std::string apk, std::string name, std::string pkg, std::string ver, std::string desc, std::string cat, std::string tagsStr) {
+    fs::create_directory(apkDir);
+    fs::create_directory(imgDir);
+
+    std::string apkName = fs::path(apk).filename().string();
+    CopyFileLocal(apk, apkDir + "/" + apkName);
+
+    std::vector<std::string> copiedScreenshots;
     for (const auto& s : screenshots) {
-        curlCmd += "-F \"screenshots=@" + s + "\" ";
+        std::string sName = fs::path(s).filename().string();
+        CopyFileLocal(s, imgDir + "/" + sName);
+        copiedScreenshots.push_back(sName);
     }
 
-    curlCmd += "http://127.0.0.1:8443/api/upload";
-
-    // Run curl silently
-    int res = system(curlCmd.c_str());
-    if (res == 0) {
-        MessageBox(NULL, "App Uploaded Successfully!", "Upload Status", MB_OK | MB_ICONINFORMATION);
-    } else {
-        MessageBox(NULL, "Upload Failed! Is the server running?", "Upload Error", MB_OK | MB_ICONERROR);
+    // Split tags by comma
+    std::vector<std::string> tags;
+    size_t pos = 0;
+    while ((pos = tagsStr.find(",")) != std::string::npos) {
+        std::string token = tagsStr.substr(0, pos);
+        if(!token.empty()) tags.push_back(token);
+        tagsStr.erase(0, pos + 1);
     }
-}
+    if(!tagsStr.empty()) tags.push_back(tagsStr);
 
-void RunCLI(int argc, char** argv) {
-    std::string apk = "", desc = "CLI Upload", category = "Uncategorized", tags = "";
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--upload") == 0 && i + 1 < argc) apk = argv[++i];
-        else if (strcmp(argv[i], "--desc") == 0 && i + 1 < argc) desc = argv[++i];
-        else if (strcmp(argv[i], "--category") == 0 && i + 1 < argc) category = argv[++i];
-        else if (strcmp(argv[i], "--tags") == 0 && i + 1 < argc) tags = argv[++i];
-        else if (strcmp(argv[i], "--screenshot") == 0 && i + 1 < argc) screenshots.push_back(argv[++i]);
+    json db = loadDb();
+    bool exists = false;
+    for (auto& app : db["apps"]) {
+        if (app["package_name"] == pkg) {
+            exists = true;
+            bool vExists = false;
+            for (auto& v : app["versions"]) {
+                if (v["version"] == ver) vExists = true;
+            }
+            if (!vExists) {
+                app["versions"].push_back({{"version", ver}, {"file", apkName}});
+            }
+            app["description"] = desc;
+            app["category"] = cat;
+            if (app.contains("tags")) {
+                for (auto t : tags) app["tags"].push_back(t);
+            } else {
+                app["tags"] = tags;
+            }
+            for (auto sc : copiedScreenshots) {
+                app["screenshots"].push_back(sc);
+            }
+            break;
+        }
     }
-    
-    if (apk.empty()) {
-        std::cout << "Usage: Elite_App_Marketplace-Server.exe --upload <file.apk> [--desc \"desc\"] [--category \"cat\"] [--tags \"tag1,tag2\"] [--screenshot <file.png>]\n";
-        return;
+
+    if (!exists) {
+        json newApp;
+        newApp["name"] = name;
+        newApp["package_name"] = pkg;
+        newApp["description"] = desc;
+        newApp["category"] = cat;
+        newApp["tags"] = tags;
+        newApp["versions"] = json::array();
+        newApp["versions"].push_back({{"version", ver}, {"file", apkName}});
+        newApp["screenshots"] = copiedScreenshots;
+        newApp["reviews"] = json::array();
+        db["apps"].push_back(newApp);
     }
-    
-    // Parse it first
-    char cmd[MAX_PATH + 50];
-    sprintf_s(cmd, "python apk_parser.py \"%s\"", apk.c_str());
-    FILE* pipe = _popen(cmd, "r");
-    char buffer[1024];
-    std::string result = "";
-    if (pipe) {
-        while (fgets(buffer, sizeof(buffer), pipe) != NULL) result += buffer;
-        _pclose(pipe);
-    }
-
-    auto extract = [&](std::string key) -> std::string {
-        std::string search = "\"" + key + "\": \"";
-        size_t pos = result.find(search);
-        if (pos == std::string::npos) return "";
-        pos += search.length();
-        size_t end = result.find("\"", pos);
-        return result.substr(pos, end - pos);
-    };
-
-    std::string name = extract("name");
-    std::string pkg = extract("package");
-    std::string ver = extract("version");
-    std::string icon = extract("icon");
-    if (!icon.empty()) strcpy_s(iconPath, icon.c_str());
-    
-    if (name.empty()) name = "Unknown App";
-    if (pkg.empty()) pkg = "com.unknown";
-    if (ver.empty()) ver = "1.0";
-
-    std::cout << "Uploading " << name << " (" << pkg << ") v" << ver << "...\n";
-    UploadApp(apk, name, pkg, ver, desc, category, tags);
-    std::cout << "Done.\n";
+    saveDb(db);
+    MessageBox(NULL, "App Processed & Added to Database!", "Success", MB_OK | MB_ICONINFORMATION);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
     case WM_CREATE: {
         HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-        
-        HWND hBanner = CreateWindow("STATIC", "Local APK Store - Server Manager",
-            WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE | SS_CENTER,
-            0, 0, 480, 50, hwnd, NULL, NULL, NULL);
+        HWND hBanner = CreateWindow("STATIC", "Elite App Marketplace - Server & Manager", WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE | SS_CENTER, 0, 0, 480, 50, hwnd, NULL, NULL, NULL);
         
         CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE, 20, 70, 100, 20, hwnd, NULL, NULL, NULL);
         hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 70, 300, 20, hwnd, NULL, NULL, NULL);
 
-        CreateWindow("STATIC", "Package Name:", WS_CHILD | WS_VISIBLE, 20, 100, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 100, 300, 20, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE, 20, 100, 100, 20, hwnd, NULL, NULL, NULL);
+        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "com.elite.", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 100, 300, 20, hwnd, NULL, NULL, NULL);
 
         CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE, 20, 130, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 130, 300, 20, hwnd, NULL, NULL, NULL);
+        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "1.0", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 130, 300, 20, hwnd, NULL, NULL, NULL);
 
-        CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 20, 160, 100, 20, hwnd, NULL, NULL, NULL);
-        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL, 130, 160, 300, 60, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE, 20, 160, 100, 20, hwnd, NULL, NULL, NULL);
+        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "Apps", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 160, 300, 20, hwnd, NULL, NULL, NULL);
 
-        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 240, 100, 30, hwnd, (HMENU)1, NULL, NULL);
-        hwndStatus = CreateWindow("STATIC", "No APK selected", WS_CHILD | WS_VISIBLE, 130, 245, 300, 20, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Tags (comma):", WS_CHILD | WS_VISIBLE, 20, 190, 100, 20, hwnd, NULL, NULL, NULL);
+        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 130, 190, 300, 20, hwnd, NULL, NULL, NULL);
 
-        btnAddScreenshot = CreateWindow("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 280, 120, 30, hwnd, (HMENU)3, NULL, NULL);
-        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 150, 280, 280, 60, hwnd, NULL, NULL, NULL);
+        CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 20, 220, 100, 20, hwnd, NULL, NULL, NULL);
+        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL, 130, 220, 300, 60, hwnd, NULL, NULL, NULL);
 
-        btnUpload = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 330, 360, 100, 30, hwnd, (HMENU)2, NULL, NULL);
+        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 290, 100, 30, hwnd, (HMENU)1, NULL, NULL);
+        hwndStatus = CreateWindow("STATIC", "No APK selected", WS_CHILD | WS_VISIBLE, 130, 295, 300, 20, hwnd, NULL, NULL, NULL);
+
+        btnAddScreenshot = CreateWindow("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 330, 120, 30, hwnd, (HMENU)3, NULL, NULL);
+        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 150, 330, 280, 60, hwnd, NULL, NULL, NULL);
+
+        btnUpload = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 330, 410, 100, 30, hwnd, (HMENU)2, NULL, NULL);
 
         SendMessage(hBanner, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(hwndName, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(hwndPackage, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(hwndVersion, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(hwndCat, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessage(hwndTags, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(hwndDesc, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(btnBrowse, WM_SETFONT, (WPARAM)hFont, TRUE);
         SendMessage(hwndStatus, WM_SETFONT, (WPARAM)hFont, TRUE);
@@ -176,11 +240,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             ofn.lpstrFile[0] = '\0';
             ofn.nMaxFile = sizeof(filePath);
             ofn.lpstrFilter = "APK Files\0*.apk\0All Files\0*.*\0";
-            ofn.nFilterIndex = 1;
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileName(&ofn)) {
                 SetWindowText(hwndStatus, filePath);
-                ParseApkMetadata(filePath);
             }
         }
         else if (LOWORD(wParam) == 3) { // Add Screenshot
@@ -199,17 +261,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SendMessage(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)imgPath);
             }
         }
-        else if (LOWORD(wParam) == 2) { // Upload (Apply)
+        else if (LOWORD(wParam) == 2) { // Apply
             if (strlen(filePath) == 0) {
                 MessageBox(hwnd, "Please select an APK file first.", "Error", MB_OK | MB_ICONERROR);
                 break;
             }
-            char n[256], p[256], v[256], d[1024];
+            char n[256], p[256], v[256], d[1024], c[256], t[256];
             GetWindowText(hwndName, n, 256);
             GetWindowText(hwndPackage, p, 256);
             GetWindowText(hwndVersion, v, 256);
             GetWindowText(hwndDesc, d, 1024);
-            UploadApp(filePath, n, p, v, d, "Uncategorized", "");
+            GetWindowText(hwndCat, c, 256);
+            GetWindowText(hwndTags, t, 256);
+            ProcessApp(filePath, n, p, v, d, c, t);
         }
         break;
     }
@@ -220,19 +284,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-int main(int argc, char** argv) {
-    if (argc > 1) {
-        RunCLI(argc, argv);
-        return 0;
-    }
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    // Start HTTP Server in background thread
+    std::thread serverThread(ServerThread);
+    serverThread.detach();
 
-    HINSTANCE hInstance = GetModuleHandle(NULL);
     INITCOMMONCONTROLSEX icex;
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
     icex.dwICC = ICC_WIN95_CLASSES;
     InitCommonControlsEx(&icex);
 
-    const char* CLASS_NAME = "ServerManagerClass";
+    const char* CLASS_NAME = "EliteAppMarketplaceServer";
     WNDCLASS wc = { };
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = hInstance;
@@ -242,9 +304,9 @@ int main(int argc, char** argv) {
     RegisterClass(&wc);
 
     HWND hwnd = CreateWindowEx(
-        0, CLASS_NAME, "EliteSoftware Server Manager",
+        0, CLASS_NAME, "Elite App Marketplace - Server",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT, 480, 450,
+        CW_USEDEFAULT, CW_USEDEFAULT, 480, 500,
         NULL, NULL, hInstance, NULL
     );
 
