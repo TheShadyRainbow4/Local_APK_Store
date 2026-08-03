@@ -479,7 +479,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         CreateWindowEx(0, "STATIC", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_ETCHEDHORZ, 0, 40, 850, 2, hwnd, NULL, NULL, NULL);
 
         hwndTab = CreateWindowEx(0, WC_TABCONTROL, "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPSIBLINGS, 10, 50, 810, 450, hwnd, (HMENU)100, NULL, NULL);
-        SetWindowPos(hwndTab, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        
         TCITEM tie; tie.mask = TCIF_TEXT; 
         tie.pszText = (LPSTR)"App Inventory"; SendMessage(hwndTab, TCM_INSERTITEM, 0, (LPARAM)&tie);
         tie.pszText = (LPSTR)"Server Monitor"; SendMessage(hwndTab, TCM_INSERTITEM, 1, (LPARAM)&tie);
@@ -529,6 +529,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         for (HWND w : windows) SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
         for (HWND lbl : invLabels) SendMessage(lbl, WM_SETFONT, (WPARAM)hFont, TRUE);
 
+        SetWindowPos(hwndTab, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
         UpdateTabVisibility();
         RefreshAppList();
         InitTrayIcon(hwnd);
