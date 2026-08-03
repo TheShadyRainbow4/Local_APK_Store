@@ -14,4 +14,9 @@ This file tracks specific instructions and workflow behaviors that Gemini must f
 - **Rule:** A `changelog.md` file must be continuously updated whenever things are changed or added to the project.
 - **Reasoning:** Provides a human-readable, centralized history of new features, bug fixes, and architectural changes over time.
 
+## 4. Elite App Marketplace Scope & Signatures
+- **Rule (App Name):** The Android Client must strictly be named **"Elite App Marketplace"**.
+- **Rule (APK Signing):** All processed APKs, including the Elite App Marketplace APK itself, must be signed using the master certificate located at `C:\Users\Administrator\Desktop\Local_APK_Store\Elite-EasySigner\EliteSoftware_Special.pfx` (Password: `Minecraft145!!`).
+- **Rule (Client Features):** The marketplace client must support categorization, tagging, user reviews/comments, and the ability to download the `EliteSoftware_Special.cer` root certificate directly to the Android device via its internal Settings menu.
+
 *(These rules are strictly enforced and continuously appended by Gemini during the session.)*
