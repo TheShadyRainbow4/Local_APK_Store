@@ -10,6 +10,12 @@
 #include <filesystem>
 #include "httplib.h"
 #include "json.hpp"
+#include <gdiplus.h>
+
+#pragma comment(linker,""/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"")
+#pragma comment(lib, "gdiplus.lib")
+
+using namespace Gdiplus;
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "ws2_32.lib")
@@ -30,6 +36,22 @@ std::vector<std::string> screenshots;
 json dbCache;
 int selectedAppIndex = -1;
 int serverPort = 8552;
+HWND hwndPreview;
+HBITMAP hPreviewBitmap = NULL;
+ULONG_PTR gdiplusToken;
+
+void UpdatePreviewImage(std::string path) {
+    if (hPreviewBitmap) { DeleteObject(hPreviewBitmap); hPreviewBitmap = NULL; }
+    if (fs::exists(path)) {
+        std::wstring wpath(path.begin(), path.end());
+        Bitmap* bmp = Bitmap::FromFile(wpath.c_str());
+        if (bmp && bmp->GetLastStatus() == Ok) {
+            bmp->GetHBITMAP(Color(255, 255, 255), &hPreviewBitmap);
+            delete bmp;
+        }
+    }
+    SendMessage(hwndPreview, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hPreviewBitmap);
+}
 
 std::string dbFile = "db.json";
 std::string apkDir = "apks";
@@ -120,6 +142,15 @@ void RefreshAppList() {
     if (dbUpdated) saveDb(dbCache);
 
     SendMessage(hwndApps, LB_RESETCONTENT, 0, 0);
+    SendMessage(hwndCat, CB_RESETCONTENT, 0, 0);
+    std::vector<std::string> cats;
+    for (auto& app : dbCache["apps"]) {
+        std::string c = app.value("category", "");
+        if (std::find(cats.begin(), cats.end(), c) == cats.end() && c != "") {
+            cats.push_back(c);
+            SendMessage(hwndCat, CB_ADDSTRING, 0, (LPARAM)c.c_str());
+        }
+    }
     for (size_t i = 0; i < dbCache["apps"].size(); i++) {
         std::string name = dbCache["apps"][i].value("name", "Unknown");
         std::string pkg = dbCache["apps"][i].value("package_name", "unknown.pkg");
@@ -157,6 +188,8 @@ void LoadAppIntoForm(int index) {
     }
     filePath[0] = '\0';
     SetWindowText(hwndStatus, "No new APK selected");
+    if (screenshots.size() > 0) UpdatePreviewImage(screenshots[0]);
+    else UpdatePreviewImage("");
 }
 
 void ClearForm() {
@@ -168,6 +201,7 @@ void ClearForm() {
     SendMessage(lstScreenshots, LB_RESETCONTENT, 0, 0);
     screenshots.clear(); filePath[0] = '\0';
     SetWindowText(hwndStatus, "No APK selected");
+    UpdatePreviewImage("");
 }
 
 void DeleteSelectedApp() {
@@ -305,13 +339,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE, 230, 130, 90, 20, hwnd, NULL, NULL, NULL);
         hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 130, 480, 20, hwnd, NULL, NULL, NULL);
         CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE, 230, 160, 90, 20, hwnd, NULL, NULL, NULL);
-        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 160, 480, 20, hwnd, NULL, NULL, NULL);
+        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", "", WS_CHILD | WS_VISIBLE | WS_BORDER | CBS_DROPDOWN | WS_VSCROLL, 330, 160, 480, 150, hwnd, NULL, NULL, NULL);
         CreateWindow("STATIC", "Tags (CSV):", WS_CHILD | WS_VISIBLE, 230, 190, 90, 20, hwnd, NULL, NULL, NULL);
         hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER, 330, 190, 480, 20, hwnd, NULL, NULL, NULL);
         CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 230, 220, 90, 20, hwnd, NULL, NULL, NULL);
         hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 330, 220, 480, 90, hwnd, NULL, NULL, NULL);
         CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 230, 320, 90, 20, hwnd, NULL, NULL, NULL);
-        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL, 330, 320, 350, 70, hwnd, NULL, NULL, NULL);
+        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 330, 320, 150, 70, hwnd, (HMENU)30, NULL, NULL);
+        hwndPreview = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_REALSIZECONTROL, 490, 320, 190, 70, hwnd, NULL, NULL, NULL);
         btnAddScreenshot = CreateWindow("BUTTON", "Add", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 320, 120, 30, hwnd, (HMENU)3, NULL, NULL);
         btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 360, 120, 30, hwnd, (HMENU)4, NULL, NULL);
         CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE, 230, 410, 90, 20, hwnd, NULL, NULL, NULL);
@@ -324,7 +359,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 590, 515, 100, 30, hwnd, (HMENU)2, NULL, NULL);
         btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
 
-        HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndStatus, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit };
+        HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndStatus, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit, hwndPreview };
         for (HWND w : windows) SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
 
         RefreshAppList();
@@ -375,6 +410,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileName(&ofn)) SetWindowText(hwndStatus, filePath);
         }
+        else if (wmId == 30 && wmEvent == LBN_SELCHANGE) {
+            int sIdx = SendMessage(lstScreenshots, LB_GETCURSEL, 0, 0);
+            if (sIdx >= 0 && sIdx < screenshots.size()) UpdatePreviewImage(screenshots[sIdx]);
+        }
         else if (wmId == 3) {
             char imgPath[MAX_PATH] = "";
             OPENFILENAME ofn; ZeroMemory(&ofn, sizeof(ofn)); ofn.lStructSize = sizeof(ofn);
@@ -418,6 +457,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    char path[MAX_PATH];
+    GetModuleFileName(NULL, path, MAX_PATH);
+    fs::path exePath = path;
+    fs::current_path(exePath.parent_path());
+
+    GdiplusStartupInput gdiplusStartupInput;
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
     LoadConfig();
     std::thread serverThread(ServerThread); serverThread.detach();
     std::thread udpThread(UDPDiscoveryThread); udpThread.detach();
@@ -437,5 +483,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0)) { TranslateMessage(&msg); DispatchMessage(&msg); }
+    GdiplusShutdown(gdiplusToken);
     return 0;
 }
