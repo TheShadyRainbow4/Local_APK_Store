@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EBEBEB">
+    android:background="#2E2E2E">
 
+    <!-- Top Action Bar (Gingerbread Market Legacy looking) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="#F3F3F3"
+        android:layout_height="60dp"
+        android:background="#A4C639"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp">
@@ -22,16 +23,21 @@
             android:scaleType="centerInside" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:text="App Details"
-            android:textColor="#33B5E5"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1.5" />
     </LinearLayout>
     
-    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#33B5E5" />
+    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#A4C639" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,9 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@android:color/white"
-            android:padding="16dp"
-            android:elevation="2dp">
+            android:background="#333333"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="App Name"
-                        android:textColor="#333333"
+                        android:textColor="#FFFFFF"
                         android:textSize="22sp"
                         android:textStyle="bold" />
                         
@@ -78,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="com.example.app"
-                        android:textColor="#888888"
+                        android:textColor="#AAAAAA"
                         android:textSize="14sp"
                         android:layout_marginTop="2dp" />
 
@@ -87,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Category"
-                        android:textColor="#33B5E5"
+                        android:textColor="#A4C639"
                         android:textSize="14sp"
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
@@ -99,7 +104,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
                 android:text="INSTALL"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:background="#A4C639"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -107,7 +112,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#E0E0E0"
+                android:background="#555555"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp" />
 
@@ -115,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"
-                android:textColor="#333333"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -124,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Full app description goes here."
-                android:textColor="#666666"
+                android:textColor="#CCCCCC"
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp" />
