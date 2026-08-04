@@ -95,7 +95,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             int fileLength = conn.getContentLength();
                             
                             InputStream input = new BufferedInputStream(url.openStream(), 8192);
-                            File apkFile = new File(getExternalFilesDir(null), app.optString("package_name") + ".apk");
+                            File apkFile = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), app.optString("package_name") + ".apk");
                             OutputStream output = new FileOutputStream(apkFile);
                             
                             byte data[] = new byte[1024];
@@ -120,17 +120,10 @@ public class AppDetailActivity extends AppCompatActivity {
                             boolean installed_ok = false;
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
-                                    java.io.OutputStream out = p.getOutputStream();
-                                    java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
-                                    byte[] buf = new byte[8192];
-                                    int len;
-                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-                                    in.close();
-                                    out.flush();
-                                    out.close();
-                                    p.waitFor();
-                                    installed_ok = true;
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    if (p.waitFor() == 0) {
+                                        installed_ok = true;
+                                    }
                                 }
                             } catch (Exception e) {}
                             
