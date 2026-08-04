@@ -379,6 +379,22 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
     MessageBox(NULL, "App Processed!", "Success", MB_OK);
 }
 
+
+WNDPROC OldTabProc;
+
+LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+    if (msg == WM_COMMAND || msg == WM_NOTIFY) {
+        return SendMessage(GetParent(hwnd), msg, wp, lp);
+    }
+    if (msg == WM_CTLCOLORSTATIC) {
+        HDC hdc = (HDC)wp;
+        SetBkMode(hdc, TRANSPARENT);
+        return (LRESULT)GetSysColorBrush(COLOR_WINDOW); // Match the tab control client area (usually window color/white)
+    }
+    return CallWindowProc(OldTabProc, hwnd, msg, wp, lp);
+}
+
+
 void UpdateTabVisibility() {
     int tab = SendMessage(hwndTab, TCM_GETCURSEL, 0, 0);
     int showInv = (tab == 0) ? SW_SHOW : SW_HIDE;
@@ -472,19 +488,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SBARS_SIZEGRIP, 0, 0, 0, 0, hwnd, NULL, NULL, NULL);
         SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)"Ready");
 
-        HWND hBannerIcon = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_ICON, 10, 4, 32, 32, hwnd, NULL, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
+        HWND hBannerIcon = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | SS_ICON, 10, 4, 32, 32, hwnd, NULL, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
         SendMessage(hBannerIcon, STM_SETICON, (WPARAM)LoadIcon((HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), MAKEINTRESOURCE(101)), 0);
-        HWND hBanner = CreateWindow("STATIC", ("        Elite App Marketplace - Server Manager (Port " + std::to_string(serverPort) + ")").c_str(), WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_CENTERIMAGE, 0, 0, 850, 40, hwnd, NULL, NULL, NULL);
+        HWND hBanner = CreateWindow("STATIC", ("Elite App Marketplace - Server Manager (Port " + std::to_string(serverPort) + ")").c_str(), WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE, 50, 0, 800, 40, hwnd, NULL, NULL, NULL);
         SendMessage(hBanner, WM_SETFONT, (WPARAM)hFontBold, TRUE);
         CreateWindowEx(0, "STATIC", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_ETCHEDHORZ, 0, 40, 850, 2, hwnd, NULL, NULL, NULL);
 
-        hwndTab = CreateWindowEx(0, WC_TABCONTROL, "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPSIBLINGS, 10, 50, 810, 450, hwnd, (HMENU)100, NULL, NULL);
+        hwndTab = CreateWindowEx(0, WC_TABCONTROL, "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 10, 50, 810, 450, hwnd, (HMENU)100, NULL, NULL);
+          OldTabProc = (WNDPROC)SetWindowLongPtr(hwndTab, GWLP_WNDPROC, (LONG_PTR)TabProc);
         
         TCITEM tie; tie.mask = TCIF_TEXT; 
         tie.pszText = (LPSTR)"App Inventory"; SendMessage(hwndTab, TCM_INSERTITEM, 0, (LPARAM)&tie);
         tie.pszText = (LPSTR)"Server Monitor"; SendMessage(hwndTab, TCM_INSERTITEM, 1, (LPARAM)&tie);
 
-        invLabels.push_back(CreateWindow("STATIC", "Store Inventory:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 15, 50, 200, 20, hwnd, NULL, NULL, NULL));
+        invLabels.push_back(CreateWindow("STATIC", "Store Inventory:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, NULL, NULL));
         hwndApps = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 15, 70, 200, 390, hwnd, (HMENU)10, NULL, NULL);
         
         invLabels.push_back(CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 70, 90, 20, hwnd, NULL, NULL, NULL));
@@ -522,14 +539,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         // Server Monitor Setup
         hwndLog = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL, 20, 80, 790, 370, hwnd, NULL, NULL, NULL);
-        hwndServerStatus = CreateWindow("STATIC", "Status: STOPPED", WS_CHILD, 20, 460, 200, 20, hwnd, NULL, NULL, NULL);
-        btnToggleServer = CreateWindow("BUTTON", "Start Server", WS_CHILD | BS_PUSHBUTTON, 690, 460, 120, 30, hwnd, (HMENU)200, NULL, NULL);
+        hwndServerStatus = CreateWindow("STATIC", "Status: STOPPED", WS_CHILD, 20, 460, 200, 20, hwndTab, NULL, NULL, NULL);
+        btnToggleServer = CreateWindow("BUTTON", "Start Server", WS_CHILD | BS_PUSHBUTTON, 690, 460, 120, 30, hwndTab, (HMENU)200, NULL, NULL);
 
         HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndApkLabel, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit, hwndTab, hwndLog, hwndServerStatus, btnToggleServer };
         for (HWND w : windows) SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
         for (HWND lbl : invLabels) SendMessage(lbl, WM_SETFONT, (WPARAM)hFont, TRUE);
 
-        SetWindowPos(hwndTab, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        
         UpdateTabVisibility();
         RefreshAppList();
         InitTrayIcon(hwnd);
