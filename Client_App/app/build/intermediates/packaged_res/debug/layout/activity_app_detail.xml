@@ -37,17 +37,7 @@
             android:shadowRadius="1.5" />
     </LinearLayout>
     
-    
-            <ProgressBar
-                android:id="@+id/pbDetailDownload"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:max="100"
-                android:visibility="gone" />
-
-            <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#A4C639" />
+    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#A4C639" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -118,6 +108,15 @@
                 android:background="#A4C639"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/detailProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:max="100" />
 
             <View
                 android:layout_width="match_parent"

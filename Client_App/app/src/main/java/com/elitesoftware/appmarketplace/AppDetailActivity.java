@@ -1,28 +1,24 @@
 package com.elitesoftware.appmarketplace;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class AppDetailActivity extends Activity {
-    private int getAppInstallState(android.content.Context context, String packageName, String serverVersion) {
-        try {
-            android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            String installedVersion = pInfo.versionName;
-            if (serverVersion != null && serverVersion.equals(installedVersion)) {
-                return 2; // OPEN
-            } else {
-                return 1; // UPDATE
-            }
-        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-            return 0; // INSTALL
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,69 +38,86 @@ public class AppDetailActivity extends Activity {
             TextView detailCategory = findViewById(R.id.detailCategory);
             TextView detailDesc = findViewById(R.id.detailDesc);
             Button detailInstallBtn = findViewById(R.id.detailInstallBtn);
+            ProgressBar detailProgressBar = findViewById(R.id.detailProgressBar);
             
             detailName.setText(app.optString("name", "Unknown"));
             detailPackage.setText(app.optString("package_name", ""));
             detailCategory.setText(app.optString("category", "Uncategorized"));
             detailDesc.setText(app.optString("description", "No description available."));
             
-            String packageName = app.optString("package_name", "");
-            String serverVersion = "";
+            boolean installed = false;
             try {
-                org.json.JSONArray versions = app.getJSONArray("versions");
-                if (versions.length() > 0) {
-                    serverVersion = versions.getJSONObject(versions.length() - 1).optString("version", "");
-                }
-            } catch(Exception e) {}
-            
-            int state = getAppInstallState(this, packageName, serverVersion);
-            if (state == 2) {
+                getPackageManager().getPackageInfo(app.optString("package_name"), 0);
+                installed = true;
+            } catch (Exception e) {}
+
+            if (installed) {
                 detailInstallBtn.setText("OPEN");
-                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
-                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
-            } else if (state == 1) {
-                detailInstallBtn.setText("UPDATE (" + serverVersion + ")");
-                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#FF8800"));
-                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+                detailInstallBtn.setOnClickListener(v -> {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                    if (launchIntent != null) startActivity(launchIntent);
+                });
             } else {
                 detailInstallBtn.setText("INSTALL");
-                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#A4C639"));
-                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#000000"));
-            }
-
-            android.widget.ProgressBar pbDetailDownload = findViewById(R.id.pbDetailDownload);
-            detailInstallBtn.setOnClickListener(v -> {
-                if (state == 2) {
-                    android.content.Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
-                    if (launchIntent != null) {
-                        startActivity(launchIntent);
-                    } else {
-                        Toast.makeText(this, "Cannot launch app", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
+                detailInstallBtn.setOnClickListener(v -> {
                     detailInstallBtn.setEnabled(false);
-                    detailInstallBtn.setText("DOWNLOADING...");
-                    pbDetailDownload.setVisibility(android.view.View.VISIBLE);
-                    pbDetailDownload.setProgress(0);
+                    detailProgressBar.setVisibility(View.VISIBLE);
+                    detailProgressBar.setProgress(0);
                     
                     new Thread(() -> {
-                        for(int i=1; i<=10; i++) {
-                            try { Thread.sleep(300); } catch(Exception e) {}
-                            final int p = i * 10;
-                            runOnUiThread(() -> pbDetailDownload.setProgress(p));
+                        try {
+                            String apkUrl = "http://" + ip + ":8552/apks/" + app.getJSONArray("versions").getJSONObject(0).getString("file");
+                            URL url = new URL(apkUrl);
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.connect();
+                            int fileLength = conn.getContentLength();
+                            
+                            InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                            File apkFile = new File(getExternalFilesDir(null), app.optString("package_name") + ".apk");
+                            OutputStream output = new FileOutputStream(apkFile);
+                            
+                            byte data[] = new byte[1024];
+                            long total = 0;
+                            int count;
+                            while ((count = input.read(data)) != -1) {
+                                total += count;
+                                int progress = (int) (total * 100 / fileLength);
+                                runOnUiThread(() -> detailProgressBar.setProgress(progress));
+                                output.write(data, 0, count);
+                            }
+                            output.flush();
+                            output.close();
+                            input.close();
+                            
+                            runOnUiThread(() -> {
+                                detailProgressBar.setVisibility(View.GONE);
+                                detailInstallBtn.setText("INSTALLING...");
+                            });
+                            
+                            // Install via Shizuku / root
+                            Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
+                            p.waitFor();
+                            
+                            runOnUiThread(() -> {
+                                detailInstallBtn.setText("OPEN");
+                                detailInstallBtn.setEnabled(true);
+                                detailInstallBtn.setOnClickListener(v2 -> {
+                                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                                    if (launchIntent != null) startActivity(launchIntent);
+                                });
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                Toast.makeText(AppDetailActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
+                                detailInstallBtn.setEnabled(true);
+                                detailInstallBtn.setText("INSTALL");
+                                detailProgressBar.setVisibility(View.GONE);
+                            });
                         }
-                        runOnUiThread(() -> {
-                            detailInstallBtn.setText("INSTALLING...");
-                            Toast.makeText(this, "Requesting Shizuku/Dhizuku Install...", Toast.LENGTH_LONG).show();
-                            pbDetailDownload.setVisibility(android.view.View.GONE);
-                            detailInstallBtn.setEnabled(true);
-                            detailInstallBtn.setText("OPEN");
-                            detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
-                            detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
-                        });
                     }).start();
-                }
-            });
+                });
+            }
             
         } catch(Exception e) {
             e.printStackTrace();

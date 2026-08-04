@@ -16,6 +16,14 @@
         "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_app_detail.xml"
     },
     {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_settings.png.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/settings.png"
+    },
+    {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_main.xml.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_main.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_list_item_app.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\list_item_app.xml"
     },

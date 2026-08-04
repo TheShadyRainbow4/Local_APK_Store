@@ -240,11 +240,28 @@ public class MainActivity extends Activity {
             tvAppName.setText(app.optString("name", "Unknown App"));
             tvAppDesc.setText(app.optString("description", "No description available."));
             
-            btnInstall.setOnClickListener(v -> {
-                // Keep it from triggering the list item click
-                String ip = app.optString("_server_ip", "");
-                Toast.makeText(MainActivity.this, "Installing " + app.optString("name") + "...", Toast.LENGTH_SHORT).show();
-            });
+            boolean installed = false;
+            try {
+                MainActivity.this.getPackageManager().getPackageInfo(app.optString("package_name"), 0);
+                installed = true;
+            } catch (Exception e) {}
+            
+            if (installed) {
+                btnInstall.setText("OPEN");
+                btnInstall.setOnClickListener(v -> {
+                    Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                    if (launchIntent != null) {
+                        MainActivity.this.startActivity(launchIntent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                btnInstall.setText("INSTALL");
+                btnInstall.setOnClickListener(v -> {
+                    Toast.makeText(MainActivity.this, "Open details to install.", Toast.LENGTH_SHORT).show();
+                });
+            }
             
             return convertView;
         }

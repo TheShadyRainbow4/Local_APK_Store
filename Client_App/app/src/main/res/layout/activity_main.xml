@@ -39,7 +39,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_settings"
+            android:src="@drawable/settings"
             android:contentDescription="Settings"
             android:scaleType="fitCenter"
             android:padding="10dp"/>

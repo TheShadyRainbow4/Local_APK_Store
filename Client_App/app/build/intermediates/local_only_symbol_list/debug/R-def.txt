@@ -1,6 +1,7 @@
 R_DEF: Internal format may change without notice
 local
 drawable ic_settings
+drawable settings
 id btnBack
 id btnInstall
 id btnSettings
@@ -10,10 +11,9 @@ id detailIcon
 id detailInstallBtn
 id detailName
 id detailPackage
+id detailProgressBar
 id ivAppIcon
 id lvApps
-id pbDetailDownload
-id pbDownload
 id tvAppDesc
 id tvAppName
 layout activity_app_detail

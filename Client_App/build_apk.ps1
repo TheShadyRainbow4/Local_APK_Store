@@ -43,13 +43,7 @@ Write-Host "Accepting Android SDK Licenses..."
 $yesParams = "y`n" * 10
 $yesParams | & "$cmdlineToolsDir\bin\sdkmanager.bat" --licenses | Out-Null
 
-# 4. Download Gradle Wrapper to the project if not exists
-if (-not (Test-Path "gradlew.bat")) {
-    Write-Host "Initializing Gradle Wrapper..."
-    & "$jdkDir\bin\java.exe" -jar "gradle\wrapper\gradle-wrapper.jar" --version 8.1.1 2>$null
-    # Since we don't have a global gradle, we can download the wrapper jar manually, 
-    # but actually we can just download a generic gradle wrapper!
-}
+    # Wrapper initialization skipped since we download gradle manually.
 
 # Actually, the best way to get gradle without global gradle is to download gradle binary and use it!
 $gradleDir = "$toolsDir\gradle-8.1.1"

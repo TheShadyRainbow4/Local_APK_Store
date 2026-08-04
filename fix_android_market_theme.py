@@ -44,7 +44,7 @@ activity_main_xml = '''<?xml version="1.0" encoding="utf-8"?>
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_settings"
+            android:src="@drawable/settings"
             android:contentDescription="Settings"
             android:scaleType="fitCenter"
             android:padding="10dp"/>
@@ -280,6 +280,15 @@ activity_app_detail_xml = '''<?xml version="1.0" encoding="utf-8"?>
                 android:background="#A4C639"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/detailProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:max="100" />
 
             <View
                 android:layout_width="match_parent"

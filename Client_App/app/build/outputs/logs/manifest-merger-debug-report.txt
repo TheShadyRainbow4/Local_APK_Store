@@ -122,7 +122,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Ad
 	android:allowBackup
 		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:13:9-35
 	android:theme
-		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:19:9-56
+		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:19:9-68
 	android:usesCleartextTraffic
 		ADDED from C:\Users\Administrator\Desktop\Local_APK_Store\Client_App\app\src\main\AndroidManifest.xml:18:9-44
 activity#com.elitesoftware.appmarketplace.MainActivity
