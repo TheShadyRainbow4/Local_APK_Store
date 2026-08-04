@@ -1,6 +1,8 @@
 R_DEF: Internal format may change without notice
 local
+drawable btn_3d
 drawable ic_settings
+drawable rounded_bg
 drawable settings
 id btnBack
 id btnInstall

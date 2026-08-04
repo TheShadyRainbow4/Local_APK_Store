@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> serverIPs = new ArrayList<>();
     private ListView lvApps;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActionBar() != null) getActionBar().hide();
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         ImageButton btnSettings = findViewById(R.id.btnSettings);
@@ -232,9 +232,16 @@ public class MainActivity extends Activity {
             TextView tvAppName = convertView.findViewById(R.id.tvAppName);
             TextView tvAppDesc = convertView.findViewById(R.id.tvAppDesc);
             Button btnInstall = convertView.findViewById(R.id.btnInstall);
+            ImageView ivAppIcon = convertView.findViewById(R.id.ivAppIcon);
             
             tvAppName.setText(app.optString("name", "Unknown App"));
             tvAppDesc.setText(app.optString("description", "No description available."));
+            ivAppIcon.setImageResource(R.mipmap.ic_launcher);
+            
+            if (app.has("icon") && !app.optString("icon").isEmpty()) {
+                String iconUrl = "http://" + app.optString("_server_ip") + ":8552/images/" + app.optString("icon");
+                loadImageAsync(iconUrl, ivAppIcon);
+            }
             
             boolean installed = false;
             try {
@@ -261,5 +268,20 @@ public class MainActivity extends Activity {
             
             return convertView;
         }
+    }
+    
+    private void loadImageAsync(String urlStr, ImageView imageView) {
+        imageView.setTag(urlStr);
+        executor.execute(() -> {
+            try {
+                java.net.URL url = new java.net.URL(urlStr);
+                android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                runOnUiThread(() -> {
+                    if (urlStr.equals(imageView.getTag())) {
+                        imageView.setImageBitmap(bmp);
+                    }
+                });
+            } catch(Exception e) {}
+        });
     }
 }

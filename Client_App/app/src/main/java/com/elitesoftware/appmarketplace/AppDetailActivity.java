@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,11 +20,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class AppDetailActivity extends Activity {
+public class AppDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActionBar() != null) getActionBar().hide();
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_app_detail);
         
         ImageButton btnBack = findViewById(R.id.btnBack);
@@ -39,11 +41,18 @@ public class AppDetailActivity extends Activity {
             TextView detailDesc = findViewById(R.id.detailDesc);
             Button detailInstallBtn = findViewById(R.id.detailInstallBtn);
             ProgressBar detailProgressBar = findViewById(R.id.detailProgressBar);
+            ImageView detailIcon = findViewById(R.id.detailIcon);
             
             detailName.setText(app.optString("name", "Unknown"));
             detailPackage.setText(app.optString("package_name", ""));
             detailCategory.setText(app.optString("category", "Uncategorized"));
             detailDesc.setText(app.optString("description", "No description available."));
+            detailIcon.setImageResource(R.mipmap.ic_launcher);
+            
+            if (app.has("icon") && !app.optString("icon").isEmpty()) {
+                String iconUrl = "http://" + ip + ":8552/images/" + app.optString("icon");
+                loadImageAsync(iconUrl, detailIcon);
+            }
             
             boolean installed = false;
             try {
@@ -124,5 +133,20 @@ public class AppDetailActivity extends Activity {
             Toast.makeText(this, "Error loading details", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+    
+    private void loadImageAsync(String urlStr, ImageView imageView) {
+        imageView.setTag(urlStr);
+        new Thread(() -> {
+            try {
+                java.net.URL url = new java.net.URL(urlStr);
+                android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                runOnUiThread(() -> {
+                    if (urlStr.equals(imageView.getTag())) {
+                        imageView.setImageBitmap(bmp);
+                    }
+                });
+            } catch(Exception e) {}
+        }).start();
     }
 }

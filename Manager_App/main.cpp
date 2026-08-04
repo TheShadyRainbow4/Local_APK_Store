@@ -119,7 +119,26 @@ void ParseApkMetadata(std::string apkPath) {
             SetWindowText(hwndName, label.c_str());
         }
     }
-    LogMessage("Extracted metadata from " + apkPath);
+    
+    std::string pkgNameStr = "";
+    char pBuf[256];
+    GetWindowText(hwndPackage, pBuf, 256);
+    pkgNameStr = pBuf;
+    
+    size_t iconPos = dump.find("icon='");
+    if (iconPos != std::string::npos && !pkgNameStr.empty()) {
+        iconPos += 6;
+        size_t end = dump.find("'", iconPos);
+        if (end != std::string::npos) {
+            std::string iconPathInApk = dump.substr(iconPos, end - iconPos);
+            std::string outIconPath = "C:\\Users\\Administrator\\Desktop\\Local_APK_Store\\Manager_App\\images\\" + pkgNameStr + "_icon.png";
+            
+            std::string psCmd = "powershell -Command \"Add-Type -AssemblyName System.IO.Compression.FileSystem; try { $zip = [System.IO.Compression.ZipFile]::OpenRead('" + apkPath + "'); $entry = $zip.GetEntry('" + iconPathInApk + "'); if ($entry) { [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, '" + outIconPath + "', $true); } $zip.Dispose() } catch { }\"";
+            ExecCmd(psCmd.c_str());
+        }
+    }
+    
+    LogMessage("Extracted metadata and icon from " + apkPath);
 }
 
 void UpdatePreviewImage(std::string path) {
@@ -420,6 +439,8 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
             }
             app["name"] = name; app["description"] = desc; app["category"] = cat;
             app["tags"] = tags; app["screenshots"] = copiedScreenshots;
+            std::string iconP = imgDir + "/" + pkg + "_icon.png";
+            if (fs::exists(iconP)) app["icon"] = pkg + "_icon.png";
             break;
         }
     }
@@ -430,6 +451,8 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
         newApp["category"] = cat; newApp["tags"] = tags;
         newApp["versions"] = json::array(); newApp["versions"].push_back({{"version", ver}, {"file", apkName}});
         newApp["screenshots"] = copiedScreenshots; newApp["reviews"] = json::array();
+        std::string iconP = imgDir + "/" + pkg + "_icon.png";
+        if (fs::exists(iconP)) newApp["icon"] = pkg + "_icon.png";
         db["apps"].push_back(newApp);
     }
     saveDb(db); RefreshAppList();
@@ -481,8 +504,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         MoveWindow(hwndTab, 10, 50, w - 20, h - 50 - sh - 50, TRUE);
 
         RECT tabRect;
-        GetWindowRect(hwndTab, &tabRect);
-        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&tabRect, 2);
+        GetClientRect(hwndTab, &tabRect);
         SendMessage(hwndTab, TCM_ADJUSTRECT, FALSE, (LPARAM)&tabRect);
         
         MoveWindow(hwndApps, tabRect.left, tabRect.top, 200, tabRect.bottom - tabRect.top - 50, TRUE);
@@ -522,12 +544,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         MoveWindow(btnDelete, tabRect.left, tabRect.bottom - 40, 130, 30, TRUE);
         MoveWindow(btnClearForm, tabRect.left + 140, tabRect.bottom - 40, 130, 30, TRUE);
 
-        MoveWindow(btnApply, w - 240, h - sh - 40, 100, 30, TRUE);
+        MoveWindow(btnApply, tabRect.right - 100, tabRect.bottom - 30, 100, 30, TRUE);
+
         MoveWindow(btnExit, w - 120, h - sh - 40, 100, 30, TRUE);
 
-        MoveWindow(hwndLog, tabRect.left, tabRect.top, tabRect.right - tabRect.left, tabRect.bottom - tabRect.top - 40, TRUE);
-        MoveWindow(hwndServerStatus, tabRect.left, tabRect.bottom - 30, 200, 30, TRUE);
-        MoveWindow(btnToggleServer, tabRect.right - 120, tabRect.bottom - 35, 120, 30, TRUE);
+        RECT tabRectHwnd;
+        GetWindowRect(hwndTab, &tabRectHwnd);
+        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&tabRectHwnd, 2);
+        MoveWindow(hwndLog, tabRectHwnd.left, tabRectHwnd.top, tabRectHwnd.right - tabRectHwnd.left, tabRectHwnd.bottom - tabRectHwnd.top - 40, TRUE);
+        MoveWindow(hwndServerStatus, tabRectHwnd.left, tabRectHwnd.bottom - 30, 200, 30, TRUE);
+        MoveWindow(btnToggleServer, tabRectHwnd.right - 120, tabRectHwnd.bottom - 35, 120, 30, TRUE);
 
         return 0;
     }
@@ -573,31 +599,52 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         invLabels.push_back(CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 160, 90, 20, hwnd, NULL, NULL, NULL));
         hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | CBS_DROPDOWN | WS_VSCROLL, 330, 160, 480, 150, hwnd, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Tags (CSV):", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 190, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 190, 480, 20, hwnd, NULL, NULL, NULL);
-        
-        invLabels.push_back(CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 220, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 330, 220, 480, 90, hwnd, NULL, NULL, NULL);
-        
-        invLabels.push_back(CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 320, 90, 20, hwnd, NULL, NULL, NULL));
-        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 330, 320, 150, 70, hwnd, (HMENU)30, NULL, NULL);
-        hwndPreview = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_BITMAP | SS_REALSIZECONTROL, 490, 320, 190, 70, hwnd, NULL, NULL, NULL);
-        btnAddScreenshot = CreateWindow("BUTTON", "Add", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 320, 120, 30, hwnd, (HMENU)3, NULL, NULL);
-        btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 360, 120, 30, hwnd, (HMENU)4, NULL, NULL);
-        
-        invLabels.push_back(CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 410, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndApkLabel = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_LEFT, 330, 450, 250, 22, hwnd, NULL, NULL, NULL);
-        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 445, 120, 30, hwnd, (HMENU)1, NULL, NULL);
-        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 330, 485, 130, 30, hwnd, (HMENU)6, NULL, NULL);
-        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 470, 485, 130, 30, hwnd, (HMENU)5, NULL, NULL);
+        tie.pszText = (LPSTR)"App Inventory"; TabCtrl_InsertItem(hwndTab, 0, &tie);
+        tie.pszText = (LPSTR)"Server Monitor"; TabCtrl_InsertItem(hwndTab, 1, &tie);
 
-        btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 590, 515, 100, 30, hwnd, (HMENU)2, NULL, NULL);
-        btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
+        hwndApps = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_NOTIFY, 20, 90, 200, 360, hwndTab, (HMENU)10, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "Store Inventory:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, NULL, NULL));
+        invLabels.push_back(CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE, 230, 90, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 330, 90, 250, 22, hwndTab, NULL, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE, 230, 120, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 330, 120, 250, 22, hwndTab, NULL, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE, 230, 150, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 330, 150, 250, 22, hwndTab, NULL, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE, 230, 180, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", "", WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST, 330, 180, 250, 150, hwndTab, NULL, NULL, NULL);
+        const char* cats[] = {"Games", "Productivity", "Social", "Tools", "Entertainment", "Education", "Other"};
+        for (const char* c : cats) SendMessage(hwndCat, CB_ADDSTRING, 0, (LPARAM)c);
+        SendMessage(hwndCat, CB_SETCURSEL, 0, 0);
+
+        invLabels.push_back(CreateWindow("STATIC", "Tags (csv):", WS_CHILD | WS_VISIBLE, 230, 210, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 330, 210, 250, 22, hwndTab, NULL, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE, 230, 240, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN, 330, 240, 250, 90, hwndTab, NULL, NULL, NULL);
+
+        invLabels.push_back(CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 230, 340, 90, 20, hwndTab, NULL, NULL, NULL));
+        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | LBS_NOTIFY, 330, 340, 150, 60, hwndTab, (HMENU)30, NULL, NULL);
+        hwndPreview = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE, 490, 340, 100, 100, hwndTab, NULL, NULL, NULL);
+        btnAddScreenshot = CreateWindow("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 320, 120, 30, hwndTab, (HMENU)3, NULL, NULL);
+        btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 360, 120, 30, hwndTab, (HMENU)4, NULL, NULL);
+        
+        invLabels.push_back(CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE, 230, 410, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndApkLabel = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | SS_LEFT, 330, 450, 250, 22, hwndTab, NULL, NULL, NULL);
+        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 690, 445, 120, 30, hwndTab, (HMENU)1, NULL, NULL);
+        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 330, 485, 130, 30, hwndTab, (HMENU)6, NULL, NULL);
+        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 470, 485, 130, 30, hwndTab, (HMENU)5, NULL, NULL);
+
+        btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 590, 515, 100, 30, hwndTab, (HMENU)2, NULL, NULL);
+        btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
 
         // Server Monitor Setup
-        hwndLog = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL, 20, 80, 790, 370, hwnd, NULL, NULL, NULL);
-        hwndServerStatus = CreateWindow("STATIC", "Status: STOPPED", WS_CHILD, 20, 460, 200, 20, hwnd, NULL, NULL, NULL);
-        btnToggleServer = CreateWindow("BUTTON", "Start Server", WS_CHILD | BS_PUSHBUTTON, 690, 460, 120, 30, hwnd, (HMENU)200, NULL, NULL);
+        hwndLog = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL, 20, 80, 790, 370, hwndTab, NULL, NULL, NULL);
+        hwndServerStatus = CreateWindow("STATIC", "Status: STOPPED", WS_CHILD, 20, 460, 200, 20, hwndTab, NULL, NULL, NULL);
+        btnToggleServer = CreateWindow("BUTTON", "Start Server", WS_CHILD | BS_PUSHBUTTON, 690, 460, 120, 30, hwndTab, (HMENU)200, NULL, NULL);
 
         HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndApkLabel, btnBrowse, btnDelete, btnClearForm, btnApply, btnExit, hwnd, hwndLog, hwndServerStatus, btnToggleServer };
         for (HWND w : windows) SendMessage(w, WM_SETFONT, (WPARAM)hFont, TRUE);
