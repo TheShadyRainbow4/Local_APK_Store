@@ -3341,6 +3341,8 @@ id parent_matrix
 id password_toggle
 id path
 id pathRelative
+id pbDetailDownload
+id pbDownload
 id peekHeight
 id percent
 id pin

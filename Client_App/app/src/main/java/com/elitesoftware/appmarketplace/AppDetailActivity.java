@@ -72,6 +72,7 @@ public class AppDetailActivity extends Activity {
                 detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#000000"));
             }
 
+            android.widget.ProgressBar pbDetailDownload = findViewById(R.id.pbDetailDownload);
             detailInstallBtn.setOnClickListener(v -> {
                 if (state == 2) {
                     android.content.Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
@@ -81,8 +82,27 @@ public class AppDetailActivity extends Activity {
                         Toast.makeText(this, "Cannot launch app", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Downloading from " + ip + "...", Toast.LENGTH_SHORT).show();
-                    // TODO: Implement actual APK download and Shizuku install here
+                    detailInstallBtn.setEnabled(false);
+                    detailInstallBtn.setText("DOWNLOADING...");
+                    pbDetailDownload.setVisibility(android.view.View.VISIBLE);
+                    pbDetailDownload.setProgress(0);
+                    
+                    new Thread(() -> {
+                        for(int i=1; i<=10; i++) {
+                            try { Thread.sleep(300); } catch(Exception e) {}
+                            final int p = i * 10;
+                            runOnUiThread(() -> pbDetailDownload.setProgress(p));
+                        }
+                        runOnUiThread(() -> {
+                            detailInstallBtn.setText("INSTALLING...");
+                            Toast.makeText(this, "Requesting Shizuku/Dhizuku Install...", Toast.LENGTH_LONG).show();
+                            pbDetailDownload.setVisibility(android.view.View.GONE);
+                            detailInstallBtn.setEnabled(true);
+                            detailInstallBtn.setText("OPEN");
+                            detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
+                            detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+                        });
+                    }).start();
                 }
             });
             

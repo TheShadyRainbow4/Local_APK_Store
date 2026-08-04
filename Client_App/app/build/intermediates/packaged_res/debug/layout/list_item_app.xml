@@ -59,4 +59,14 @@
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
+
+    <ProgressBar
+        android:id="@+id/pbDownload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppDesc"
+        android:layout_marginTop="8dp"
+        android:max="100"
+        android:visibility="gone" />
 </RelativeLayout>

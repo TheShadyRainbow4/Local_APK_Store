@@ -12,6 +12,8 @@ id detailName
 id detailPackage
 id ivAppIcon
 id lvApps
+id pbDetailDownload
+id pbDownload
 id tvAppDesc
 id tvAppName
 layout activity_app_detail

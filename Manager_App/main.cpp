@@ -502,43 +502,43 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         tie.pszText = (LPSTR)"Server Monitor"; SendMessage(hwndTab, TCM_INSERTITEM, 1, (LPARAM)&tie);
 
         invLabels.push_back(CreateWindow("STATIC", "Store Inventory:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, NULL, NULL));
-        hwndApps = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 15, 70, 200, 390, hwnd, (HMENU)10, NULL, NULL);
+        hwndApps = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 15, 70, 200, 390, hwndTab, (HMENU)10, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 70, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 70, 480, 20, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "App Name:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 70, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndName = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 70, 480, 20, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 100, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 100, 480, 20, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Package:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 100, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndPackage = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 100, 480, 20, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 130, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 130, 480, 20, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Version:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 130, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndVersion = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 130, 480, 20, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 160, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | CBS_DROPDOWN | WS_VSCROLL, 330, 160, 480, 150, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Category:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 160, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndCat = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | CBS_DROPDOWN | WS_VSCROLL, 330, 160, 480, 150, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Tags (CSV):", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 190, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 190, 480, 20, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Tags (CSV):", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 190, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndTags = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER, 330, 190, 480, 20, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 220, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 330, 220, 480, 90, hwnd, NULL, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Description:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 220, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndDesc = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL, 330, 220, 480, 90, hwndTab, NULL, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 320, 90, 20, hwnd, NULL, NULL, NULL));
-        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 330, 320, 150, 70, hwnd, (HMENU)30, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 320, 90, 20, hwndTab, NULL, NULL, NULL));
+        lstScreenshots = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_BORDER | WS_VSCROLL | LBS_NOTIFY, 330, 320, 150, 70, hwndTab, (HMENU)30, NULL, NULL);
         hwndPreview = CreateWindow("STATIC", "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_BITMAP | SS_REALSIZECONTROL, 490, 320, 190, 70, hwnd, NULL, NULL, NULL);
-        btnAddScreenshot = CreateWindow("BUTTON", "Add", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 320, 120, 30, hwnd, (HMENU)3, NULL, NULL);
-        btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 360, 120, 30, hwnd, (HMENU)4, NULL, NULL);
+        btnAddScreenshot = CreateWindow("BUTTON", "Add", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 320, 120, 30, hwndTab, (HMENU)3, NULL, NULL);
+        btnClearScreenshots = CreateWindow("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 360, 120, 30, hwndTab, (HMENU)4, NULL, NULL);
         
-        invLabels.push_back(CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 410, 90, 20, hwnd, NULL, NULL, NULL));
-        hwndApkLabel = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_LEFT, 330, 450, 250, 22, hwnd, NULL, NULL, NULL);
-        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 445, 120, 30, hwnd, (HMENU)1, NULL, NULL);
-        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 330, 485, 130, 30, hwnd, (HMENU)6, NULL, NULL);
-        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 470, 485, 130, 30, hwnd, (HMENU)5, NULL, NULL);
+        invLabels.push_back(CreateWindow("STATIC", "APK File:", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 230, 410, 90, 20, hwndTab, NULL, NULL, NULL));
+        hwndApkLabel = CreateWindowEx(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_LEFT, 330, 450, 250, 22, hwndTab, NULL, NULL, NULL);
+        btnBrowse = CreateWindow("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 690, 445, 120, 30, hwndTab, (HMENU)1, NULL, NULL);
+        btnDelete = CreateWindow("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 330, 485, 130, 30, hwndTab, (HMENU)6, NULL, NULL);
+        btnClearForm = CreateWindow("BUTTON", "New App", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 470, 485, 130, 30, hwndTab, (HMENU)5, NULL, NULL);
 
-        btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 590, 515, 100, 30, hwnd, (HMENU)2, NULL, NULL);
-        btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 710, 515, 100, 30, hwnd, (HMENU)7, NULL, NULL);
+        btnApply = CreateWindow("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 590, 515, 100, 30, hwndTab, (HMENU)2, NULL, NULL);
+        btnExit = CreateWindow("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | BS_PUSHBUTTON, 710, 515, 100, 30, hwndTab, (HMENU)7, NULL, NULL);
 
         // Server Monitor Setup
-        hwndLog = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL, 20, 80, 790, 370, hwnd, NULL, NULL, NULL);
+        hwndLog = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_BORDER | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL, 20, 80, 790, 370, hwndTab, NULL, NULL, NULL);
         hwndServerStatus = CreateWindow("STATIC", "Status: STOPPED", WS_CHILD, 20, 460, 200, 20, hwndTab, NULL, NULL, NULL);
         btnToggleServer = CreateWindow("BUTTON", "Start Server", WS_CHILD | BS_PUSHBUTTON, 690, 460, 120, 30, hwndTab, (HMENU)200, NULL, NULL);
 

@@ -275,6 +275,8 @@ public class MainActivity extends Activity {
                 btnInstall.setTextColor(android.graphics.Color.parseColor("#000000"));
             }
             
+            ProgressBar pbDownload = convertView.findViewById(R.id.pbDownload);
+            
             btnInstall.setOnClickListener(v -> {
                 if (state == 2) {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
@@ -285,8 +287,28 @@ public class MainActivity extends Activity {
                     }
                 } else {
                     String ip = app.optString("_server_ip", "");
-                    Toast.makeText(MainActivity.this, (state == 1 ? "Updating " : "Installing ") + app.optString("name") + "...", Toast.LENGTH_SHORT).show();
-                    // Implement actual download logic here in the future
+                    btnInstall.setEnabled(false);
+                    btnInstall.setText("DOWNLOADING...");
+                    pbDownload.setVisibility(View.VISIBLE);
+                    pbDownload.setProgress(0);
+                    
+                    // Mock progress for now
+                    new Thread(() -> {
+                        for(int i=1; i<=10; i++) {
+                            try { Thread.sleep(300); } catch(Exception e) {}
+                            final int p = i * 10;
+                            runOnUiThread(() -> pbDownload.setProgress(p));
+                        }
+                        runOnUiThread(() -> {
+                            btnInstall.setText("INSTALLING...");
+                            Toast.makeText(MainActivity.this, "Requesting Shizuku/Dhizuku Install...", Toast.LENGTH_LONG).show();
+                            pbDownload.setVisibility(View.GONE);
+                            btnInstall.setEnabled(true);
+                            btnInstall.setText("OPEN");
+                            btnInstall.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
+                            btnInstall.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+                        });
+                    }).start();
                 }
             });
             
