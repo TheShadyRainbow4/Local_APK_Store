@@ -32,11 +32,11 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\raw\\elite_cert.cer"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_rounded_bg.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/rounded_bg.xml"
-    },
-    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_rounded_bg.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\rounded_bg.xml"
+    },
+    {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/raw_elite_cert_pfx.pfx.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/raw/elite_cert_pfx.pfx"
     }
 ]

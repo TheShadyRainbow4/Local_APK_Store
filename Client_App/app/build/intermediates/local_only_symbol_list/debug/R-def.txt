@@ -27,5 +27,6 @@ layout activity_main
 layout list_item_app
 mipmap ic_launcher
 raw elite_cert
+raw elite_cert_pfx
 string app_name
 style Theme.LegacyMarket

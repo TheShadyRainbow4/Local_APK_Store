@@ -147,16 +147,17 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Marketplace Settings");
-        String[] options = {"Install Root Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black"};
+        String[] options = {"Install Root Certificate", "Install PFX Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) installCertificate();
-            else if (which == 1) promptForServerIP();
-            else if (which == 2) { appsList.clear(); filterApps(); discoverServers(); }
-            else if (which >= 3 && which <= 5) {
+            else if (which == 1) installPfxCertificate();
+            else if (which == 2) promptForServerIP();
+            else if (which == 3) { appsList.clear(); filterApps(); discoverServers(); }
+            else if (which >= 4 && which <= 6) {
                 android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-                if (which == 3) prefs.edit().putString("theme", "light").apply();
-                else if (which == 4) prefs.edit().putString("theme", "dark").apply();
-                else if (which == 5) prefs.edit().putString("theme", "amoled").apply();
+                if (which == 4) prefs.edit().putString("theme", "light").apply();
+                else if (which == 5) prefs.edit().putString("theme", "dark").apply();
+                else if (which == 6) prefs.edit().putString("theme", "amoled").apply();
                 recreate();
             }
         });
@@ -176,6 +177,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "Failed to load cert", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void installPfxCertificate() {
+        try {
+            java.io.InputStream is = getResources().openRawResource(R.raw.elite_cert_pfx);
+            byte[] certBytes = new byte[is.available()];
+            is.read(certBytes);
+            is.close();
+
+            android.content.Intent intent = android.security.KeyChain.createInstallIntent();
+            intent.putExtra(android.security.KeyChain.EXTRA_PKCS12, certBytes);
+            intent.putExtra(android.security.KeyChain.EXTRA_NAME, "EliteSoftware Special PFX");
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to load PFX cert", Toast.LENGTH_SHORT).show();
         }
     }
 

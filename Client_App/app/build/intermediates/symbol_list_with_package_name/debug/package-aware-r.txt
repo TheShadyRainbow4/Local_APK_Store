@@ -3709,6 +3709,7 @@ layout support_simple_spinner_dropdown_item
 mipmap ic_launcher
 plurals mtrl_badge_content_description
 raw elite_cert
+raw elite_cert_pfx
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description
