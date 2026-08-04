@@ -24,9 +24,21 @@ import java.net.URL;
 public class AppDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        String theme = prefs.getString("theme", "light");
+        if (theme.equals("light")) {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (theme.equals("dark") || theme.equals("amoled")) {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+        }
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_app_detail);
+        
+        if (theme.equals("amoled")) {
+            getWindow().getDecorView().setBackgroundColor(android.graphics.Color.BLACK);
+        }
+
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
         
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
@@ -108,14 +120,30 @@ public class AppDetailActivity extends AppCompatActivity {
                             boolean installed_ok = false;
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                    java.io.OutputStream out = p.getOutputStream();
+                                    java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                    byte[] buf = new byte[8192];
+                                    int len;
+                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                    in.close();
+                                    out.flush();
+                                    out.close();
                                     p.waitFor();
                                     installed_ok = true;
                                 }
                             } catch (Exception e) {}
                             
                             if (!installed_ok) {
-                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
+                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -S " + apkFile.length() + "' || su -c 'pm install -S " + apkFile.length() + "'"});
+                                java.io.OutputStream out = p.getOutputStream();
+                                java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                byte[] buf = new byte[8192];
+                                int len;
+                                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                in.close();
+                                out.flush();
+                                out.close();
                                 p.waitFor();
                             }
                             

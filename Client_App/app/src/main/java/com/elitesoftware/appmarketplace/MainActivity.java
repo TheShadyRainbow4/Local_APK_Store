@@ -29,52 +29,136 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> serverIPs = new ArrayList<>();
-    private ListView lvApps;
+    private HashSet<String> serverIPs = new HashSet<>();
     private ArrayList<JSONObject> appsList = new ArrayList<>();
+    private ArrayList<JSONObject> displayedAppsList = new ArrayList<>();
+    private int currentTab = 0; // 0=APPS, 1=GAMES, 2=DOWNLOADS
     private AppAdapter adapter;
     private ExecutorService executor = Executors.newFixedThreadPool(4);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        String theme = prefs.getString("theme", "light");
+        if (theme.equals("light")) {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (theme.equals("dark") || theme.equals("amoled")) {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+        }
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+        
+        if (theme.equals("amoled")) {
+            getWindow().getDecorView().setBackgroundColor(android.graphics.Color.BLACK);
+        }
+
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         ImageButton btnSettings = findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(v -> showSettingsDialog());
 
-        lvApps = findViewById(R.id.lvApps);
+        ListView lvApps = findViewById(R.id.lvApps);
         adapter = new AppAdapter();
         lvApps.setAdapter(adapter);
 
         lvApps.setOnItemClickListener((parent, view, position, id) -> {
-            JSONObject app = appsList.get(position);
+            JSONObject app = displayedAppsList.get(position);
             Intent intent = new Intent(MainActivity.this, AppDetailActivity.class);
-            intent.putExtra("app_json", app.toString());
-            // Assume the server IP is the first one found for simplicity right now
-            if (!serverIPs.isEmpty()) {
-                intent.putExtra("server_ip", serverIPs.get(0));
-            }
+            intent.putExtra("app_data", app.toString());
             startActivity(intent);
         });
+        
+        setupTabs();
 
         discoverServers();
+    }
+    
+    private void setupTabs() {
+        TextView tabApps = findViewById(R.id.tabApps);
+        TextView tabGames = findViewById(R.id.tabGames);
+        TextView tabDownloads = findViewById(R.id.tabDownloads);
+        
+        android.view.View.OnClickListener tabListener = v -> {
+            tabApps.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
+            tabGames.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
+            tabDownloads.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
+            
+            ((TextView) v).setTextColor(android.graphics.Color.parseColor("#A4C639"));
+            
+            if (v == tabApps) currentTab = 0;
+            else if (v == tabGames) currentTab = 1;
+            else if (v == tabDownloads) currentTab = 2;
+            
+            filterApps();
+        };
+        
+        tabApps.setOnClickListener(tabListener);
+        tabGames.setOnClickListener(tabListener);
+        tabDownloads.setOnClickListener(tabListener);
+        tabApps.setTextColor(android.graphics.Color.parseColor("#A4C639"));
+    }
+    
+    private void filterApps() {
+        displayedAppsList.clear();
+        for (JSONObject app : appsList) {
+            if (currentTab == 0) {
+                displayedAppsList.add(app);
+            } else if (currentTab == 1) {
+                if (app.optString("category", "").toLowerCase().contains("game")) {
+                    displayedAppsList.add(app);
+                }
+            } else if (currentTab == 2) {
+                boolean installed = false;
+                try {
+                    getPackageManager().getPackageInfo(app.optString("package_name"), 0);
+                    installed = true;
+                } catch (Exception e) {}
+                if (installed) displayedAppsList.add(app);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        menu.add(0, 1, 0, "Theme: Light");
+        menu.add(0, 2, 0, "Theme: Dark");
+        menu.add(0, 3, 0, "Theme: AMOLED Black");
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        if (item.getItemId() == 1) prefs.edit().putString("theme", "light").apply();
+        else if (item.getItemId() == 2) prefs.edit().putString("theme", "dark").apply();
+        else if (item.getItemId() == 3) prefs.edit().putString("theme", "amoled").apply();
+        else return super.onOptionsItemSelected(item);
+        recreate();
+        return true;
     }
 
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Marketplace Settings");
-        String[] options = {"Install Root Certificate", "Manually Add Server IP", "Refresh Store"};
+        String[] options = {"Install Root Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) installCertificate();
             else if (which == 1) promptForServerIP();
-            else if (which == 2) { appsList.clear(); adapter.notifyDataSetChanged(); discoverServers(); }
+            else if (which == 2) { appsList.clear(); filterApps(); discoverServers(); }
+            else if (which >= 3 && which <= 5) {
+                android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                if (which == 3) prefs.edit().putString("theme", "light").apply();
+                else if (which == 4) prefs.edit().putString("theme", "dark").apply();
+                else if (which == 5) prefs.edit().putString("theme", "amoled").apply();
+                recreate();
+            }
         });
         builder.show();
     }
@@ -199,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {}
                     }
-                    adapter.notifyDataSetChanged();
+                    filterApps();
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -210,12 +294,12 @@ public class MainActivity extends AppCompatActivity {
     private class AppAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return appsList.size();
+            return displayedAppsList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return appsList.get(position);
+            return displayedAppsList.get(position);
         }
 
         @Override
@@ -229,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                 convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.list_item_app, parent, false);
             }
             
-            JSONObject app = appsList.get(position);
+            JSONObject app = displayedAppsList.get(position);
             
             TextView tvAppName = convertView.findViewById(R.id.tvAppName);
             TextView tvAppDesc = convertView.findViewById(R.id.tvAppDesc);
@@ -304,14 +388,30 @@ public class MainActivity extends AppCompatActivity {
                             boolean installed_ok = false;
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                    java.io.OutputStream out = p.getOutputStream();
+                                    java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                    byte[] buf = new byte[8192];
+                                    int len;
+                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                    in.close();
+                                    out.flush();
+                                    out.close();
                                     p.waitFor();
                                     installed_ok = true;
                                 }
                             } catch (Exception e) {}
                             
                             if (!installed_ok) {
-                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
+                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -S " + apkFile.length() + "' || su -c 'pm install -S " + apkFile.length() + "'"});
+                                java.io.OutputStream out = p.getOutputStream();
+                                java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                byte[] buf = new byte[8192];
+                                int len;
+                                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                in.close();
+                                out.flush();
+                                out.close();
                                 p.waitFor();
                             }
                             
