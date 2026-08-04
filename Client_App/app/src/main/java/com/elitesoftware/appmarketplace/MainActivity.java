@@ -205,6 +205,20 @@ public class MainActivity extends Activity {
         });
     }
 
+        private int getAppInstallState(Context context, String packageName, String serverVersion) {
+        try {
+            android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            String installedVersion = pInfo.versionName;
+            if (serverVersion != null && serverVersion.equals(installedVersion)) {
+                return 2; // OPEN
+            } else {
+                return 1; // UPDATE
+            }
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return 0; // INSTALL
+        }
+    }
+
     private class AppAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -229,6 +243,7 @@ public class MainActivity extends Activity {
             
             JSONObject app = appsList.get(position);
             
+
             TextView tvAppName = convertView.findViewById(R.id.tvAppName);
             TextView tvAppDesc = convertView.findViewById(R.id.tvAppDesc);
             Button btnInstall = convertView.findViewById(R.id.btnInstall);
@@ -236,13 +251,47 @@ public class MainActivity extends Activity {
             tvAppName.setText(app.optString("name", "Unknown App"));
             tvAppDesc.setText(app.optString("description", "No description available."));
             
+            String packageName = app.optString("package_name", "");
+            String serverVersion = "";
+            try {
+                org.json.JSONArray versions = app.getJSONArray("versions");
+                if (versions.length() > 0) {
+                    serverVersion = versions.getJSONObject(versions.length() - 1).optString("version", "");
+                }
+            } catch(Exception e) {}
+            
+            int state = getAppInstallState(MainActivity.this, packageName, serverVersion);
+            if (state == 2) {
+                btnInstall.setText("OPEN");
+                btnInstall.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
+                btnInstall.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+            } else if (state == 1) {
+                btnInstall.setText("UPDATE");
+                btnInstall.setBackgroundColor(android.graphics.Color.parseColor("#FF8800"));
+                btnInstall.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+            } else {
+                btnInstall.setText("INSTALL");
+                btnInstall.setBackgroundColor(android.graphics.Color.parseColor("#A4C639"));
+                btnInstall.setTextColor(android.graphics.Color.parseColor("#000000"));
+            }
+            
             btnInstall.setOnClickListener(v -> {
-                // Keep it from triggering the list item click
-                String ip = app.optString("_server_ip", "");
-                Toast.makeText(MainActivity.this, "Installing " + app.optString("name") + "...", Toast.LENGTH_SHORT).show();
+                if (state == 2) {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+                    if (launchIntent != null) {
+                        startActivity(launchIntent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Cannot launch app", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    String ip = app.optString("_server_ip", "");
+                    Toast.makeText(MainActivity.this, (state == 1 ? "Updating " : "Installing ") + app.optString("name") + "...", Toast.LENGTH_SHORT).show();
+                    // Implement actual download logic here in the future
+                }
             });
             
             return convertView;
+
         }
     }
 }

@@ -10,6 +10,21 @@ import org.json.JSONObject;
 
 public class AppDetailActivity extends Activity {
     @Override
+        private int getAppInstallState(android.content.Context context, String packageName, String serverVersion) {
+        try {
+            android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            String installedVersion = pInfo.versionName;
+            if (serverVersion != null && serverVersion.equals(installedVersion)) {
+                return 2; // OPEN
+            } else {
+                return 1; // UPDATE
+            }
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return 0; // INSTALL
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getActionBar() != null) getActionBar().hide();
@@ -34,9 +49,42 @@ public class AppDetailActivity extends Activity {
             detailCategory.setText(app.optString("category", "Uncategorized"));
             detailDesc.setText(app.optString("description", "No description available."));
             
+            String packageName = app.optString("package_name", "");
+            String serverVersion = "";
+            try {
+                org.json.JSONArray versions = app.getJSONArray("versions");
+                if (versions.length() > 0) {
+                    serverVersion = versions.getJSONObject(versions.length() - 1).optString("version", "");
+                }
+            } catch(Exception e) {}
+            
+            int state = getAppInstallState(this, packageName, serverVersion);
+            if (state == 2) {
+                detailInstallBtn.setText("OPEN");
+                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#444444"));
+                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+            } else if (state == 1) {
+                detailInstallBtn.setText("UPDATE (" + serverVersion + ")");
+                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#FF8800"));
+                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#FFFFFF"));
+            } else {
+                detailInstallBtn.setText("INSTALL");
+                detailInstallBtn.setBackgroundColor(android.graphics.Color.parseColor("#A4C639"));
+                detailInstallBtn.setTextColor(android.graphics.Color.parseColor("#000000"));
+            }
+
             detailInstallBtn.setOnClickListener(v -> {
-                Toast.makeText(this, "Downloading from " + ip + "...", Toast.LENGTH_SHORT).show();
-                // TODO: Implement actual APK download and Shizuku install here
+                if (state == 2) {
+                    android.content.Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+                    if (launchIntent != null) {
+                        startActivity(launchIntent);
+                    } else {
+                        Toast.makeText(this, "Cannot launch app", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Downloading from " + ip + "...", Toast.LENGTH_SHORT).show();
+                    // TODO: Implement actual APK download and Shizuku install here
+                }
             });
             
         } catch(Exception e) {

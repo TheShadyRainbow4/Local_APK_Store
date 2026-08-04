@@ -1,26 +1,30 @@
 {
-    "apps": [
+  "apps": [
+    {
+      "name": "Elite App Marketplace",
+      "package_name": "com.elitesoftware.appmarketplace",
+      "description": "The official App Store client for downloading and managing Elite Software on your Android device.",
+      "category": "System",
+      "tags": [
+        "App Store",
+        "Marketplace",
+        "Root",
+        "Shizuku"
+      ],
+      "versions": [
         {
-            "name": "Elite App Marketplace",
-            "package_name": "com.elitesoftware.appmarketplace",
-            "description": "The official App Store client for downloading and managing Elite Software on your Android device.",
-            "category": "System",
-            "tags": [
-                "App Store",
-                "Marketplace",
-                "Root",
-                "Shizuku"
-            ],
-            "versions": [
-                {
-                    "version": "1.0.0",
-                    "file": "Elite_App_Marketplace-Client.apk"
-                }
-            ],
-            "screenshots": [
-                "Elite_App_Marketplace.png"
-            ],
-            "reviews": []
+          "version": "1.0.0",
+          "file": "Elite_App_Marketplace-Client.apk"
+        },
+        {
+          "version": "1.0.14",
+          "file": "Elite_App_Marketplace-Client.apk"
         }
-    ]
+      ],
+      "screenshots": [
+        "Elite_App_Marketplace.png"
+      ],
+      "reviews": []
+    }
+  ]
 }

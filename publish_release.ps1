@@ -4,6 +4,20 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+$rawVer = $Version.Replace("v", "")
+$verParts = $rawVer.Split('.')
+$verCode = 1
+if ($verParts.Length -eq 3) {
+    $verCode = [int]$verParts[0] * 10000 + [int]$verParts[1] * 100 + [int]$verParts[2]
+}
+
+Write-Host "Updating Android build.gradle version..."
+$gradlePath = "Client_App/app/build.gradle"
+$gradle = Get-Content $gradlePath
+$gradle = $gradle -replace 'versionCode \d+', "versionCode $verCode"
+$gradle = $gradle -replace 'versionName ".*"', "versionName ""$rawVer"""
+$gradle | Set-Content $gradlePath
+
 Write-Host "Building C++ Server Manager..."
 cd Manager_App
 windres resource.rc -O coff -o resource.res
@@ -22,6 +36,29 @@ $apksigner = (Get-ChildItem -Path "$toolsDir\android-sdk\build-tools" -Filter "a
 
 Write-Host "Injecting newest APK into Server's DB..."
 Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Manager_App\apks\Elite_App_Marketplace-Client.apk" -Force
+
+Write-Host "Updating db.json..."
+$dbPath = "Manager_App/db.json"
+$dbStr = Get-Content $dbPath -Raw
+$dbObj = $dbStr | ConvertFrom-Json
+foreach ($app in $dbObj.apps) {
+    if ($app.package_name -eq "com.elitesoftware.appmarketplace") {
+        $found = $false
+        foreach ($v in $app.versions) {
+            if ($v.version -eq $rawVer) {
+                $found = $true
+            }
+        }
+        if (-not $found) {
+            $newVer = @{
+                "version" = $rawVer
+                "file" = "Elite_App_Marketplace-Client.apk"
+            }
+            $app.versions += $newVer
+        }
+    }
+}
+$dbObj | ConvertTo-Json -Depth 10 | Set-Content $dbPath
 
 Write-Host "Committing and Pushing to Git..."
 git add .
