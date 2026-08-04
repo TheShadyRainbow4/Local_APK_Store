@@ -9,8 +9,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 public class AppDetailActivity extends Activity {
-    @Override
-        private int getAppInstallState(android.content.Context context, String packageName, String serverVersion) {
+    private int getAppInstallState(android.content.Context context, String packageName, String serverVersion) {
         try {
             android.content.pm.PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
             String installedVersion = pInfo.versionName;

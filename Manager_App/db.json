@@ -23,6 +23,10 @@
         {
           "file": "Elite_App_Marketplace-Client.apk",
           "version": "1.0.15"
+        },
+        {
+          "version": "1.0.16",
+          "file": "Elite_App_Marketplace-Client.apk"
         }
       ],
       "screenshots": [
