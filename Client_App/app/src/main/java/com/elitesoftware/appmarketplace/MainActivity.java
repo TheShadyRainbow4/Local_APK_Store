@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
         TextView tabDownloads = findViewById(R.id.tabDownloads);
         
         android.view.View.OnClickListener tabListener = v -> {
-            tabApps.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
-            tabGames.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
-            tabDownloads.setTextColor(android.graphics.Color.parseColor("?android:attr/textColorSecondary"));
+            int unselectedColor = android.graphics.Color.parseColor("#888888"); // A neutral grey that looks fine in light and dark mode, or use context color
+            tabApps.setTextColor(unselectedColor);
+            tabGames.setTextColor(unselectedColor);
+            tabDownloads.setTextColor(unselectedColor);
             
             ((TextView) v).setTextColor(android.graphics.Color.parseColor("#A4C639"));
             
@@ -298,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
                             if (!exists) {
                                 appsList.add(app);
                             }
+                            checkForSelfUpdate(app);
                         } catch (Exception e) {}
                     }
                     filterApps();
@@ -306,6 +308,33 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void checkForSelfUpdate(JSONObject app) {
+        try {
+            if (!app.getString("package_name").equals("com.elitesoftware.appmarketplace")) return;
+            JSONArray versions = app.getJSONArray("versions");
+            String latestVer = "";
+            for (int i = 0; i < versions.length(); i++) {
+                String ver = versions.getJSONObject(i).getString("version");
+                if (ver.compareTo(latestVer) > 0) latestVer = ver;
+            }
+            android.content.pm.PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String currentVer = pInfo.versionName;
+            
+            if (latestVer.compareTo(currentVer) > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Store Update Available");
+                builder.setMessage("A new version of the Marketplace (" + latestVer + ") is available. View update?");
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                    android.content.Intent intent = new android.content.Intent(MainActivity.this, AppDetailActivity.class);
+                    intent.putExtra("app_json", app.toString());
+                    startActivity(intent);
+                });
+                builder.setNegativeButton("Later", null);
+                builder.show();
+            }
+        } catch (Exception e) {}
     }
 
     private class AppAdapter extends BaseAdapter {

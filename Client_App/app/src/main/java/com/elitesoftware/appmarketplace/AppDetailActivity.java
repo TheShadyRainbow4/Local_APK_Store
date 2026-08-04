@@ -118,9 +118,17 @@ public class AppDetailActivity extends AppCompatActivity {
                             
                             // Install via Shizuku API / fallback to sh
                             boolean installed_ok = false;
+                            
+                            String packageName = app.optString("package_name");
+                            boolean isSelfUpdate = packageName.equals(getPackageName());
+                            String installCmd = "pm install -r '" + apkFile.getAbsolutePath() + "'";
+                            if (isSelfUpdate) {
+                                installCmd += " && am start -n " + getPackageName() + "/.MainActivity";
+                            }
+                            
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    Process p = Shizuku.newProcess(new String[]{"sh", "-c", installCmd}, null, null);
                                     if (p.waitFor() == 0) {
                                         installed_ok = true;
                                     }
@@ -128,7 +136,10 @@ public class AppDetailActivity extends AppCompatActivity {
                             } catch (Exception e) {}
                             
                             if (!installed_ok) {
-                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -S " + apkFile.length() + "' || su -c 'pm install -S " + apkFile.length() + "'"});
+                                String streamInstallCmd = "dhizuku -c 'pm install -S " + apkFile.length() + "' || su -c 'pm install -S " + apkFile.length() + "'";
+                                // We cannot easily chain am start with stream install because standard input must be fed to the pm command.
+                                // However, dhizuku or su runs sh -c.
+                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", streamInstallCmd});
                                 java.io.OutputStream out = p.getOutputStream();
                                 java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
                                 byte[] buf = new byte[8192];
