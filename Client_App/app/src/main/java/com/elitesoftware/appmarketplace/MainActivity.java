@@ -275,7 +275,7 @@ public class MainActivity extends Activity {
                 btnInstall.setTextColor(android.graphics.Color.parseColor("#000000"));
             }
             
-            ProgressBar pbDownload = convertView.findViewById(R.id.pbDownload);
+            android.widget.ProgressBar pbDownload = convertView.findViewById(R.id.pbDownload);
             
             btnInstall.setOnClickListener(v -> {
                 if (state == 2) {
