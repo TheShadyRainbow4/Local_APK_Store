@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2E2E2E">
+    android:background="?android:attr/colorBackground">
 
-    <!-- Top Action Bar (Gingerbread Market Legacy looking) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -48,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#333333"
+            android:background="@drawable/rounded_bg"
+            android:elevation="4dp"
             android:padding="16dp">
 
             <LinearLayout
@@ -74,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="App Name"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
                         
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="com.example.app"
-                        android:textColor="#AAAAAA"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         android:layout_marginTop="2dp" />
 
@@ -104,10 +104,14 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
                 android:text="INSTALL"
-                android:textColor="#000000"
-                android:background="#A4C639"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/btn_3d"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:shadowColor="#556b2f"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1" />
 
             <ProgressBar
                 android:id="@+id/detailProgressBar"
@@ -121,7 +125,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#555555"
+                android:background="?android:attr/listDivider"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp" />
 
@@ -129,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"
-                android:textColor="#FFFFFF"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -138,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Full app description goes here."
-                android:textColor="#CCCCCC"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp" />

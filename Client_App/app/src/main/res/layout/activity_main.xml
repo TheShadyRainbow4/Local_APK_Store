@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2E2E2E">
+    android:background="?android:attr/colorBackground">
 
-    <!-- Top Action Bar (Gingerbread Market Legacy looking) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -48,8 +47,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#111111"
-        android:orientation="horizontal">
+        android:background="?android:attr/colorBackgroundFloating"
+        android:orientation="horizontal"
+        android:elevation="4dp">
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -58,23 +58,23 @@
             android:text="APPS"
             android:textColor="#A4C639"
             android:textStyle="bold"/>
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#333333"/>
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="?android:attr/listDivider"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="GAMES"
-            android:textColor="#888888"
+            android:textColor="?android:attr/textColorSecondary"
             android:textStyle="bold"/>
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#333333"/>
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="?android:attr/listDivider"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="DOWNLOADS"
-            android:textColor="#888888"
+            android:textColor="?android:attr/textColorSecondary"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -87,7 +87,8 @@
         android:id="@+id/lvApps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#444444"
-        android:dividerHeight="1dp"
-        android:clipToPadding="false" />
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:clipToPadding="false"
+        android:padding="8dp" />
 </LinearLayout>

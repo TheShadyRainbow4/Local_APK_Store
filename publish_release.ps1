@@ -35,7 +35,8 @@ $apksigner = (Get-ChildItem -Path "$toolsDir\android-sdk\build-tools" -Filter "a
 & $apksigner sign --ks "C:\Users\Administrator\Desktop\Local_APK_Store\Elite-EasySigner\EliteSoftware_Special.pfx" --ks-pass pass:Minecraft145!! --out "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Client_App\app\build\outputs\apk\debug\app-debug.apk"
 
 Write-Host "Injecting newest APK into Server's DB..."
-Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Manager_App\apks\Elite_App_Marketplace-Client.apk" -Force
+$apkFileName = "Elite_App_Marketplace-Client_$Version.apk"
+Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Manager_App\apks\$apkFileName" -Force
 
 Write-Host "Updating db.json..."
 $dbPath = "Manager_App/db.json"
@@ -52,7 +53,7 @@ foreach ($app in $dbObj.apps) {
         if (-not $found) {
             $newVer = @{
                 "version" = $rawVer
-                "file" = "Elite_App_Marketplace-Client.apk"
+                "file" = $apkFileName
             }
             $app.versions += $newVer
         }

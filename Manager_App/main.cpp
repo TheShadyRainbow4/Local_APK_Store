@@ -13,6 +13,8 @@
 #include "httplib.h"
 #include "json.hpp"
 #include <gdiplus.h>
+#include <memory>
+#include <array>
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "gdiplus.lib")
@@ -63,6 +65,61 @@ void LogMessage(std::string msg) {
     int len = GetWindowTextLength(hwndLog);
     SendMessage(hwndLog, EM_SETSEL, (WPARAM)len, (LPARAM)len);
     SendMessage(hwndLog, EM_REPLACESEL, 0, (LPARAM)timestamp.c_str());
+}
+
+std::string ExecCmd(const char* cmd) {
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(cmd, "r"), _pclose);
+    if (!pipe) return "";
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
+    }
+    return result;
+}
+
+void ParseApkMetadata(std::string apkPath) {
+    std::string cmd = "powershell -Command \"(Get-ChildItem -Path C:\\AndroidBuildTools\\android-sdk\\build-tools -Filter aapt.exe -Recurse | Select-Object -First 1).FullName\"";
+    std::string aaptPath = ExecCmd(cmd.c_str());
+    while(aaptPath.size() && (aaptPath.back()=='\r' || aaptPath.back()=='\n')) aaptPath.pop_back();
+    if (aaptPath.empty()) {
+        LogMessage("aapt.exe not found. Metadata extraction skipped.");
+        return;
+    }
+    
+    std::string dumpCmd = "\"" + aaptPath + "\" dump badging \"" + apkPath + "\"";
+    std::string dump = ExecCmd(dumpCmd.c_str());
+    
+    size_t pkgPos = dump.find("package: name='");
+    if (pkgPos != std::string::npos) {
+        pkgPos += 15;
+        size_t end = dump.find("'", pkgPos);
+        if (end != std::string::npos) {
+            std::string pkg = dump.substr(pkgPos, end - pkgPos);
+            SetWindowText(hwndPackage, pkg.c_str());
+        }
+    }
+    
+    size_t vNamePos = dump.find("versionName='");
+    if (vNamePos != std::string::npos) {
+        vNamePos += 13;
+        size_t end = dump.find("'", vNamePos);
+        if (end != std::string::npos) {
+            std::string vName = dump.substr(vNamePos, end - vNamePos);
+            SetWindowText(hwndVersion, vName.c_str());
+        }
+    }
+    
+    size_t labelPos = dump.find("application-label:'");
+    if (labelPos != std::string::npos) {
+        labelPos += 19;
+        size_t end = dump.find("'", labelPos);
+        if (end != std::string::npos) {
+            std::string label = dump.substr(labelPos, end - labelPos);
+            SetWindowText(hwndName, label.c_str());
+        }
+    }
+    LogMessage("Extracted metadata from " + apkPath);
 }
 
 void UpdatePreviewImage(std::string path) {
@@ -401,13 +458,13 @@ void UpdateTabVisibility() {
     int showMon = (tab == 1) ? SW_SHOW : SW_HIDE;
     
     HWND windows[] = { hwndApps, hwndName, hwndPackage, hwndVersion, hwndCat, hwndTags, hwndDesc, lstScreenshots, btnAddScreenshot, btnClearScreenshots, hwndApkLabel, btnBrowse, btnDelete, btnClearForm };
-    for(HWND w : windows) ShowWindow(w, showInv);
-    ShowWindow(hwndPreview, showInv);
-    for(HWND lbl : invLabels) ShowWindow(lbl, showInv);
+    for(HWND w : windows) { ShowWindow(w, showInv); if (showInv == SW_SHOW) BringWindowToTop(w); }
+    ShowWindow(hwndPreview, showInv); if (showInv == SW_SHOW) BringWindowToTop(hwndPreview);
+    for(HWND lbl : invLabels) { ShowWindow(lbl, showInv); if (showInv == SW_SHOW) BringWindowToTop(lbl); }
 
-    ShowWindow(hwndLog, showMon);
-    ShowWindow(hwndServerStatus, showMon);
-    ShowWindow(btnToggleServer, showMon);
+    ShowWindow(hwndLog, showMon); if (showMon == SW_SHOW) BringWindowToTop(hwndLog);
+    ShowWindow(hwndServerStatus, showMon); if (showMon == SW_SHOW) BringWindowToTop(hwndServerStatus);
+    ShowWindow(btnToggleServer, showMon); if (showMon == SW_SHOW) BringWindowToTop(btnToggleServer);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -599,7 +656,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             ofn.hwndOwner = hwnd; ofn.lpstrFile = filePath; ofn.lpstrFile[0] = '\0';
             ofn.nMaxFile = sizeof(filePath); ofn.lpstrFilter = "APK Files\0*.apk\0All Files\0*.*\0";
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-            if (GetOpenFileName(&ofn)) SetWindowText(hwndApkLabel, filePath);
+            if (GetOpenFileName(&ofn)) {
+                SetWindowText(hwndApkLabel, filePath);
+                ParseApkMetadata(filePath);
+            }
         }
         else if (wmId == 30 && wmEvent == LBN_SELCHANGE) {
             int sIdx = SendMessage(lstScreenshots, LB_GETCURSEL, 0, 0);
@@ -667,7 +727,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(101)); RegisterClass(&wc);
 
     HWND hwnd = CreateWindowEx(0, "EliteAppMarketplaceServer", "Elite App Marketplace - Server & Manager",
-        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 850, 600, NULL, NULL, hInstance, NULL);
+        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, 850, 600, NULL, NULL, hInstance, NULL);
 
     if (hwnd == NULL) return 0;
     ShowWindow(hwnd, SW_SHOW);
