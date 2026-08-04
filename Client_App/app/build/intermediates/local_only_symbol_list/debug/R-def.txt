@@ -16,6 +16,7 @@ id detailPackage
 id detailProgressBar
 id ivAppIcon
 id lvApps
+id pbInstall
 id tvAppDesc
 id tvAppName
 layout activity_app_detail

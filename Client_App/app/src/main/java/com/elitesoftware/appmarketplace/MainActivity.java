@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import rikka.shizuku.Shizuku;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -249,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
                 installed = true;
             } catch (Exception e) {}
             
+            ProgressBar pbInstall = convertView.findViewById(R.id.pbInstall);
+            
             if (installed) {
                 btnInstall.setText("OPEN");
                 btnInstall.setOnClickListener(v -> {
@@ -262,7 +266,73 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 btnInstall.setText("INSTALL");
                 btnInstall.setOnClickListener(v -> {
-                    Toast.makeText(MainActivity.this, "Open details to install.", Toast.LENGTH_SHORT).show();
+                    btnInstall.setEnabled(false);
+                    pbInstall.setVisibility(View.VISIBLE);
+                    pbInstall.setProgress(0);
+                    
+                    new Thread(() -> {
+                        try {
+                            String apkUrl = "http://" + app.optString("_server_ip") + ":8552/apks/" + app.getJSONArray("versions").getJSONObject(0).getString("file");
+                            java.net.URL url = new java.net.URL(apkUrl);
+                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                            conn.connect();
+                            int fileLength = conn.getContentLength();
+                            
+                            java.io.InputStream input = new java.io.BufferedInputStream(url.openStream(), 8192);
+                            java.io.File apkFile = new java.io.File(MainActivity.this.getExternalFilesDir(null), app.optString("package_name") + ".apk");
+                            java.io.OutputStream output = new java.io.FileOutputStream(apkFile);
+                            
+                            byte data[] = new byte[1024];
+                            long total = 0;
+                            int count;
+                            while ((count = input.read(data)) != -1) {
+                                total += count;
+                                int progress = (int) (total * 100 / fileLength);
+                                runOnUiThread(() -> pbInstall.setProgress(progress));
+                                output.write(data, 0, count);
+                            }
+                            output.flush();
+                            output.close();
+                            input.close();
+                            
+                            runOnUiThread(() -> {
+                                pbInstall.setVisibility(View.GONE);
+                                btnInstall.setText("INSTALLING...");
+                            });
+                            
+                            // Install via Shizuku API / fallback to sh
+                            boolean installed_ok = false;
+                            try {
+                                if (Shizuku.pingBinder()) {
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    p.waitFor();
+                                    installed_ok = true;
+                                }
+                            } catch (Exception e) {}
+                            
+                            if (!installed_ok) {
+                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
+                                p.waitFor();
+                            }
+                            
+                            runOnUiThread(() -> {
+                                btnInstall.setText("OPEN");
+                                btnInstall.setEnabled(true);
+                                btnInstall.setOnClickListener(v2 -> {
+                                    Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                                    if (launchIntent != null) MainActivity.this.startActivity(launchIntent);
+                                });
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                Toast.makeText(MainActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
+                                btnInstall.setEnabled(true);
+                                btnInstall.setText("INSTALL");
+                                pbInstall.setVisibility(View.GONE);
+                            });
+                        }
+                    }).start();
                 });
             }
             

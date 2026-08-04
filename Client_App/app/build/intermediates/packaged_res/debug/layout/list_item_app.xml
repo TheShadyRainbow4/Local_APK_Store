@@ -66,5 +66,16 @@
             android:shadowRadius="1"
             android:focusable="false"
             android:focusableInTouchMode="false" />
+
+        <ProgressBar
+            android:id="@+id/pbInstall"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@+id/btnInstall"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:progress="0"
+            android:max="100" />
     </RelativeLayout>
 </LinearLayout>

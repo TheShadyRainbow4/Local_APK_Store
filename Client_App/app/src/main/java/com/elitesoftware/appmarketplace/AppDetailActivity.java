@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import rikka.shizuku.Shizuku;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -103,9 +104,20 @@ public class AppDetailActivity extends AppCompatActivity {
                                 detailInstallBtn.setText("INSTALLING...");
                             });
                             
-                            // Install via Shizuku / root
-                            Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
-                            p.waitFor();
+                            // Install via Shizuku API / fallback to sh
+                            boolean installed_ok = false;
+                            try {
+                                if (Shizuku.pingBinder()) {
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
+                                    p.waitFor();
+                                    installed_ok = true;
+                                }
+                            } catch (Exception e) {}
+                            
+                            if (!installed_ok) {
+                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "' || su -c 'pm install -r " + apkFile.getAbsolutePath() + "' || shizuku -c 'pm install -r " + apkFile.getAbsolutePath() + "'"});
+                                p.waitFor();
+                            }
                             
                             runOnUiThread(() -> {
                                 detailInstallBtn.setText("OPEN");
