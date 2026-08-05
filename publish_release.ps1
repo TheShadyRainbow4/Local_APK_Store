@@ -78,4 +78,9 @@ Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" $prope
 
 Remove-Item $properApkName
 
+Write-Host "Restarting Server..."
+cd Manager_App
+Start-Process -FilePath "Elite_App_Marketplace-Server.exe"
+cd ..
+
 Write-Host "Publish complete for $Version"
