@@ -120,6 +120,46 @@ std::string dbFile = "db.json";
 std::string apkDir = "apks";
 std::string imgDir = "images";
 std::string configFile = "config.json";
+int g_windowWidth = 1000;
+int g_windowHeight = 700;
+bool g_windowMaximized = false;
+int g_listWidth = 350;
+bool g_isDraggingSplitter = false;
+HWND hwndSplitter = NULL;
+WNDPROC oldSplitterProc = NULL;
+
+LRESULT CALLBACK SplitterProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    switch (uMsg) {
+    case WM_SETCURSOR:
+        SetCursor(LoadCursor(NULL, IDC_SIZEWE));
+        return TRUE;
+    case WM_LBUTTONDOWN:
+        SetCapture(hwnd);
+        g_isDraggingSplitter = true;
+        return 0;
+    case WM_MOUSEMOVE:
+        if (g_isDraggingSplitter) {
+            POINT pt;
+            GetCursorPos(&pt);
+            HWND hParent = GetParent(GetParent(hwnd)); // Splitter is child of Tab, wait, tab's parent is hwndMain
+            // Actually, if we make it a child of Tab, its parent is hwndTab.
+            ScreenToClient(GetParent(hwnd), &pt);
+            int newWidth = pt.x - 10;
+            if (newWidth < 240) newWidth = 240;
+            g_listWidth = newWidth;
+            SendMessageA(GetParent(GetParent(hwnd)), WM_SIZE, 0, 0);
+        }
+        return 0;
+    case WM_LBUTTONUP:
+        if (g_isDraggingSplitter) {
+            ReleaseCapture();
+            g_isDraggingSplitter = false;
+        }
+        return 0;
+    }
+    return CallWindowProcA(oldSplitterProc, hwnd, uMsg, wParam, lParam);
+}
+
 
 void LogToFileAndUI(const std::string& msg) {
     char sysDrive[MAX_PATH] = "C:";
@@ -576,6 +616,29 @@ void RemoveTrayIcon(HWND hwnd) {
     Shell_NotifyIconA(NIM_DELETE, &nid);
 }
 
+void SaveConfig(HWND hwnd = NULL) {
+    json j;
+    j["server_port"] = serverPort;
+    j["apk_dir"] = apkDir;
+    j["img_dir"] = imgDir;
+    
+    WINDOWPLACEMENT wp;
+    wp.length = sizeof(WINDOWPLACEMENT);
+    if (hwnd && GetWindowPlacement(hwnd, &wp)) {
+        j["window_maximized"] = (wp.showCmd == SW_SHOWMAXIMIZED);
+        j["window_width"] = wp.rcNormalPosition.right - wp.rcNormalPosition.left;
+        j["window_height"] = wp.rcNormalPosition.bottom - wp.rcNormalPosition.top;
+    } else {
+        j["window_width"] = g_windowWidth;
+        j["window_height"] = g_windowHeight;
+        j["window_maximized"] = g_windowMaximized;
+    }
+    j["listview_width"] = g_listWidth;
+    
+    std::ofstream o(configFile);
+    o << j.dump(4);
+}
+
 void LoadConfig() {
     if (fs::exists(configFile)) {
         try {
@@ -584,13 +647,13 @@ void LoadConfig() {
             serverPort = j.value("server_port", 8552);
             apkDir = j.value("apk_dir", "apks");
             imgDir = j.value("img_dir", "images");
+            g_windowWidth = j.value("window_width", 1000);
+            g_windowHeight = j.value("window_height", 700);
+            g_windowMaximized = j.value("window_maximized", false);
+            g_listWidth = j.value("listview_width", 350);
         } catch(...) {}
     } else {
-        json j;
-        j["server_port"] = 8552;
-        j["apk_dir"] = "apks";
-        j["img_dir"] = "images";
-        std::ofstream o(configFile); o << j.dump(4);
+        SaveConfig();
     }
 }
 
@@ -1451,13 +1514,7 @@ LRESULT CALLBACK SettingsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
             if (strlen(aBuf) > 0) apkDir = aBuf;
             if (strlen(iBuf) > 0) imgDir = iBuf;
 
-            json j;
-            j["server_port"] = serverPort;
-            j["apk_dir"] = apkDir;
-            j["img_dir"] = imgDir;
-            std::ofstream o(configFile);
-            o << j.dump(4);
-
+            SaveConfig(hwndMain);
             LogToFileAndUI("Settings updated. Server Port: " + std::to_string(serverPort));
             DestroyWindow(hwnd);
         } else if (id == IDCANCEL) {
@@ -1776,6 +1833,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         if (btnExit && IsWindow(btnExit)) {
             MoveWindow(btnExit, w - 120, chinY + 6, 100, 30, TRUE);
         }
+        if (btnApply && IsWindow(btnApply)) {
+            MoveWindow(btnApply, w - 240, chinY + 6, 110, 30, TRUE);
+        }
 
         int tabY = topOffset + 4;
         int tabH = chinY - tabY - 6;
@@ -1787,13 +1847,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             SendMessageA(hwndTab, TCM_ADJUSTRECT, FALSE, (LPARAM)&tabRect);
 
             // Tab 0 controls
-            int leftWidth = std::max(240, (int)((tabRect.right - tabRect.left) * 0.35));
+            int leftWidth = g_listWidth;
+            if (leftWidth < 240) leftWidth = 240;
+            if (leftWidth > tabRect.right - tabRect.left - 300) leftWidth = std::max(240L, tabRect.right - tabRect.left - 300);
+            g_listWidth = leftWidth;
+            
             if (invLabels.size() > 0 && invLabels[0]) {
                 MoveWindow(invLabels[0], tabRect.left + 5, tabRect.top + 5, 200, 18, TRUE);
             }
             if (hwndApps) MoveWindow(hwndApps, tabRect.left + 5, tabRect.top + 26, leftWidth, tabRect.bottom - tabRect.top - 70, TRUE);
             if (btnDelete) MoveWindow(btnDelete, tabRect.left + 5, tabRect.bottom - 38, 115, 30, TRUE);
             if (btnClearForm) MoveWindow(btnClearForm, tabRect.left + 125, tabRect.bottom - 38, 115, 30, TRUE);
+            
+            if (hwndSplitter) {
+                MoveWindow(hwndSplitter, tabRect.left + 5 + leftWidth, tabRect.top + 26, 8, tabRect.bottom - tabRect.top - 70, TRUE);
+                SetWindowPos(hwndSplitter, HWND_TOP, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE);
+            }
 
             int formX = tabRect.left + leftWidth + 15;
             int rightBtnW = 120;
@@ -1962,8 +2031,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         btnDelete = CreateWindowA("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)6, hInstance, NULL);
         btnClearForm = CreateWindowA("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)5, hInstance, NULL);
 
-        btnApply = CreateWindowA("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)2, hInstance, NULL);
+        btnApply = CreateWindowA("BUTTON", "Apply", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwnd, (HMENU)2, hInstance, NULL);
         
+        hwndSplitter = CreateWindowExA(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_NOTIFY, 0,0,0,0, hwndTab, NULL, hInstance, NULL);
+        oldSplitterProc = (WNDPROC)SetWindowLongPtrA(hwndSplitter, GWLP_WNDPROC, (LONG_PTR)SplitterProc);
+
         hwndChin = CreateWindowExA(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDHORZ, 0, 0, 0, 0, hwnd, NULL, hInstance, NULL);
         hwndLogLink = CreateWindowExA(0, "STATIC", "View LocalAPKStore Logs", WS_CHILD | WS_VISIBLE | SS_NOTIFY, 0, 0, 0, 0, hwnd, (HMENU)600, hInstance, NULL);
         btnExit = CreateWindowA("BUTTON", "Hide to Tray", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwnd, (HMENU)7, hInstance, NULL);
@@ -2080,6 +2152,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             SetForegroundWindow(hwnd);
         }
         else if (wmId == ID_TRAY_EXIT_CONTEXT_MENU_ITEM) {
+            SaveConfig(hwnd);
             RemoveTrayIcon(hwnd);
             PostQuitMessage(0);
         }
@@ -2172,9 +2245,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hIcon = GetDynamicAppIcon(hInstance);
     RegisterClassA(&wc);
 
-    HWND hwnd = CreateWindowExA(0, wc.lpszClassName, "Local APK Store - Server Manager", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1000, 700, NULL, NULL, hInstance, NULL);
+    HWND hwnd = CreateWindowExA(0, wc.lpszClassName, "Local APK Store - Server Manager", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, g_windowWidth, g_windowHeight, NULL, NULL, hInstance, NULL);
     if (hwnd == NULL) return 0;
-    ShowWindow(hwnd, nCmdShow);
+    
+    int showMode = g_windowMaximized ? SW_SHOWMAXIMIZED : nCmdShow;
+    ShowWindow(hwnd, showMode);
     UpdateWindow(hwnd);
 
     MSG msg;
