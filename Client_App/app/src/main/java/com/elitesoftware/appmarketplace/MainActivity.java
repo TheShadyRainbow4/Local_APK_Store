@@ -279,26 +279,41 @@ public class MainActivity extends AppCompatActivity {
                 lock = wifi.createMulticastLock("EliteMarketplaceDiscovery");
                 lock.acquire();
             }
-            try (DatagramSocket socket = new DatagramSocket()) {
+            try (java.net.DatagramSocket socket = new java.net.DatagramSocket()) {
                 socket.setBroadcast(true);
                 socket.setSoTimeout(3000);
-                byte[] sendData = "ELITE_MARKET_DISCOVER".getBytes();
-                
-                InetAddress broadcastAddr = InetAddress.getByName("255.255.255.255");
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcastAddr, 8552);
-                socket.send(sendPacket);
+                byte[] sendData = "ELITE_MARKET_DISCOVER".getBytes("UTF-8");
                 
                 try {
-                    InetAddress b2 = InetAddress.getByName("192.168.1.255");
-                    socket.send(new DatagramPacket(sendData, sendData.length, b2, 8552));
+                    java.net.InetAddress broadcastAddr = java.net.InetAddress.getByName("255.255.255.255");
+                    socket.send(new java.net.DatagramPacket(sendData, sendData.length, broadcastAddr, 8552));
+                } catch(Exception e){}
+                
+                try {
+                    if (wifi != null) {
+                        android.net.DhcpInfo dhcp = wifi.getDhcpInfo();
+                        if (dhcp != null) {
+                            int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+                            byte[] quads = new byte[4];
+                            for (int k = 0; k < 4; k++)
+                                quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+                            java.net.InetAddress actualBroadcast = java.net.InetAddress.getByAddress(quads);
+                            socket.send(new java.net.DatagramPacket(sendData, sendData.length, actualBroadcast, 8552));
+                        }
+                    }
+                } catch(Exception e){}
+
+                try {
+                    java.net.InetAddress b2 = java.net.InetAddress.getByName("192.168.1.255");
+                    socket.send(new java.net.DatagramPacket(sendData, sendData.length, b2, 8552));
                 } catch(Exception e){}
 
                 while (true) {
                     byte[] recvBuf = new byte[256];
-                    DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
+                    java.net.DatagramPacket receivePacket = new java.net.DatagramPacket(recvBuf, recvBuf.length);
                     try {
                         socket.receive(receivePacket);
-                        String response = new String(receivePacket.getData()).trim();
+                        String response = new String(receivePacket.getData(), 0, receivePacket.getLength(), "UTF-8").trim();
                         if (response.equals("ELITE_MARKET_HERE")) {
                             String ip = receivePacket.getAddress().getHostAddress();
                             synchronized (serverIPs) {

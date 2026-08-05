@@ -945,8 +945,8 @@ void UDPDiscoveryThread() {
     bind(udpSock, (sockaddr*)&addr, sizeof(addr));
     char buffer[256];
     sockaddr_in clientAddr;
-    int clientLen = sizeof(clientAddr);
     while (serverRunning) {
+        int clientLen = sizeof(clientAddr);
         int bytes = recvfrom(udpSock, buffer, 255, 0, (sockaddr*)&clientAddr, &clientLen);
         if (bytes > 0) {
             buffer[bytes] = '\0';
