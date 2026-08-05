@@ -165,8 +165,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    String installCmd = "pm install -S " + apkFile.length();
-                                    Process p = Shizuku.newProcess(new String[]{"sh", "-c", installCmd}, null, null);
+                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
                                     
                                     java.io.OutputStream out = p.getOutputStream();
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
