@@ -63,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
         
         if (theme.equals("amoled")) {
             getWindow().getDecorView().setBackgroundColor(android.graphics.Color.BLACK);
+            android.view.View root = ((android.view.ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+            if (root != null) root.setBackgroundColor(android.graphics.Color.BLACK);
+            ListView lv = findViewById(R.id.lvApps);
+            if (lv != null) lv.setBackgroundColor(android.graphics.Color.BLACK);
         }
 
         if (getSupportActionBar() != null) getSupportActionBar().hide();
@@ -84,9 +88,28 @@ public class MainActivity extends AppCompatActivity {
         
         setupTabs();
 
+        loadCachedApps();
         discoverServers();
     }
     
+    private void loadCachedApps() {
+        try {
+            android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+            org.json.JSONArray cachedApps = new org.json.JSONArray(prefs.getString("cached_apps", "[]"));
+            for (int i = 0; i < cachedApps.length(); i++) {
+                JSONObject app = cachedApps.getJSONObject(i);
+                boolean exists = false;
+                for (JSONObject existingApp : appsList) {
+                    if (existingApp.optString("package_name").equals(app.optString("package_name"))) {
+                        exists = true; break;
+                    }
+                }
+                if (!exists) appsList.add(app);
+            }
+            filterApps();
+        } catch (Exception e) {}
+    }
+
     private void setupTabs() {
         TextView tabApps = findViewById(R.id.tabApps);
         TextView tabGames = findViewById(R.id.tabGames);
@@ -473,6 +496,21 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 btnInstall.setText("OPEN");
                                 btnInstall.setEnabled(true);
+                                try {
+                                    android.content.SharedPreferences p = getSharedPreferences("prefs", MODE_PRIVATE);
+                                    org.json.JSONArray cachedApps = new org.json.JSONArray(p.getString("cached_apps", "[]"));
+                                    boolean exists = false;
+                                    for (int i = 0; i < cachedApps.length(); i++) {
+                                        if (cachedApps.getJSONObject(i).optString("package_name").equals(app.optString("package_name"))) {
+                                            exists = true; break;
+                                        }
+                                    }
+                                    if (!exists) {
+                                        cachedApps.put(app);
+                                        p.edit().putString("cached_apps", cachedApps.toString()).apply();
+                                        if (!appsList.contains(app)) appsList.add(app);
+                                    }
+                                } catch (Exception ex) {}
                                 btnInstall.setOnClickListener(v2 -> {
                                     Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
                                     if (launchIntent != null) MainActivity.this.startActivity(launchIntent);

@@ -36,6 +36,8 @@ public class AppDetailActivity extends AppCompatActivity {
         
         if (theme.equals("amoled")) {
             getWindow().getDecorView().setBackgroundColor(android.graphics.Color.BLACK);
+            android.view.View root = ((android.view.ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+            if (root != null) root.setBackgroundColor(android.graphics.Color.BLACK);
         }
 
         if (getSupportActionBar() != null) getSupportActionBar().hide();
@@ -176,6 +178,20 @@ public class AppDetailActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 detailInstallBtn.setText("OPEN");
                                 detailInstallBtn.setEnabled(true);
+                                try {
+                                    android.content.SharedPreferences p = getSharedPreferences("prefs", MODE_PRIVATE);
+                                    org.json.JSONArray cachedApps = new org.json.JSONArray(p.getString("cached_apps", "[]"));
+                                    boolean exists = false;
+                                    for (int i = 0; i < cachedApps.length(); i++) {
+                                        if (cachedApps.getJSONObject(i).optString("package_name").equals(app.optString("package_name"))) {
+                                            exists = true; break;
+                                        }
+                                    }
+                                    if (!exists) {
+                                        cachedApps.put(app);
+                                        p.edit().putString("cached_apps", cachedApps.toString()).apply();
+                                    }
+                                } catch (Exception ex) {}
                                 detailInstallBtn.setOnClickListener(v2 -> {
                                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
                                     if (launchIntent != null) startActivity(launchIntent);

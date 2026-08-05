@@ -77,6 +77,10 @@
                                       {
                                           "version":  "1.0.3",
                                           "file":  "Elite_App_Marketplace-Client_v1.0.3.apk"
+                                      },
+                                      {
+                                          "version":  "1.0.4",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.4.apk"
                                       }
                                   ]
                  },
