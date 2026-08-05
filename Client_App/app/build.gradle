@@ -10,8 +10,8 @@ android {
         applicationId "com.elitesoftware.appmarketplace"
         minSdk 24
         targetSdk 34
-        versionCode 10048
-        versionName "1.0.48"
+        versionCode 10049
+        versionName "1.0.49"
     }
     buildTypes {
         release {
@@ -32,5 +32,5 @@ dependencies {
     // Shizuku for silent install
     implementation 'dev.rikka.shizuku:api:13.1.0'
     implementation 'dev.rikka.shizuku:provider:13.1.0'
-    implementation 'io.github.iamr0s:Dhizuku-API:2.0.0'
+    implementation 'io.github.iamr0s:Dhizuku-API:2.4'
 }

@@ -6,6 +6,7 @@ drawable rounded_bg
 drawable settings
 id btnBack
 id btnInstall
+id btnSearch
 id btnSelectApk
 id btnSelectScreenshots
 id btnSettings
@@ -23,6 +24,7 @@ id editDescription
 id editName
 id editPackage
 id editVersion
+id etSearch
 id ivAppIcon
 id lvApps
 id pbInstall

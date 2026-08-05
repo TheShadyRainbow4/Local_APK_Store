@@ -3102,6 +3102,7 @@ id bounceEnd
 id bounceStart
 id btnBack
 id btnInstall
+id btnSearch
 id btnSelectApk
 id btnSelectScreenshots
 id btnSettings
@@ -3199,6 +3200,7 @@ id end
 id endToStart
 id enterAlways
 id enterAlwaysCollapsed
+id etSearch
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu

@@ -54,6 +54,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Select APK File"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
             android:layout_marginTop="8dp"/>
 
         <TextView
@@ -67,6 +73,12 @@
             android:id="@+id/btnSelectScreenshots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
             android:text="Select Screenshots" />
 
         <TextView
@@ -81,8 +93,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Upload to Store"
-            android:backgroundTint="#A4C639"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1" />
 
     </LinearLayout>
 </ScrollView>
