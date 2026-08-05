@@ -10,8 +10,8 @@ android {
         applicationId "com.elitesoftware.appmarketplace"
         minSdk 24
         targetSdk 34
-        versionCode 10004
-        versionName "1.0.4"
+        versionCode 10025
+        versionName "1.0.25"
     }
     buildTypes {
         release {

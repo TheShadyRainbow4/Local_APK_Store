@@ -141,13 +141,13 @@ LRESULT CALLBACK SplitterProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (g_isDraggingSplitter) {
             POINT pt;
             GetCursorPos(&pt);
-            HWND hParent = GetParent(GetParent(hwnd)); // Splitter is child of Tab, wait, tab's parent is hwndMain
-            // Actually, if we make it a child of Tab, its parent is hwndTab.
+            HWND hParent = GetParent(GetParent(hwnd));
             ScreenToClient(GetParent(hwnd), &pt);
             int newWidth = pt.x - 10;
             if (newWidth < 240) newWidth = 240;
             g_listWidth = newWidth;
-            SendMessageA(GetParent(GetParent(hwnd)), WM_SIZE, 0, 0);
+            RECT rc; GetClientRect(hParent, &rc);
+            SendMessageA(hParent, WM_SIZE, 0, MAKELPARAM(rc.right, rc.bottom));
         }
         return 0;
     case WM_LBUTTONUP:
@@ -1832,6 +1832,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     case WM_SIZE: {
         int w = LOWORD(lParam);
         int h = HIWORD(lParam);
+        static int prevW = 0;
+        if (prevW != 0 && w != prevW) {
+            g_listWidth += (w - prevW);
+        }
+        prevW = w;
 
         int sh = 0;
         if (hwndStatusBar && IsWindow(hwndStatusBar)) {
@@ -1902,7 +1907,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             int formX = tabRect.left + leftWidth + 15;
             int rightPanelW = 160;
             int rightPanelX = tabRect.right - rightPanelW - 5;
-            int editW = std::max(120, (int)(rightPanelX - formX - 15));
+            int editW = std::max(120, (int)(rightPanelX - (formX + 90) - 15));
 
             if (invLabels.size() > 1 && invLabels[1]) MoveWindow(invLabels[1], formX, tabRect.top + 5, 85, 20, TRUE);
             if (hwndName) MoveWindow(hwndName, formX + 90, tabRect.top + 5, editW, 22, TRUE);
@@ -1923,8 +1928,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             if (hwndDesc) MoveWindow(hwndDesc, formX + 90, tabRect.top + 245, editW, 100, TRUE);
 
             if (invLabels.size() > 8 && invLabels[8]) MoveWindow(invLabels[8], formX, tabRect.top + 355, 85, 20, TRUE);
-            if (hwndApkLabel) MoveWindow(hwndApkLabel, formX + 90, tabRect.top + 355, editW - 90, 24, TRUE);
-            if (btnBrowse) MoveWindow(btnBrowse, formX + editW, tabRect.top + 353, 85, 28, TRUE);
+            int apkLabelW = std::max(50, editW - 90);
+            if (hwndApkLabel) MoveWindow(hwndApkLabel, formX + 90, tabRect.top + 355, apkLabelW, 24, TRUE);
+            if (btnBrowse) MoveWindow(btnBrowse, formX + 90 + apkLabelW + 5, tabRect.top + 353, 85, 28, TRUE);
 
             if (invLabels.size() > 7 && invLabels[7]) MoveWindow(invLabels[7], rightPanelX, tabRect.top + 5, rightPanelW, 20, TRUE);
             if (lstScreenshots) MoveWindow(lstScreenshots, rightPanelX, tabRect.top + 25, rightPanelW, tabRect.bottom - tabRect.top - 210, TRUE);
