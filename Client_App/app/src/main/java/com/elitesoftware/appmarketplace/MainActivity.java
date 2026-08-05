@@ -74,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnSettings = findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(v -> showSettingsDialog());
 
+        ImageButton btnUpload = findViewById(R.id.btnUpload);
+        if (btnUpload != null) {
+            btnUpload.setOnClickListener(v -> {
+                String ip = "192.168.1.100"; // fallback
+                if (!serverIPs.isEmpty()) {
+                    ip = serverIPs.iterator().next();
+                }
+                Intent intent = new Intent(MainActivity.this, UploadActivity.class);
+                intent.putExtra("server_ip", ip);
+                startActivity(intent);
+            });
+        }
+
         ListView lvApps = findViewById(R.id.lvApps);
         adapter = new AppAdapter();
         lvApps.setAdapter(adapter);
