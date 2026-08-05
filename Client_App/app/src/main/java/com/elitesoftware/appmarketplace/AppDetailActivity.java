@@ -84,9 +84,9 @@ public class AppDetailActivity extends AppCompatActivity {
                 android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(app.optString("package_name"), 0);
                 installed = true;
                 String installedVersion = pi.versionName;
-                org.json.JSONArray versionsArr = app.getJSONArray("versions");
-                if (versionsArr.length() > 0) {
-                    String serverVersion = versionsArr.getJSONObject(versionsArr.length() - 1).getString("version");
+                org.json.JSONArray updateVersionsArr = app.getJSONArray("versions");
+                if (updateVersionsArr.length() > 0) {
+                    String serverVersion = updateVersionsArr.getJSONObject(updateVersionsArr.length() - 1).getString("version");
                     if (installedVersion != null && !installedVersion.equals(serverVersion)) {
                         updateAvailable = true;
                     }
