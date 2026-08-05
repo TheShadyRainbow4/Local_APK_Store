@@ -1727,7 +1727,15 @@ LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     if (msg == WM_COMMAND || msg == WM_NOTIFY || msg == WM_DROPFILES) {
         return SendMessageA(GetParent(hwnd), msg, wp, lp);
     }
-    if (msg == WM_CTLCOLORSTATIC || msg == WM_CTLCOLORBTN) {
+    if (msg == WM_CTLCOLORSTATIC) {
+        if ((HWND)lp == hwndLog || (HWND)lp == hwndClientList) {
+            return CallWindowProcA(OldTabProc, hwnd, msg, wp, lp);
+        }
+        HDC hdc = (HDC)wp;
+        SetBkMode(hdc, TRANSPARENT);
+        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
+    }
+    if (msg == WM_CTLCOLORBTN) {
         HDC hdc = (HDC)wp;
         SetBkMode(hdc, TRANSPARENT);
         return (LRESULT)GetStockObject(HOLLOW_BRUSH);

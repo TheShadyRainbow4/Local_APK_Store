@@ -610,6 +610,8 @@ public class MainActivity extends AppCompatActivity {
                     conn.setDoOutput(true);
                     conn.setConnectTimeout(3000);
                     conn.setReadTimeout(3000);
+                    conn.setFixedLengthStreamingMode(body.length);
+                    conn.setRequestProperty("Content-Length", String.valueOf(body.length));
                     java.io.OutputStream os = conn.getOutputStream();
                     os.write(body);
                     os.flush();

@@ -79,25 +79,26 @@ public class AppDetailActivity extends AppCompatActivity {
             }
             
             boolean installed = false;
+            boolean updateAvailable = false;
             try {
-                getPackageManager().getPackageInfo(app.optString("package_name"), 0);
+                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(app.optString("package_name"), 0);
                 installed = true;
+                String installedVersion = pi.versionName;
+                org.json.JSONArray versionsArr = app.getJSONArray("versions");
+                if (versionsArr.length() > 0) {
+                    String serverVersion = versionsArr.getJSONObject(versionsArr.length() - 1).getString("version");
+                    if (installedVersion != null && !installedVersion.equals(serverVersion)) {
+                        updateAvailable = true;
+                    }
+                }
             } catch (Exception e) {}
 
-            if (installed) {
-                detailInstallBtn.setText("OPEN");
-                detailInstallBtn.setOnClickListener(v -> {
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
-                    if (launchIntent != null) startActivity(launchIntent);
-                });
-            } else {
-                detailInstallBtn.setText("INSTALL");
-                detailInstallBtn.setOnClickListener(v -> {
-                    detailInstallBtn.setEnabled(false);
-                    detailProgressBar.setVisibility(View.VISIBLE);
-                    detailProgressBar.setProgress(0);
-                    
-                    new Thread(() -> {
+            View.OnClickListener installAction = v -> {
+                detailInstallBtn.setEnabled(false);
+                detailProgressBar.setVisibility(View.VISIBLE);
+                detailProgressBar.setProgress(0);
+                
+                new Thread(() -> {
                         try {
                             int selectedIdx = 0;
                             String selectedVer = "";
@@ -207,12 +208,22 @@ public class AppDetailActivity extends AppCompatActivity {
                             });
                         }
                     }).start();
+                };
+            
+            if (installed && !updateAvailable) {
+                detailInstallBtn.setText("OPEN");
+                detailInstallBtn.setOnClickListener(v -> {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                    if (launchIntent != null) startActivity(launchIntent);
                 });
+            } else {
+                detailInstallBtn.setText(updateAvailable ? "UPDATE" : "INSTALL");
+                detailInstallBtn.setOnClickListener(installAction);
             }
             
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error loading details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to load app details", Toast.LENGTH_SHORT).show();
             finish();
         }
     }

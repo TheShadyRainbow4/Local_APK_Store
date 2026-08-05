@@ -83,12 +83,16 @@
                                           "version":  "1.0.4"
                                       },
                                       {
-                                          "version":  "1.0.25",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.25.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.25.apk",
+                                          "version":  "1.0.25"
                                       },
                                       {
-                                          "version":  "1.0.26",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.26.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.26.apk",
+                                          "version":  "1.0.26"
+                                      },
+                                      {
+                                          "version":  "1.0.27",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.27.apk"
                                       }
                                   ]
                  },

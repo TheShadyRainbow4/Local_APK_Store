@@ -66,13 +66,13 @@ git add .
 git commit -m "Auto-build and release $Version"
 git push origin master
 
-Write-Host "Creating GitHub Releases..."
+Write-Host "Creating GitHub Release..."
 $gh = "C:\Reunion7_Windows\Program Files\GitHub CLI\gh.exe"
-& $gh release create "server-$Version" "Manager_App\Elite_App_Marketplace-Server.exe" --title "Elite App Marketplace Server $Version" --notes "Automated release." --target master
-
 $properApkName = "Elite_App_Marketplace-Client_$Version.apk"
 Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" $properApkName -Force
-& $gh release create "client-$Version" $properApkName --title "Elite App Marketplace Client $Version" --notes "Automated release." --target master
+
+& $gh release create "$Version" "Manager_App\Elite_App_Marketplace-Server.exe" $properApkName --title "Elite App Marketplace $Version" --notes "Automated release." --target master
+
 Remove-Item $properApkName
 
 Write-Host "Publish complete for $Version"
