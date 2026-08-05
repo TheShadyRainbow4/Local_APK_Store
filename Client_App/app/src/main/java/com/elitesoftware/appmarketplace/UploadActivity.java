@@ -117,15 +117,15 @@ public class UploadActivity extends AppCompatActivity {
             return;
         }
 
-        String serverIp = getSharedPreferences("StorePrefs", MODE_PRIVATE).getString("server_ip", "");
-        if (serverIp.isEmpty()) {
+        String serverIp = getIntent().getStringExtra("server_ip");
+        if (serverIp == null || serverIp.isEmpty()) {
             Toast.makeText(this, "Server IP not set!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         new Thread(() -> {
             try {
-                String baseUrl = "http://" + serverIp + ":41530";
+                String baseUrl = "http://" + serverIp + ":8552";
                 
                 String apkFileName = null;
                 if (apkUri != null) {
