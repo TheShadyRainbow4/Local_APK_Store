@@ -165,15 +165,31 @@ public class AppDetailActivity extends AppCompatActivity {
                             boolean isSelfUpdate = packageName.equals(getPackageName());
                             
                             try {
-                                if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
-                                    
+                                Process p = null;
+                                if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                    p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                } else {
+                                    try {
+                                        if (com.rosan.dhizuku.api.Dhizuku.isPermissionGranted()) {
+                                            p = com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                        }
+                                    } catch(Exception e) {}
+                                    if (p == null) {
+                                        // SU fallback
+                                        p = Runtime.getRuntime().exec("su");
+                                        p.getOutputStream().write(("pm install -S " + apkFile.length() + "\n").getBytes());
+                                    }
+                                }
+                                
+                                if (p != null) {
                                     java.io.OutputStream out = p.getOutputStream();
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
                                     byte[] buf = new byte[65536];
                                     int len;
                                     while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
                                     in.close();
+                                    
+                                    try { out.write("\nexit\n".getBytes()); } catch(Exception e){}
                                     out.flush();
                                     out.close();
                                     
@@ -184,14 +200,24 @@ public class AppDetailActivity extends AppCompatActivity {
                                     if (p.waitFor() == 0) {
                                         installed_ok = true;
                                         if (isSelfUpdate) {
-                                            Shizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
+                                            if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                                Shizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
+                                            } else {
+                                                try {
+                                                    if (com.rosan.dhizuku.api.Dhizuku.isPermissionGranted()) {
+                                                        com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
+                                                    }
+                                                } catch(Exception e){}
+                                            }
                                         }
+                                    } else {
+                                        errorLog += " Process returned non-zero. ";
                                     }
                                 } else {
-                                    errorLog += "Shizuku is not running. ";
+                                    errorLog += "Shizuku/Dhizuku/SU is not available or permission denied. ";
                                 }
                             } catch (Exception e) {
-                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
+                                errorLog += "Install Error: " + e.getMessage() + "\n";
                             }
                             
                             if (!installed_ok) {
