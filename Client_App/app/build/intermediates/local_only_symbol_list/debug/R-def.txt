@@ -14,6 +14,7 @@ id detailInstallBtn
 id detailName
 id detailPackage
 id detailProgressBar
+id detailVersionSpinner
 id ivAppIcon
 id lvApps
 id pbInstall

@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private int currentTab = 0; // 0=APPS, 1=GAMES, 2=DOWNLOADS
     private AppAdapter adapter;
     private ExecutorService executor = Executors.newFixedThreadPool(4);
+    private ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> heartbeatFuture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         lvApps.setOnItemClickListener((parent, view, position, id) -> {
             JSONObject app = displayedAppsList.get(position);
             Intent intent = new Intent(MainActivity.this, AppDetailActivity.class);
-            intent.putExtra("app_data", app.toString());
+            intent.putExtra("app_json", app.toString());
+            intent.putExtra("server_ip", app.optString("_server_ip"));
             startActivity(intent);
         });
         
@@ -205,9 +213,12 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(input);
         builder.setPositiveButton("Add", (dialog, which) -> {
             String ip = input.getText().toString();
-            if (!serverIPs.contains(ip)) {
-                serverIPs.add(ip);
-                fetchAppsFromServer(ip);
+            synchronized (serverIPs) {
+                if (!serverIPs.contains(ip)) {
+                    serverIPs.add(ip);
+                    fetchAppsFromServer(ip);
+                    startHeartbeat();
+                }
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -244,10 +255,13 @@ public class MainActivity extends AppCompatActivity {
                         String response = new String(receivePacket.getData()).trim();
                         if (response.equals("ELITE_MARKET_HERE")) {
                             String ip = receivePacket.getAddress().getHostAddress();
-                            if (!serverIPs.contains(ip)) {
-                                serverIPs.add(ip);
-                                runOnUiThread(() -> Toast.makeText(this, "Found server: " + ip, Toast.LENGTH_SHORT).show());
-                                fetchAppsFromServer(ip);
+                            synchronized (serverIPs) {
+                                if (!serverIPs.contains(ip)) {
+                                    serverIPs.add(ip);
+                                    runOnUiThread(() -> Toast.makeText(this, "Found server: " + ip, Toast.LENGTH_SHORT).show());
+                                    fetchAppsFromServer(ip);
+                                    startHeartbeat();
+                                }
                             }
                         }
                     } catch (SocketTimeoutException e) {
@@ -409,7 +423,9 @@ public class MainActivity extends AppCompatActivity {
                             int fileLength = conn.getContentLength();
                             
                             java.io.InputStream input = new java.io.BufferedInputStream(url.openStream(), 8192);
-                            java.io.File apkFile = new java.io.File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), app.optString("package_name") + ".apk");
+                            String ver = app.getJSONArray("versions").getJSONObject(0).getString("version");
+                            String safeName = app.optString("name").replaceAll(" ", "_");
+                            java.io.File apkFile = new java.io.File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), safeName + "_v" + ver + ".apk");
                             java.io.OutputStream output = new java.io.FileOutputStream(apkFile);
                             
                             byte data[] = new byte[1024];
@@ -492,5 +508,137 @@ public class MainActivity extends AppCompatActivity {
                 });
             } catch(Exception e) {}
         });
+    }
+
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model != null && manufacturer != null && model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + (model != null ? model : "");
+        }
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) return "";
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) return s;
+        return Character.toUpperCase(first) + s.substring(1);
+    }
+
+    private String getClientId() {
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (id == null || id.isEmpty() || "9774d56d682e549c".equals(id)) {
+            android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+            id = prefs.getString("client_uuid", null);
+            if (id == null) {
+                id = java.util.UUID.randomUUID().toString();
+                prefs.edit().putString("client_uuid", id).apply();
+            }
+        }
+        return id;
+    }
+
+    private synchronized void startHeartbeat() {
+        if (heartbeatFuture != null && !heartbeatFuture.isCancelled()) return;
+        heartbeatFuture = heartbeatScheduler.scheduleAtFixedRate(() -> {
+            sendHeartbeat();
+        }, 0, 5, TimeUnit.SECONDS);
+    }
+
+    private void sendHeartbeat() {
+        HashSet<String> ipsCopy;
+        synchronized (serverIPs) {
+            ipsCopy = new HashSet<>(serverIPs);
+        }
+        if (ipsCopy.isEmpty()) return;
+
+        String clientId = getClientId();
+        String deviceName = getDeviceName();
+
+        try {
+            JSONObject json = new JSONObject();
+            json.put("client_id", clientId);
+            json.put("device_name", deviceName);
+            byte[] body = json.toString().getBytes("UTF-8");
+
+            for (String ip : ipsCopy) {
+                try {
+                    java.net.URL url = new java.net.URL("http://" + ip + ":8552/api/heartbeat");
+                    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setDoOutput(true);
+                    conn.setConnectTimeout(3000);
+                    conn.setReadTimeout(3000);
+                    java.io.OutputStream os = conn.getOutputStream();
+                    os.write(body);
+                    os.flush();
+                    os.close();
+                    int code = conn.getResponseCode();
+                    conn.disconnect();
+                } catch (Exception e) {
+                    // Ignore transient network errors on heartbeat
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendDisconnect() {
+        HashSet<String> ipsCopy;
+        synchronized (serverIPs) {
+            ipsCopy = new HashSet<>(serverIPs);
+        }
+        if (ipsCopy.isEmpty()) return;
+
+        String clientId = getClientId();
+        executor.execute(() -> {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("client_id", clientId);
+                byte[] body = json.toString().getBytes("UTF-8");
+
+                for (String ip : ipsCopy) {
+                    try {
+                        java.net.URL url = new java.net.URL("http://" + ip + ":8552/api/disconnect");
+                        java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Content-Type", "application/json");
+                        conn.setDoOutput(true);
+                        conn.setConnectTimeout(2000);
+                        conn.setReadTimeout(2000);
+                        java.io.OutputStream os = conn.getOutputStream();
+                        os.write(body);
+                        os.flush();
+                        os.close();
+                        int code = conn.getResponseCode();
+                        conn.disconnect();
+                    } catch (Exception e) {
+                        // Ignore transient network errors on disconnect
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        synchronized (serverIPs) {
+            if (!serverIPs.isEmpty()) {
+                startHeartbeat();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sendDisconnect();
     }
 }

@@ -62,6 +62,15 @@ public class AppDetailActivity extends AppCompatActivity {
             detailDesc.setText(app.optString("description", "No description available."));
             detailIcon.setImageResource(R.mipmap.ic_launcher);
             
+            android.widget.Spinner detailVersionSpinner = findViewById(R.id.detailVersionSpinner);
+            java.util.List<String> versionLabels = new java.util.ArrayList<>();
+            org.json.JSONArray versionsArr = app.getJSONArray("versions");
+            for (int i = 0; i < versionsArr.length(); i++) {
+                versionLabels.add(versionsArr.getJSONObject(i).getString("version"));
+            }
+            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, versionLabels);
+            detailVersionSpinner.setAdapter(adapter);
+            
             if (app.has("icon") && !app.optString("icon").isEmpty()) {
                 String iconUrl = "http://" + ip + ":8552/images/" + app.optString("icon");
                 loadImageAsync(iconUrl, detailIcon);
@@ -88,14 +97,27 @@ public class AppDetailActivity extends AppCompatActivity {
                     
                     new Thread(() -> {
                         try {
-                            String apkUrl = "http://" + ip + ":8552/apks/" + app.getJSONArray("versions").getJSONObject(0).getString("file");
+                            int selectedIdx = 0;
+                            String selectedVer = "";
+                            // Get selected index safely
+                            java.util.concurrent.atomic.AtomicInteger ai = new java.util.concurrent.atomic.AtomicInteger(0);
+                            runOnUiThread(() -> ai.set(detailVersionSpinner.getSelectedItemPosition()));
+                            Thread.sleep(100); // wait for UI thread
+                            selectedIdx = ai.get();
+                            if(selectedIdx < 0) selectedIdx = 0;
+                            
+                            org.json.JSONObject verObj = versionsArr.getJSONObject(selectedIdx);
+                            String apkUrl = "http://" + ip + ":8552/apks/" + verObj.getString("file");
+                            selectedVer = verObj.getString("version");
+                            
                             URL url = new URL(apkUrl);
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                             conn.connect();
                             int fileLength = conn.getContentLength();
                             
                             InputStream input = new BufferedInputStream(url.openStream(), 8192);
-                            File apkFile = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), app.optString("package_name") + ".apk");
+                            String safeName = app.optString("name").replaceAll(" ", "_");
+                            File apkFile = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), safeName + "_v" + selectedVer + ".apk");
                             OutputStream output = new FileOutputStream(apkFile);
                             
                             byte data[] = new byte[1024];

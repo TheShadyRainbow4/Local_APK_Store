@@ -3161,6 +3161,7 @@ id detailInstallBtn
 id detailName
 id detailPackage
 id detailProgressBar
+id detailVersionSpinner
 id dialog_button
 id dimensions
 id direct

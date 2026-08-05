@@ -1,4 +1,19 @@
-101 ICON "Elite_App_Marketplace-Server.ico"
+101 ICON "..\\Resources\\Elite_App_Marketplace.ico"
+102 ICON "..\\Resources\\Help_Window_ICON.ico"
+103 ICON "..\\Resources\\Settings-Window_ICO.ico"
+104 ICON "..\\Resources\\Browse_APK_Toolbar.ico"
+105 ICON "..\\Resources\\Help_Toolbar.ico"
+106 ICON "..\\Resources\\Toggle_Server_Toolbar.ico"
+107 ICON "..\\Resources\\Server.ico"
+108 ICON "..\\Resources\\Server_ON.ico"
+109 ICON "..\\Resources\\Server_OFF.ico"
+110 ICON "..\\Resources\\SERVER_ERROR.ico"
+111 ICON "..\\Resources\\NO_APK_ICON.ico"
+112 RCDATA "..\\Resources\\Help_Menubar_MenuEntry-Icon.png"
+113 RCDATA "..\\Resources\\Settings-Menubar.png"
+114 RCDATA "..\\Resources\\Browse_APK_Toolbar.png"
+115 RCDATA "..\\Resources\\Toggle_Server_Toolbar.png"
+116 RCDATA "..\\Resources\\Help_Toolbar.png"
 
 1 VERSIONINFO
 FILEVERSION 1,0,0,0
