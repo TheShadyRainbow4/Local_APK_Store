@@ -1724,7 +1724,7 @@ void CreateAppToolbar(HWND hwndParent) {
 WNDPROC OldTabProc = NULL;
 
 LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-    if (msg == WM_COMMAND || msg == WM_NOTIFY) {
+    if (msg == WM_COMMAND || msg == WM_NOTIFY || msg == WM_DROPFILES) {
         return SendMessageA(GetParent(hwnd), msg, wp, lp);
     }
     if (msg == WM_CTLCOLORSTATIC || msg == WM_CTLCOLORBTN) {
@@ -1791,6 +1791,41 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SendMessageA(hwndLog, EM_REPLACESEL, 0, (LPARAM)pStr->c_str());
             }
             delete pStr;
+        }
+        return 0;
+    }
+    case WM_DROPFILES: {
+        HDROP hDrop = (HDROP)wParam;
+        UINT numFiles = DragQueryFileA(hDrop, 0xFFFFFFFF, NULL, 0);
+        bool addedScreenshot = false;
+        for (UINT i = 0; i < numFiles; ++i) {
+            char path[MAX_PATH];
+            DragQueryFileA(hDrop, i, path, MAX_PATH);
+            std::string p = path;
+            std::string ext = "";
+            size_t dot = p.find_last_of('.');
+            if (dot != std::string::npos) {
+                ext = p.substr(dot);
+                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+            }
+            if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
+                screenshots.push_back(path);
+                SendMessageA(lstScreenshots, LB_ADDSTRING, 0, (LPARAM)fs::path(path).filename().string().c_str());
+                UpdatePreviewImage(screenshots.back());
+                addedScreenshot = true;
+            } else if (ext == ".apk") {
+                SetWindowTextA(hwndApkLabel, path);
+                ParseApkMetadata(path);
+            }
+        }
+        DragFinish(hDrop);
+        
+        if (addedScreenshot) {
+            char pkg[256];
+            GetWindowTextA(hwndPackage, pkg, 256);
+            if (strlen(pkg) > 0) {
+                SendMessageA(hwnd, WM_COMMAND, 2, 0);
+            }
         }
         return 0;
     }
@@ -1865,8 +1900,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             }
 
             int formX = tabRect.left + leftWidth + 15;
-            int rightBtnW = 120;
-            int editW = std::max(120, (int)(tabRect.right - formX - rightBtnW - 35));
+            int rightPanelW = 160;
+            int rightPanelX = tabRect.right - rightPanelW - 5;
+            int editW = std::max(120, (int)(rightPanelX - formX - 15));
 
             if (invLabels.size() > 1 && invLabels[1]) MoveWindow(invLabels[1], formX, tabRect.top + 5, 85, 20, TRUE);
             if (hwndName) MoveWindow(hwndName, formX + 90, tabRect.top + 5, editW, 22, TRUE);
@@ -1878,26 +1914,25 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             if (hwndVersion) MoveWindow(hwndVersion, formX + 90, tabRect.top + 65, editW, 22, TRUE);
 
             if (invLabels.size() > 4 && invLabels[4]) MoveWindow(invLabels[4], formX, tabRect.top + 95, 85, 20, TRUE);
-            if (hwndCat) MoveWindow(hwndCat, formX + 90, tabRect.top + 95, editW, 150, TRUE);
+            if (hwndCat) MoveWindow(hwndCat, formX + 90, tabRect.top + 95, editW, 110, TRUE);
 
-            if (invLabels.size() > 5 && invLabels[5]) MoveWindow(invLabels[5], formX, tabRect.top + 125, 85, 20, TRUE);
-            if (hwndTags) MoveWindow(hwndTags, formX + 90, tabRect.top + 125, editW, 22, TRUE);
+            if (invLabels.size() > 5 && invLabels[5]) MoveWindow(invLabels[5], formX, tabRect.top + 215, 85, 20, TRUE);
+            if (hwndTags) MoveWindow(hwndTags, formX + 90, tabRect.top + 215, editW, 22, TRUE);
 
-            if (invLabels.size() > 6 && invLabels[6]) MoveWindow(invLabels[6], formX, tabRect.top + 155, 85, 20, TRUE);
-            if (hwndDesc) MoveWindow(hwndDesc, formX + 90, tabRect.top + 155, editW, 80, TRUE);
+            if (invLabels.size() > 6 && invLabels[6]) MoveWindow(invLabels[6], formX, tabRect.top + 245, 85, 20, TRUE);
+            if (hwndDesc) MoveWindow(hwndDesc, formX + 90, tabRect.top + 245, editW, 100, TRUE);
 
-            if (invLabels.size() > 7 && invLabels[7]) MoveWindow(invLabels[7], formX, tabRect.top + 245, 85, 20, TRUE);
-            if (lstScreenshots) MoveWindow(lstScreenshots, formX + 90, tabRect.top + 245, 140, 70, TRUE);
-            if (hwndPreview) MoveWindow(hwndPreview, formX + 240, tabRect.top + 245, 90, 90, TRUE);
+            if (invLabels.size() > 8 && invLabels[8]) MoveWindow(invLabels[8], formX, tabRect.top + 355, 85, 20, TRUE);
+            if (hwndApkLabel) MoveWindow(hwndApkLabel, formX + 90, tabRect.top + 355, editW - 90, 24, TRUE);
+            if (btnBrowse) MoveWindow(btnBrowse, formX + editW, tabRect.top + 353, 85, 28, TRUE);
 
-            if (btnAddScreenshot) MoveWindow(btnAddScreenshot, tabRect.right - rightBtnW - 5, tabRect.top + 245, rightBtnW, 28, TRUE);
-            if (btnClearScreenshots) MoveWindow(btnClearScreenshots, tabRect.right - rightBtnW - 5, tabRect.top + 280, rightBtnW, 28, TRUE);
+            if (invLabels.size() > 7 && invLabels[7]) MoveWindow(invLabels[7], rightPanelX, tabRect.top + 5, rightPanelW, 20, TRUE);
+            if (lstScreenshots) MoveWindow(lstScreenshots, rightPanelX, tabRect.top + 25, rightPanelW, tabRect.bottom - tabRect.top - 210, TRUE);
+            if (hwndPreview) MoveWindow(hwndPreview, rightPanelX, tabRect.bottom - 180, rightPanelW, 140, TRUE);
 
-            if (invLabels.size() > 8 && invLabels[8]) MoveWindow(invLabels[8], formX, tabRect.top + 345, 85, 20, TRUE);
-            if (hwndApkLabel) MoveWindow(hwndApkLabel, formX + 90, tabRect.top + 345, editW - 70, 24, TRUE);
-            if (btnBrowse) MoveWindow(btnBrowse, tabRect.right - rightBtnW - 5, tabRect.top + 343, rightBtnW, 28, TRUE);
+            if (btnAddScreenshot) MoveWindow(btnAddScreenshot, rightPanelX, tabRect.bottom - 38, rightPanelW/2 - 2, 28, TRUE);
+            if (btnClearScreenshots) MoveWindow(btnClearScreenshots, rightPanelX + rightPanelW/2 + 2, tabRect.bottom - 38, rightPanelW/2 - 2, 28, TRUE);
 
-            if (btnApply) MoveWindow(btnApply, tabRect.right - rightBtnW - 5, tabRect.bottom - 38, rightBtnW, 30, TRUE);
 
             // Tab 1 controls
             int monW = tabRect.right - tabRect.left - 10;
@@ -1966,6 +2001,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         hwndTab = CreateWindowExA(0, WC_TABCONTROL, "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 10, 50, 810, 450, hwnd, (HMENU)100, hInstance, NULL);
         OldTabProc = (WNDPROC)SetWindowLongPtrA(hwndTab, GWLP_WNDPROC, (LONG_PTR)TabProc);
+        DragAcceptFiles(hwnd, TRUE);
+        DragAcceptFiles(hwndTab, TRUE);
         SendMessageA(hwndTab, WM_SETFONT, (WPARAM)hFontSegoeNormal, TRUE);
         
         g_hTabImageList = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 1);
