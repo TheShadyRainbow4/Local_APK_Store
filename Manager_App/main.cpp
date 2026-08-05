@@ -1039,8 +1039,10 @@ void ServerThread() {
             json filtered = json::array();
             for (auto& app : db["apps"]) {
                 std::string n = app.value("name", "");
+                std::string d = app.value("description", "");
                 std::transform(n.begin(), n.end(), n.begin(), ::tolower);
-                if (n.find(q) != std::string::npos) filtered.push_back(app);
+                std::transform(d.begin(), d.end(), d.begin(), ::tolower);
+                if (n.find(q) != std::string::npos || d.find(q) != std::string::npos) filtered.push_back(app);
             }
             json out; out["apps"] = filtered;
             res.set_content(out.dump(), "application/json");

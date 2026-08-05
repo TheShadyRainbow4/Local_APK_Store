@@ -37,20 +37,22 @@
             android:id="@+id/btnSettings"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="@drawable/btn_3d"
             android:src="@drawable/settings"
             android:contentDescription="Settings"
             android:scaleType="fitCenter"
-            android:padding="10dp"/>
-            <ImageButton
+            android:layout_marginEnd="4dp"
+            android:padding="8dp"/>
+            
+        <ImageButton
             android:id="@+id/btnUpload"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="@drawable/btn_3d"
             android:src="@android:drawable/ic_menu_upload"
             android:contentDescription="Upload"
             android:scaleType="fitCenter"
-            android:padding="10dp"/>
+            android:padding="8dp"/>
 </LinearLayout>
 
     <LinearLayout
@@ -113,7 +115,13 @@
             android:id="@+id/btnSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search" />
+            android:text="Search"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1" />
     </LinearLayout>
 
     <ListView

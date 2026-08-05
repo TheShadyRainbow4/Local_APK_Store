@@ -122,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
         Button btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(v -> {
             currentSearchQuery = etSearch.getText().toString().trim().toLowerCase();
-            filterApps();
+            if (!serverIPs.isEmpty()) {
+                fetchAppsFromServer(serverIPs.iterator().next(), currentSearchQuery);
+            }
         });
 
         loadCachedApps();
@@ -186,11 +188,6 @@ public class MainActivity extends AppCompatActivity {
     private void filterApps() {
         displayedAppsList.clear();
         for (JSONObject app : appsList) {
-            String appName = app.optString("name", "").toLowerCase();
-            String appDesc = app.optString("description", "").toLowerCase();
-            if (!currentSearchQuery.isEmpty() && !appName.contains(currentSearchQuery) && !appDesc.contains(currentSearchQuery)) {
-                continue;
-            }
             if (currentTab == 0) {
                 displayedAppsList.add(app);
             } else if (currentTab == 1) {
@@ -291,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             synchronized (serverIPs) {
                 if (!serverIPs.contains(ip)) {
                     serverIPs.add(ip);
-                    fetchAppsFromServer(ip);
+                    fetchAppsFromServer(ip, currentSearchQuery);
                     startHeartbeat();
                 }
             }
@@ -349,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (!serverIPs.contains(ip)) {
                                     serverIPs.add(ip);
                                     runOnUiThread(() -> Toast.makeText(this, "Found server: " + ip, Toast.LENGTH_SHORT).show());
-                                    fetchAppsFromServer(ip);
+                                    fetchAppsFromServer(ip, currentSearchQuery);
                                     startHeartbeat();
                                 }
                             }
@@ -372,10 +369,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchAppsFromServer(String ip) {
+    private void fetchAppsFromServer(String ip, String query) {
         executor.execute(() -> {
             try {
-                java.net.URL url = new java.net.URL("http://" + ip + ":8552/api/apps");
+                String urlStr = "http://" + ip + ":8552/api/apps";
+                if (query != null && !query.isEmpty()) {
+                    urlStr += "?q=" + java.net.URLEncoder.encode(query, "UTF-8");
+                }
+                java.net.URL url = new java.net.URL(urlStr);
                 java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
@@ -388,21 +389,12 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray apps = json.getJSONArray("apps");
                 
                 runOnUiThread(() -> {
+                    appsList.clear(); // Clear existing when fetching from server (search replaces list)
                     for (int i = 0; i < apps.length(); i++) {
                         try {
                             JSONObject app = apps.getJSONObject(i);
-                            // add ip field so we know where it came from
                             app.put("_server_ip", ip);
-                            boolean exists = false;
-                            for (JSONObject existingApp : appsList) {
-                                if (existingApp.getString("package_name").equals(app.getString("package_name"))) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (!exists) {
-                                appsList.add(app);
-                            }
+                            appsList.add(app);
                             checkForSelfUpdate(app);
                         } catch (Exception e) {}
                     }
