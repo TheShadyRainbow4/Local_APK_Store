@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
-    private void checkSelfUpdate(JSONObject app) {
+    private void checkForSelfUpdate(JSONObject app) {
         try {
             if (!app.getString("package_name").equals("com.elitesoftware.appmarketplace")) return;
             JSONArray versions = app.getJSONArray("versions");

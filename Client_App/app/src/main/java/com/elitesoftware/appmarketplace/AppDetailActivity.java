@@ -81,7 +81,7 @@ public class AppDetailActivity extends AppCompatActivity {
                 versionLabels.add(vObj.getString("version"));
             }
             app.put("versions", newVersionsArr);
-            versionsArr = newVersionsArr;
+            final org.json.JSONArray finalVersionsArr = newVersionsArr;
             
             android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, versionLabels);
             detailVersionSpinner.setAdapter(adapter);
@@ -115,7 +115,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             selectedIdx = ai.get();
                             if(selectedIdx < 0) selectedIdx = 0;
                             
-                            org.json.JSONObject verObj = versionsArr.getJSONObject(selectedIdx);
+                            org.json.JSONObject verObj = finalVersionsArr.getJSONObject(selectedIdx);
                             String apkUrl = "http://" + ip + ":8552/apks/" + verObj.getString("file");
                             selectedVer = verObj.getString("version");
                             
