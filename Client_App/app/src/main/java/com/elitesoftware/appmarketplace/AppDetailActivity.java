@@ -124,12 +124,16 @@ public class AppDetailActivity extends AppCompatActivity {
                             conn.connect();
                             int fileLength = conn.getContentLength();
                             
+                            // Add Premium Feel Delay
+                            runOnUiThread(() -> detailInstallBtn.setText("PREPARING..."));
+                            try { Thread.sleep(600); } catch(Exception e) {}
+                            
                             InputStream input = new BufferedInputStream(url.openStream(), 8192);
                             String safeName = app.optString("name").replaceAll(" ", "_");
                             File apkFile = new File(getExternalFilesDir(null), safeName + "_v" + selectedVer + ".apk");
                             OutputStream output = new FileOutputStream(apkFile);
                             
-                            byte data[] = new byte[1024];
+                            byte data[] = new byte[8192];
                             long total = 0;
                             int count;
                             while ((count = input.read(data)) != -1) {
@@ -137,6 +141,8 @@ public class AppDetailActivity extends AppCompatActivity {
                                 int progress = (int) (total * 100 / fileLength);
                                 runOnUiThread(() -> detailProgressBar.setProgress(progress));
                                 output.write(data, 0, count);
+                                // slight artificial delay for progress bar visibility
+                                try { Thread.sleep(1); } catch(Exception e) {}
                             }
                             output.flush();
                             output.close();
@@ -147,40 +153,24 @@ public class AppDetailActivity extends AppCompatActivity {
                                 detailInstallBtn.setText("INSTALLING...");
                             });
                             
-                            // Install via Shizuku API / fallback to sh
+                            // Premium feel delay for installation
+                            try { Thread.sleep(800); } catch(Exception e) {}
+
+                            // Install via Shizuku API Stream (Bypasses Scoped Storage)
                             boolean installed_ok = false;
                             String errorLog = "";
                             
                             String packageName = app.optString("package_name");
                             boolean isSelfUpdate = packageName.equals(getPackageName());
-                            String installCmd = "pm install -r '" + apkFile.getAbsolutePath() + "'";
-                            if (isSelfUpdate) {
-                                installCmd += " && am start -n " + getPackageName() + "/.MainActivity";
-                            }
                             
                             try {
                                 if (Shizuku.pingBinder()) {
+                                    String installCmd = "pm install -S " + apkFile.length();
                                     Process p = Shizuku.newProcess(new String[]{"sh", "-c", installCmd}, null, null);
-                                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
-                                    String line;
-                                    while ((line = reader.readLine()) != null) errorLog += line + "\n";
-                                    if (p.waitFor() == 0) {
-                                        installed_ok = true;
-                                    }
-                                } else {
-                                    errorLog += "Shizuku is not running. ";
-                                }
-                            } catch (Exception e) {
-                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
-                            }
-                            
-                            if (!installed_ok) {
-                                try {
-                                    String streamInstallCmd = "dhizuku -c 'pm install -S " + apkFile.length() + "'";
-                                    Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", streamInstallCmd});
+                                    
                                     java.io.OutputStream out = p.getOutputStream();
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
-                                    byte[] buf = new byte[8192];
+                                    byte[] buf = new byte[65536];
                                     int len;
                                     while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
                                     in.close();
@@ -193,12 +183,15 @@ public class AppDetailActivity extends AppCompatActivity {
                                     
                                     if (p.waitFor() == 0) {
                                         installed_ok = true;
-                                    } else {
-                                        errorLog += "Dhizuku fallback failed with exit code " + p.exitValue() + "\n";
+                                        if (isSelfUpdate) {
+                                            Shizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
+                                        }
                                     }
-                                } catch (Exception e) {
-                                    errorLog += "Dhizuku Error: " + e.getMessage() + "\n";
+                                } else {
+                                    errorLog += "Shizuku is not running. ";
                                 }
+                            } catch (Exception e) {
+                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
                             }
                             
                             if (!installed_ok) {

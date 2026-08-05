@@ -484,13 +484,17 @@ public class MainActivity extends AppCompatActivity {
                             conn.connect();
                             int fileLength = conn.getContentLength();
                             
+                            // Add Premium Feel Delay
+                            runOnUiThread(() -> btnInstall.setText("PREPARING..."));
+                            try { Thread.sleep(600); } catch(Exception e) {}
+                            
                             java.io.InputStream input = new java.io.BufferedInputStream(url.openStream(), 8192);
                             String ver = app.getJSONArray("versions").getJSONObject(0).getString("version");
                             String safeName = app.optString("name").replaceAll(" ", "_");
                             java.io.File apkFile = new java.io.File(MainActivity.this.getExternalFilesDir(null), safeName + "_v" + ver + ".apk");
                             java.io.OutputStream output = new java.io.FileOutputStream(apkFile);
                             
-                            byte data[] = new byte[1024];
+                            byte data[] = new byte[8192];
                             long total = 0;
                             int count;
                             while ((count = input.read(data)) != -1) {
@@ -498,6 +502,8 @@ public class MainActivity extends AppCompatActivity {
                                 int progress = (int) (total * 100 / fileLength);
                                 runOnUiThread(() -> pbInstall.setProgress(progress));
                                 output.write(data, 0, count);
+                                // slight artificial delay for progress bar visibility
+                                try { Thread.sleep(1); } catch(Exception e) {}
                             }
                             output.flush();
                             output.close();
@@ -508,31 +514,24 @@ public class MainActivity extends AppCompatActivity {
                                 btnInstall.setText("INSTALLING...");
                             });
                             
-                            // Install via Shizuku API / fallback to sh
+                            // Premium feel delay for installation
+                            try { Thread.sleep(800); } catch(Exception e) {}
+                            
+                            // Install via Shizuku API Stream (Bypasses Scoped Storage)
                             boolean installed_ok = false;
                             String errorLog = "";
+                            
+                            String packageName = app.optString("package_name");
+                            boolean isSelfUpdate = packageName.equals(getPackageName());
+                            
                             try {
                                 if (Shizuku.pingBinder()) {
-                                    Process p = Shizuku.newProcess(new String[]{"pm", "install", "-r", apkFile.getAbsolutePath()}, null, null);
-                                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
-                                    String line;
-                                    while ((line = reader.readLine()) != null) errorLog += line + "\n";
-                                    if (p.waitFor() == 0) {
-                                        installed_ok = true;
-                                    }
-                                } else {
-                                    errorLog += "Shizuku is not running. ";
-                                }
-                            } catch (Exception e) {
-                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
-                            }
-                            
-                            if (!installed_ok) {
-                                try {
-                                    Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "dhizuku -c 'pm install -S " + apkFile.length() + "'"});
+                                    String installCmd = "pm install -S " + apkFile.length();
+                                    Process p = Shizuku.newProcess(new String[]{"sh", "-c", installCmd}, null, null);
+                                    
                                     java.io.OutputStream out = p.getOutputStream();
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
-                                    byte[] buf = new byte[8192];
+                                    byte[] buf = new byte[65536];
                                     int len;
                                     while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
                                     in.close();
@@ -545,12 +544,15 @@ public class MainActivity extends AppCompatActivity {
                                     
                                     if (p.waitFor() == 0) {
                                         installed_ok = true;
-                                    } else {
-                                        errorLog += "Dhizuku fallback failed with exit code " + p.exitValue() + "\n";
+                                        if (isSelfUpdate) {
+                                            Shizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
+                                        }
                                     }
-                                } catch (Exception e) {
-                                    errorLog += "Dhizuku Error: " + e.getMessage() + "\n";
+                                } else {
+                                    errorLog += "Shizuku is not running. ";
                                 }
+                            } catch (Exception e) {
+                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
                             }
                             
                             if (!installed_ok) {

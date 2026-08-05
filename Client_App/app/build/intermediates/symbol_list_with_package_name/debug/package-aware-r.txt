@@ -3102,7 +3102,10 @@ id bounceEnd
 id bounceStart
 id btnBack
 id btnInstall
+id btnSelectApk
+id btnSelectScreenshots
 id btnSettings
+id btnUpload
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -3184,6 +3187,11 @@ id easeInOut
 id easeOut
 id east
 id edge
+id editCategory
+id editDescription
+id editName
+id editPackage
+id editVersion
 id edit_query
 id elastic
 id embed
@@ -3491,6 +3499,8 @@ id transition_transform
 id triangle
 id tvAppDesc
 id tvAppName
+id txtApkStatus
+id txtScreenshotsStatus
 id unchecked
 id uniform
 id unlabeled
@@ -3629,6 +3639,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_app_detail
 layout activity_main
+layout activity_upload
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.appmarketplace"
-    android:versionCode="10035"
-    android:versionName="1.0.35" >
+    android:versionCode="10036"
+    android:versionName="1.0.36" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -48,6 +48,7 @@
             android:name="com.elitesoftware.appmarketplace.AppDetailActivity"
             android:exported="false"
             android:label="App Details" />
+        <activity android:name="com.elitesoftware.appmarketplace.UploadActivity" />
 
         <meta-data
             android:name="moe.shizuku.client.V3_SUPPORT"

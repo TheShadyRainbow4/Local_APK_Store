@@ -6,7 +6,10 @@ drawable rounded_bg
 drawable settings
 id btnBack
 id btnInstall
+id btnSelectApk
+id btnSelectScreenshots
 id btnSettings
+id btnUpload
 id detailCategory
 id detailDesc
 id detailIcon
@@ -15,6 +18,11 @@ id detailName
 id detailPackage
 id detailProgressBar
 id detailVersionSpinner
+id editCategory
+id editDescription
+id editName
+id editPackage
+id editVersion
 id ivAppIcon
 id lvApps
 id pbInstall
@@ -23,8 +31,11 @@ id tabDownloads
 id tabGames
 id tvAppDesc
 id tvAppName
+id txtApkStatus
+id txtScreenshotsStatus
 layout activity_app_detail
 layout activity_main
+layout activity_upload
 layout list_item_app
 mipmap ic_launcher
 raw elite_cert

@@ -33,6 +33,7 @@
             android:name=".AppDetailActivity"
             android:exported="false"
             android:label="App Details" />
+        <activity android:name=".UploadActivity" />
     </application>
 
 </manifest>

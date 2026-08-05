@@ -7,7 +7,13 @@
       "package_name": "com.elitesoftware.appmarketplace",
       "reviews": [],
       "screenshots": [
-        "Elite_App_Marketplace.png"
+        "Elite_App_Marketplace_Screenshot.png",
+        "Elite_App_Marketplace_Screenshot0.png",
+        "Elite_App_Marketplace_Screenshot1.png",
+        "Elite_App_Marketplace_Screenshot2.png",
+        "Elite_App_Marketplace_Screenshot3.png",
+        "Elite_App_Marketplace_Screenshot4.png",
+        "Elite_App_Marketplace_Screenshot5.png"
       ],
       "tags": [
         "App Store",
@@ -113,16 +119,20 @@
           "version": "1.0.32"
         },
         {
-          "version": "1.0.33",
-          "file": "Elite_App_Marketplace-Client_v1.0.33.apk"
+          "file": "Elite_App_Marketplace-Client_v1.0.33.apk",
+          "version": "1.0.33"
         },
         {
-          "version": "1.0.34",
-          "file": "Elite_App_Marketplace-Client_v1.0.34.apk"
+          "file": "Elite_App_Marketplace-Client_v1.0.34.apk",
+          "version": "1.0.34"
         },
         {
-          "version": "1.0.35",
-          "file": "Elite_App_Marketplace-Client_v1.0.35.apk"
+          "file": "Elite_App_Marketplace-Client_v1.0.35.apk",
+          "version": "1.0.35"
+        },
+        {
+          "file": "Elite_App_Marketplace-Client_v1.0.36.apk",
+          "version": "1.0.36"
         }
       ]
     },
