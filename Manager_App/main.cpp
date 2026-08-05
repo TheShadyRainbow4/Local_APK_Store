@@ -1838,6 +1838,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         return 0;
     }
     case WM_SIZE: {
+        if (wParam == SIZE_MINIMIZED) return DefWindowProcA(hwnd, uMsg, wParam, lParam);
         int w = LOWORD(lParam);
         int h = HIWORD(lParam);
         static int prevW = 0;
@@ -1845,6 +1846,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             g_listWidth += (w - prevW);
         }
         prevW = w;
+        
+        SaveConfig(hwnd);
 
         int sh = 0;
         if (hwndStatusBar && IsWindow(hwndStatusBar)) {
@@ -1898,7 +1901,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             int leftWidth = g_listWidth;
             if (leftWidth < 240) leftWidth = 240;
             if (leftWidth > tabRect.right - tabRect.left - 300) leftWidth = std::max(240L, tabRect.right - tabRect.left - 300);
-            g_listWidth = leftWidth;
             
             if (invLabels.size() > 0 && invLabels[0]) {
                 MoveWindow(invLabels[0], tabRect.left + 5, tabRect.top + 5, 200, 18, TRUE);
@@ -2261,6 +2263,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         return (LRESULT)GetStockObject(HOLLOW_BRUSH);
     }
     case WM_DESTROY:
+        SaveConfig(hwnd);
         if (g_hAppIcon) { DestroyIcon(g_hAppIcon); g_hAppIcon = NULL; }
         KillTimer(hwnd, 1002);
         StopServer();
