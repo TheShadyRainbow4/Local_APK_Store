@@ -92,22 +92,49 @@ public class MainActivity extends AppCompatActivity {
         discoverServers();
     }
     
+    private boolean isAppDisplayed(String packageName) {
+        for (JSONObject app : displayedAppsList) {
+            if (app.optString("package_name").equals(packageName)) return true;
+        }
+        return false;
+    }
+
     private void loadCachedApps() {
         try {
             android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
             org.json.JSONArray cachedApps = new org.json.JSONArray(prefs.getString("cached_apps", "[]"));
             for (int i = 0; i < cachedApps.length(); i++) {
                 JSONObject app = cachedApps.getJSONObject(i);
-                boolean exists = false;
-                for (JSONObject existingApp : appsList) {
-                    if (existingApp.optString("package_name").equals(app.optString("package_name"))) {
-                        exists = true; break;
+                if (!isAppDisplayed(app.optString("package_name"))) {
+                    displayedAppsList.add(app);
+                }
+            }
+            
+            // Add installed apps to the store list
+            java.util.List<android.content.pm.PackageInfo> packages = getPackageManager().getInstalledPackages(0);
+            for (android.content.pm.PackageInfo pi : packages) {
+                if ((pi.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 || pi.packageName.equals(getPackageName())) {
+                    if (!isAppDisplayed(pi.packageName)) {
+                        JSONObject app = new JSONObject();
+                        app.put("package_name", pi.packageName);
+                        CharSequence label = pi.applicationInfo.loadLabel(getPackageManager());
+                        app.put("name", label != null ? label.toString() : pi.packageName);
+                        app.put("description", "Installed on this device.");
+                        org.json.JSONArray vers = new org.json.JSONArray();
+                        JSONObject v = new JSONObject();
+                        v.put("version", pi.versionName != null ? pi.versionName : "1.0");
+                        v.put("file", "");
+                        vers.put(v);
+                        app.put("versions", vers);
+                        displayedAppsList.add(app);
                     }
                 }
-                if (!exists) appsList.add(app);
             }
-            filterApps();
-        } catch (Exception e) {}
+            
+            if (adapter != null) adapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupTabs() {
@@ -423,6 +450,10 @@ public class MainActivity extends AppCompatActivity {
             if (installed) {
                 btnInstall.setText("OPEN");
                 btnInstall.setOnClickListener(v -> {
+                    if (app.optString("package_name").equals(MainActivity.this.getPackageName())) {
+                        Toast.makeText(MainActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
                     if (launchIntent != null) {
                         MainActivity.this.startActivity(launchIntent);
@@ -533,12 +564,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     
+    private static java.util.HashMap<String, android.graphics.Bitmap> imageCache = new java.util.HashMap<>();
+    
     private void loadImageAsync(String urlStr, ImageView imageView) {
+        if (imageCache.containsKey(urlStr)) {
+            imageView.setImageBitmap(imageCache.get(urlStr));
+            return;
+        }
         imageView.setTag(urlStr);
         executor.execute(() -> {
             try {
                 java.net.URL url = new java.net.URL(urlStr);
                 android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                if (bmp != null) imageCache.put(urlStr, bmp);
                 runOnUiThread(() -> {
                     if (urlStr.equals(imageView.getTag())) {
                         imageView.setImageBitmap(bmp);

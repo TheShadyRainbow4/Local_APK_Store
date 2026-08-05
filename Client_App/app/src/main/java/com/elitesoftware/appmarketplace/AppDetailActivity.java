@@ -213,8 +213,17 @@ public class AppDetailActivity extends AppCompatActivity {
             if (installed && !updateAvailable) {
                 detailInstallBtn.setText("OPEN");
                 detailInstallBtn.setOnClickListener(v -> {
+                    if (app.optString("package_name").equals(getPackageName())) {
+                        Toast.makeText(AppDetailActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
-                    if (launchIntent != null) startActivity(launchIntent);
+                    if (launchIntent != null) {
+                        startActivity(launchIntent);
+                    } else {
+                        Toast.makeText(AppDetailActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
+                    }
                 });
             } else {
                 detailInstallBtn.setText(updateAvailable ? "UPDATE" : "INSTALL");
@@ -228,12 +237,19 @@ public class AppDetailActivity extends AppCompatActivity {
         }
     }
     
+    private static java.util.HashMap<String, android.graphics.Bitmap> imageCache = new java.util.HashMap<>();
+    
     private void loadImageAsync(String urlStr, ImageView imageView) {
+        if (imageCache.containsKey(urlStr)) {
+            imageView.setImageBitmap(imageCache.get(urlStr));
+            return;
+        }
         imageView.setTag(urlStr);
         new Thread(() -> {
             try {
                 java.net.URL url = new java.net.URL(urlStr);
                 android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                if (bmp != null) imageCache.put(urlStr, bmp);
                 runOnUiThread(() -> {
                     if (urlStr.equals(imageView.getTag())) {
                         imageView.setImageBitmap(bmp);
