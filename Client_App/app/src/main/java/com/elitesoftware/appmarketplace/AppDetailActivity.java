@@ -149,6 +149,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             
                             // Install via Shizuku API / fallback to sh
                             boolean installed_ok = false;
+                            String errorLog = "";
                             
                             String packageName = app.optString("package_name");
                             boolean isSelfUpdate = packageName.equals(getPackageName());
@@ -160,26 +161,55 @@ public class AppDetailActivity extends AppCompatActivity {
                             try {
                                 if (Shizuku.pingBinder()) {
                                     Process p = Shizuku.newProcess(new String[]{"sh", "-c", installCmd}, null, null);
+                                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
+                                    String line;
+                                    while ((line = reader.readLine()) != null) errorLog += line + "\n";
                                     if (p.waitFor() == 0) {
                                         installed_ok = true;
                                     }
+                                } else {
+                                    errorLog += "Shizuku is not running. ";
                                 }
-                            } catch (Exception e) {}
+                            } catch (Exception e) {
+                                errorLog += "Shizuku Error: " + e.getMessage() + "\n";
+                            }
                             
                             if (!installed_ok) {
-                                String streamInstallCmd = "dhizuku -c 'pm install -S " + apkFile.length() + "' || su -c 'pm install -S " + apkFile.length() + "'";
-                                // We cannot easily chain am start with stream install because standard input must be fed to the pm command.
-                                // However, dhizuku or su runs sh -c.
-                                Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", streamInstallCmd});
-                                java.io.OutputStream out = p.getOutputStream();
-                                java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
-                                byte[] buf = new byte[8192];
-                                int len;
-                                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-                                in.close();
-                                out.flush();
-                                out.close();
-                                p.waitFor();
+                                try {
+                                    String streamInstallCmd = "dhizuku -c 'pm install -S " + apkFile.length() + "'";
+                                    Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", streamInstallCmd});
+                                    java.io.OutputStream out = p.getOutputStream();
+                                    java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                    byte[] buf = new byte[8192];
+                                    int len;
+                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                    in.close();
+                                    out.flush();
+                                    out.close();
+                                    
+                                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
+                                    String line;
+                                    while ((line = reader.readLine()) != null) errorLog += line + "\n";
+                                    
+                                    if (p.waitFor() == 0) {
+                                        installed_ok = true;
+                                    } else {
+                                        errorLog += "Dhizuku fallback failed with exit code " + p.exitValue() + "\n";
+                                    }
+                                } catch (Exception e) {
+                                    errorLog += "Dhizuku Error: " + e.getMessage() + "\n";
+                                }
+                            }
+                            
+                            if (!installed_ok) {
+                                final String finalErr = errorLog;
+                                runOnUiThread(() -> {
+                                    Toast.makeText(AppDetailActivity.this, "Install failed!\n" + finalErr, Toast.LENGTH_LONG).show();
+                                    detailInstallBtn.setText("INSTALL");
+                                    detailInstallBtn.setEnabled(true);
+                                    pbInstall.setVisibility(View.GONE);
+                                });
+                                return; // abort
                             }
                             
                             runOnUiThread(() -> {

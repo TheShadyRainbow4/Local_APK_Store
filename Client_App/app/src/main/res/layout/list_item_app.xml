@@ -70,11 +70,11 @@
 
         <ProgressBar
             android:id="@+id/pbInstall"
-            style="?android:attr/progressBarStyleHorizontal"
+            style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_below="@+id/btnInstall"
-            android:layout_marginTop="8dp"
+            android:layout_height="16dp"
+            android:layout_below="@+id/ivAppIcon"
+            android:layout_marginTop="12dp"
             android:visibility="gone"
             android:progress="0"
             android:max="100" />

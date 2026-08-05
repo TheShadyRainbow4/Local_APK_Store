@@ -1034,29 +1034,7 @@ void ServerThread() {
     svrPtr->set_mount_point("/apks", apkDir.c_str());
     svrPtr->set_mount_point("/images", imgDir.c_str());
 
-    SOCKET testSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (testSock != INVALID_SOCKET) {
-        sockaddr_in service;
-        service.sin_family = AF_INET;
-        service.sin_addr.s_addr = inet_addr("0.0.0.0");
-        service.sin_port = htons(serverPort);
-
-        int bindRes = bind(testSock, (SOCKADDR*)&service, sizeof(service));
-        closesocket(testSock);
-
-        if (bindRes == SOCKET_ERROR) {
-            LogMessage("ERROR: HTTP Server failed to bind to port " + std::to_string(serverPort));
-            serverRunning = false;
-            if (hwndServerStatus && IsWindow(hwndServerStatus)) {
-                SetWindowTextA(hwndServerStatus, "Status: STOPPED (Port Error)");
-            }
-            if (btnToggleServer && IsWindow(btnToggleServer)) {
-                SetWindowTextA(btnToggleServer, "Start Server");
-            }
-            return;
-        }
-    }
-
+    // Removed testSock check to avoid TIME_WAIT blocking the port for httplib
     LogMessage("HTTP API Listening on port " + std::to_string(serverPort));
     bool success = svrPtr->listen("0.0.0.0", serverPort);
     if (!success) {
@@ -1246,13 +1224,27 @@ LRESULT CALLBACK AboutDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     static HFONT hNormalFont = NULL;
 
     switch (uMsg) {
+    case WM_PAINT: {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd, &ps);
+        RECT clientRect; GetClientRect(hwnd, &clientRect);
+        
+        RECT bannerRect = {0, 0, clientRect.right, 42};
+        HBRUSH hbrBanner = CreateSolidBrush(RGB(255, 255, 255));
+        FillRect(hdc, &bannerRect, hbrBanner);
+        DeleteObject(hbrBanner);
+        
+        DrawIconEx(hdc, 15, 5, LoadIcon(NULL, IDI_INFORMATION), 32, 32, 0, NULL, DI_NORMAL | DI_COMPAT);
+        
+        EndPaint(hwnd, &ps);
+        return 0;
+    }
     case WM_CREATE: {
         expanded = false;
         hNormalFont = CreateFontA(14, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
         hBoldFont = CreateFontA(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
 
-        HWND hIcon = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_ICON, 15, 15, 32, 32, hwnd, NULL, NULL, NULL);
-        SendMessageA(hIcon, STM_SETICON, (WPARAM)LoadIcon(NULL, IDI_INFORMATION), 0);
+        // Icon drawn in WM_PAINT instead for transparency over banner
 
         HWND hTitle = CreateWindowA("STATIC", "Local APK Store Manager v1.2.0.0", WS_CHILD | WS_VISIBLE, 60, 12, 360, 24, hwnd, NULL, NULL, NULL);
         SendMessageA(hTitle, WM_SETFONT, (WPARAM)hBoldFont, TRUE);
@@ -1348,6 +1340,22 @@ LRESULT CALLBACK HelpDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     static HFONT hBoldFont = NULL;
 
     switch (uMsg) {
+    case WM_PAINT: {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd, &ps);
+        RECT clientRect; GetClientRect(hwnd, &clientRect);
+        
+        RECT bannerRect = {0, 0, clientRect.right, 42};
+        HBRUSH hbrBanner = CreateSolidBrush(RGB(255, 255, 255));
+        FillRect(hdc, &bannerRect, hbrBanner);
+        DeleteObject(hbrBanner);
+        
+        HICON hHelpIcon = LoadIconA(GetModuleHandle(NULL), MAKEINTRESOURCE(102));
+        if (hHelpIcon) DrawIconEx(hdc, 15, 5, hHelpIcon, 32, 32, 0, NULL, DI_NORMAL | DI_COMPAT);
+        
+        EndPaint(hwnd, &ps);
+        return 0;
+    }
     case WM_CREATE: {
         hNormalFont = CreateFontA(14, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
         hBoldFont = CreateFontA(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_SWISS, "Segoe UI");
@@ -1355,9 +1363,8 @@ LRESULT CALLBACK HelpDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         HICON hHelpIcon = LoadIconA(GetModuleHandle(NULL), MAKEINTRESOURCE(102));
         SendMessageA(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hHelpIcon);
         SendMessageA(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hHelpIcon);
-
-        HWND hIcon = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_ICON, 15, 15, 32, 32, hwnd, NULL, NULL, NULL);
-        SendMessageA(hIcon, STM_SETICON, (WPARAM)hHelpIcon, 0);
+        
+        // Icon drawn in WM_PAINT instead for transparency over banner
 
         HWND hTitle = CreateWindowA("STATIC", "Local APK Store User Manual & Help Guidance", WS_CHILD | WS_VISIBLE, 60, 20, 420, 24, hwnd, NULL, NULL, NULL);
         SendMessageA(hTitle, WM_SETFONT, (WPARAM)hBoldFont, TRUE);
