@@ -556,6 +556,7 @@ public class MainActivity extends AppCompatActivity {
                             
                             try {
                                 Process p = null;
+                                boolean isSu = false;
                                 if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                     p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
                                 } else {
@@ -566,6 +567,7 @@ public class MainActivity extends AppCompatActivity {
                                     } catch(Exception e) {}
                                     if (p == null) {
                                         // SU fallback
+                                        isSu = true;
                                         p = Runtime.getRuntime().exec("su");
                                         p.getOutputStream().write(("pm install -S " + apkFile.length() + "\n").getBytes());
                                     }
@@ -580,7 +582,9 @@ public class MainActivity extends AppCompatActivity {
                                     in.close();
                                     
                                     // if SU, write exit
-                                    try { out.write("\nexit\n".getBytes()); } catch(Exception e){}
+                                    if (isSu) {
+                                        try { out.write("\nexit\n".getBytes()); } catch(Exception e){}
+                                    }
                                     out.flush();
                                     out.close();
                                     
