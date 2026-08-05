@@ -105,33 +105,54 @@ public class MainActivity extends AppCompatActivity {
             org.json.JSONArray cachedApps = new org.json.JSONArray(prefs.getString("cached_apps", "[]"));
             for (int i = 0; i < cachedApps.length(); i++) {
                 JSONObject app = cachedApps.getJSONObject(i);
-                if (!isAppDisplayed(app.optString("package_name"))) {
-                    displayedAppsList.add(app);
+                boolean exists = false;
+                for (JSONObject existingApp : appsList) {
+                    if (existingApp.optString("package_name").equals(app.optString("package_name"))) {
+                        exists = true; break;
+                    }
                 }
+                if (!exists) appsList.add(app);
             }
             
             // Add installed apps to the store list
             java.util.List<android.content.pm.PackageInfo> packages = getPackageManager().getInstalledPackages(0);
             for (android.content.pm.PackageInfo pi : packages) {
                 if ((pi.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 || pi.packageName.equals(getPackageName())) {
-                    if (!isAppDisplayed(pi.packageName)) {
+                    boolean exists = false;
+                    for (JSONObject existingApp : appsList) {
+                        if (existingApp.optString("package_name").equals(pi.packageName)) {
+                            exists = true; break;
+                        }
+                    }
+                    if (!exists) {
                         JSONObject app = new JSONObject();
                         app.put("package_name", pi.packageName);
                         CharSequence label = pi.applicationInfo.loadLabel(getPackageManager());
                         app.put("name", label != null ? label.toString() : pi.packageName);
                         app.put("description", "Installed on this device.");
+                        app.put("icon", "local://" + pi.packageName);
+                        
+                        // Cache the local icon as a bitmap
+                        try {
+                            android.graphics.drawable.Drawable icon = getPackageManager().getApplicationIcon(pi.applicationInfo);
+                            android.graphics.Bitmap bmp = android.graphics.Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+                            android.graphics.Canvas canvas = new android.graphics.Canvas(bmp);
+                            icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                            icon.draw(canvas);
+                            imageCache.put("local://" + pi.packageName, bmp);
+                        } catch (Exception e) {}
+                        
                         org.json.JSONArray vers = new org.json.JSONArray();
                         JSONObject v = new JSONObject();
                         v.put("version", pi.versionName != null ? pi.versionName : "1.0");
                         v.put("file", "");
                         vers.put(v);
                         app.put("versions", vers);
-                        displayedAppsList.add(app);
+                        appsList.add(app);
                     }
                 }
             }
-            
-            if (adapter != null) adapter.notifyDataSetChanged();
+            filterApps();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -450,7 +471,8 @@ public class MainActivity extends AppCompatActivity {
             ivAppIcon.setImageResource(R.mipmap.ic_launcher);
             
             if (app.has("icon") && !app.optString("icon").isEmpty()) {
-                String iconUrl = "http://" + app.optString("_server_ip") + ":8552/images/" + app.optString("icon");
+                String iconVal = app.optString("icon");
+                String iconUrl = iconVal.startsWith("local://") ? iconVal : "http://" + app.optString("_server_ip") + ":8552/images/" + iconVal;
                 loadImageAsync(iconUrl, ivAppIcon);
             }
             

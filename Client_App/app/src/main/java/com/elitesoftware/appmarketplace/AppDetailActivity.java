@@ -87,7 +87,8 @@ public class AppDetailActivity extends AppCompatActivity {
             detailVersionSpinner.setAdapter(adapter);
             
             if (app.has("icon") && !app.optString("icon").isEmpty()) {
-                String iconUrl = "http://" + ip + ":8552/images/" + app.optString("icon");
+                String iconVal = app.optString("icon");
+                String iconUrl = iconVal.startsWith("local://") ? iconVal : "http://" + ip + ":8552/images/" + iconVal;
                 loadImageAsync(iconUrl, detailIcon);
             }
             
