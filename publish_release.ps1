@@ -19,9 +19,12 @@ $gradle = $gradle -replace 'versionName ".*"', "versionName ""$rawVer"""
 $gradle | Set-Content $gradlePath
 
 Write-Host "Building C++ Server Manager..."
+Stop-Process -Name "Elite_App_Marketplace-Server" -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 2
 cd Manager_App
 windres resource.rc -O coff -o resource.res
-g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32
+gcc -O2 -c miniz.c -o miniz.o
+g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.o resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32
 cd ..
 
 Write-Host "Building Android APK..."

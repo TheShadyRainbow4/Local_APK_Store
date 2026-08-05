@@ -12,6 +12,7 @@
 #include <algorithm>
 #include "httplib.h"
 #include "json.hpp"
+#include "miniz.h"
 #include <gdiplus.h>
 #include <memory>
 #include <array>
@@ -122,8 +123,11 @@ std::string imgDir = "images";
 std::string configFile = "config.json";
 int g_windowWidth = 1000;
 int g_windowHeight = 700;
+int g_windowX = CW_USEDEFAULT;
+int g_windowY = CW_USEDEFAULT;
 bool g_windowMaximized = false;
 int g_listWidth = 350;
+std::vector<int> g_listCols = {110, 130, 55, 60, 70};
 bool g_isDraggingSplitter = false;
 HWND hwndSplitter = NULL;
 WNDPROC oldSplitterProc = NULL;
@@ -522,34 +526,49 @@ void ExtractApkMetadataAndIcon(const std::string& apkPath, json& appNode) {
     std::string outIconPath = imgDir + "\\" + outIconName;
     std::string absOutIconPath = fs::absolute(outIconPath).string();
 
-    std::string psScript = 
-        "$ErrorActionPreference = 'SilentlyContinue';\n"
-        "Add-Type -AssemblyName System.IO.Compression.FileSystem;\n"
-        "$zip = [System.IO.Compression.ZipFile]::OpenRead('" + PsEscape(absApkPath) + "');\n"
-        "$out = '" + PsEscape(absOutIconPath) + "';\n"
-        "$specified = '" + PsEscape(candidatePng) + "';\n"
-        "$entry = $null;\n"
-        "if ($specified -ne '') { $entry = $zip.GetEntry($specified); }\n"
-        "if (-not $entry) {\n"
-        "  $imgs = $zip.Entries | Where-Object { ($_.FullName -like '*.png' -or $_.FullName -like '*.webp' -or $_.FullName -like '*.jpg') -and $_.FullName -notlike '*.9.png' };\n"
-        "  $priorities = @('res/mipmap-xxxhdpi-v4/ic_launcher.png', 'res/mipmap-xxhdpi-v4/ic_launcher.png', 'res/mipmap-xhdpi-v4/ic_launcher.png', 'res/mipmap-hdpi-v4/ic_launcher.png', 'res/mipmap-mdpi-v4/ic_launcher.png', 'res/drawable-xxhdpi-v4/ic_launcher.png', 'res/drawable-xhdpi-v4/ic_launcher.png', 'res/drawable-hdpi-v4/ic_launcher.png');\n"
-        "  foreach ($p in $priorities) { $e = $imgs | Where-Object { $_.FullName -eq $p }; if ($e) { $entry = $e; break } }\n"
-        "  if (-not $entry) { $entry = $imgs | Where-Object { $_.FullName -like '*ic_launcher*.png' } | Sort-Object Length -Descending | Select-Object -First 1; }\n"
-        "  if (-not $entry) { $entry = $imgs | Where-Object { $_.FullName -like '*icon*.png' } | Sort-Object Length -Descending | Select-Object -First 1; }\n"
-        "  if (-not $entry) { $entry = $imgs | Where-Object { $_.FullName -like 'res/*.png' } | Sort-Object Length -Descending | Select-Object -First 1; }\n"
-        "  if (-not $entry) { $entry = $imgs | Where-Object { $_.FullName -like '*ic_launcher*' -or $_.FullName -like '*icon*' -or $_.FullName -like 'res/*' } | Sort-Object Length -Descending | Select-Object -First 1; }\n"
-        "  if (-not $entry) { $entry = $imgs | Sort-Object Length -Descending | Select-Object -First 1; }\n"
-        "}\n"
-        "if ($entry) { $entry.ExtractToFile($out, $true); }\n"
-        "$zip.Dispose();\n";
-
-    std::ofstream scriptFile("extract_icon_temp.ps1");
-    if (scriptFile.is_open()) {
-        scriptFile << "\xEF\xBB\xBF"; // Write UTF-8 BOM so PowerShell treats file as UTF-8
-        scriptFile << psScript;
-        scriptFile.close();
-        ExecCmd("powershell -ExecutionPolicy Bypass -File \"extract_icon_temp.ps1\"");
-        fs::remove("extract_icon_temp.ps1");
+    mz_zip_archive zip_archive;
+    memset(&zip_archive, 0, sizeof(zip_archive));
+    if (mz_zip_reader_init_file(&zip_archive, absApkPath.c_str(), 0)) {
+        int target_index = -1;
+        if (!candidatePng.empty()) {
+            target_index = mz_zip_reader_locate_file(&zip_archive, candidatePng.c_str(), NULL, 0);
+        }
+        if (target_index < 0) {
+            std::vector<std::string> priorities = {
+                "res/mipmap-xxxhdpi-v4/ic_launcher.png", "res/mipmap-xxhdpi-v4/ic_launcher.png",
+                "res/mipmap-xhdpi-v4/ic_launcher.png", "res/mipmap-hdpi-v4/ic_launcher.png",
+                "res/mipmap-mdpi-v4/ic_launcher.png", "res/drawable-xxhdpi-v4/ic_launcher.png",
+                "res/drawable-xhdpi-v4/ic_launcher.png", "res/drawable-hdpi-v4/ic_launcher.png"
+            };
+            for (const auto& p : priorities) {
+                target_index = mz_zip_reader_locate_file(&zip_archive, p.c_str(), NULL, 0);
+                if (target_index >= 0) break;
+            }
+            if (target_index < 0) {
+                mz_uint num_files = mz_zip_reader_get_num_files(&zip_archive);
+                mz_uint64 max_size = 0;
+                int best_icon = -1;
+                for (mz_uint i = 0; i < num_files; i++) {
+                    mz_zip_archive_file_stat file_stat;
+                    if (mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) {
+                        std::string name = file_stat.m_filename;
+                        if (name.length() >= 4 && name.substr(name.length()-4) == ".png" && name.find(".9.png") == std::string::npos) {
+                            if (name.find("ic_launcher") != std::string::npos || name.find("icon") != std::string::npos || name.find("res/") != std::string::npos) {
+                                if (file_stat.m_uncomp_size > max_size) {
+                                    max_size = file_stat.m_uncomp_size;
+                                    best_icon = i;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (best_icon >= 0) target_index = best_icon;
+            }
+        }
+        if (target_index >= 0) {
+            mz_zip_reader_extract_to_file(&zip_archive, target_index, absOutIconPath.c_str(), 0);
+        }
+        mz_zip_reader_end(&zip_archive);
     }
 
     if (fs::exists(outIconPath)) {
@@ -633,6 +652,8 @@ void SaveConfig(HWND hwnd) {
         int normW = wp.rcNormalPosition.right - wp.rcNormalPosition.left;
         j["window_width"] = normW;
         j["window_height"] = wp.rcNormalPosition.bottom - wp.rcNormalPosition.top;
+        j["window_x"] = wp.rcNormalPosition.left;
+        j["window_y"] = wp.rcNormalPosition.top;
         
         if (wp.showCmd == SW_SHOWMAXIMIZED) {
             RECT rc; GetClientRect(hwnd, &rc);
@@ -646,6 +667,16 @@ void SaveConfig(HWND hwnd) {
         j["window_height"] = g_windowHeight;
         j["window_maximized"] = g_windowMaximized;
         j["listview_width"] = g_listWidth;
+        j["window_x"] = -1;
+        j["window_y"] = -1;
+    }
+    
+    if (hwndApps && IsWindow(hwndApps)) {
+        json cols = json::array();
+        for (int i = 0; i < 5; i++) {
+            cols.push_back(ListView_GetColumnWidth(hwndApps, i));
+        }
+        j["list_cols"] = cols;
     }
     
     std::ofstream o(configFile);
@@ -662,11 +693,19 @@ void LoadConfig() {
             imgDir = j.value("img_dir", "images");
             g_windowWidth = j.value("window_width", 1000);
             g_windowHeight = j.value("window_height", 700);
+            g_windowX = j.value("window_x", CW_USEDEFAULT);
+            g_windowY = j.value("window_y", CW_USEDEFAULT);
             g_windowMaximized = j.value("window_maximized", false);
             g_listWidth = j.value("listview_width", 350);
+            if (j.contains("list_cols") && j["list_cols"].is_array()) {
+                auto cols = j["list_cols"];
+                for (size_t i = 0; i < cols.size() && i < g_listCols.size(); i++) {
+                    g_listCols[i] = cols[i].get<int>();
+                }
+            }
         } catch(...) {}
     } else {
-        SaveConfig();
+        SaveConfig(NULL);
     }
 }
 
@@ -944,6 +983,9 @@ void ClientCleanupThread() {
         for (const auto& logMsg : timedOutLogs) {
             LogMessage(logMsg);
         }
+        if (!timedOutLogs.empty() && hwndMain) {
+            PostMessageA(hwndMain, WM_COMMAND, 5001, 0);
+        }
     }
 }
 
@@ -1017,6 +1059,7 @@ void ServerThread() {
                     clientId, ip, deviceName, std::chrono::steady_clock::now()
                 };
             }
+            if (hwndMain) PostMessageA(hwndMain, WM_COMMAND, 5001, 0);
             res.set_content("{\"status\":\"ok\"}", "application/json");
         } catch (...) {
             res.status = 400;
@@ -1150,6 +1193,7 @@ svrPtr->Post("/api/disconnect", [](const httplib::Request& req, httplib::Respons
             }
             if (found) {
                 LogMessage("Client disconnected (explicit): " + deviceName + " (" + req.remote_addr + ")");
+                if (hwndMain) PostMessageA(hwndMain, WM_COMMAND, 5001, 0);
             }
             res.set_content("{\"status\":\"disconnected\"}", "application/json");
         } catch (...) {
@@ -2199,11 +2243,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         LVCOLUMNA lvc = {0};
         lvc.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
 
-        lvc.iSubItem = 0; lvc.pszText = (LPSTR)"Name"; lvc.cx = 110; ListView_InsertColumn(hwndApps, 0, &lvc);
-        lvc.iSubItem = 1; lvc.pszText = (LPSTR)"Package"; lvc.cx = 130; ListView_InsertColumn(hwndApps, 1, &lvc);
-        lvc.iSubItem = 2; lvc.pszText = (LPSTR)"Version"; lvc.cx = 55; ListView_InsertColumn(hwndApps, 2, &lvc);
-        lvc.iSubItem = 3; lvc.pszText = (LPSTR)"Size"; lvc.cx = 60; ListView_InsertColumn(hwndApps, 3, &lvc);
-        lvc.iSubItem = 4; lvc.pszText = (LPSTR)"Status"; lvc.cx = 70; ListView_InsertColumn(hwndApps, 4, &lvc);
+        lvc.iSubItem = 0; lvc.pszText = (LPSTR)"Name"; lvc.cx = g_listCols[0]; ListView_InsertColumn(hwndApps, 0, &lvc);
+        lvc.iSubItem = 1; lvc.pszText = (LPSTR)"Package"; lvc.cx = g_listCols[1]; ListView_InsertColumn(hwndApps, 1, &lvc);
+        lvc.iSubItem = 2; lvc.pszText = (LPSTR)"Version"; lvc.cx = g_listCols[2]; ListView_InsertColumn(hwndApps, 2, &lvc);
+        lvc.iSubItem = 3; lvc.pszText = (LPSTR)"Size"; lvc.cx = g_listCols[3]; ListView_InsertColumn(hwndApps, 3, &lvc);
+        lvc.iSubItem = 4; lvc.pszText = (LPSTR)"Status"; lvc.cx = g_listCols[4]; ListView_InsertColumn(hwndApps, 4, &lvc);
 
         HIMAGELIST hSmallState = ImageList_Create(32, 32, ILC_COLOR32 | ILC_MASK, 10, 10);
         ListView_SetImageList(hwndApps, hSmallState, LVSIL_SMALL);
@@ -2371,6 +2415,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         else if (wmId == 5000) {
             RefreshAppList();
         }
+        else if (wmId == 5001) {
+            RefreshClientListView();
+        }
         else if (wmId == ID_TRAY_EXIT_CONTEXT_MENU_ITEM) {
             SaveConfig(hwnd);
             RemoveTrayIcon(hwnd);
@@ -2467,7 +2514,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hIcon = GetDynamicAppIcon(hInstance);
     RegisterClassA(&wc);
 
-    HWND hwnd = CreateWindowExA(0, wc.lpszClassName, "Local APK Store - Server Manager", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, g_windowWidth, g_windowHeight, NULL, NULL, hInstance, NULL);
+    HWND hwnd = CreateWindowExA(0, wc.lpszClassName, "Local APK Store - Server Manager", WS_OVERLAPPEDWINDOW, g_windowX, g_windowY, g_windowWidth, g_windowHeight, NULL, NULL, hInstance, NULL);
     if (hwnd == NULL) return 0;
     
     int showMode = g_windowMaximized ? SW_SHOWMAXIMIZED : nCmdShow;
