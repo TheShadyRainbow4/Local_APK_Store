@@ -578,15 +578,18 @@ public class MainActivity extends AppCompatActivity {
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
                                     byte[] buf = new byte[65536];
                                     int len;
-                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-                                    in.close();
-                                    
-                                    // if SU, write exit
-                                    if (isSu) {
-                                        try { out.write("\nexit\n".getBytes()); } catch(Exception e){}
+                                    try {
+                                        while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                        out.flush();
+                                        if (isSu) {
+                                            out.write("\nexit\n".getBytes());
+                                            out.flush();
+                                        }
+                                        out.close();
+                                    } catch (Exception streamErr) {
+                                        errorLog += "Stream closed early: " + streamErr.getMessage() + ". ";
                                     }
-                                    out.flush();
-                                    out.close();
+                                    in.close();
                                     
                                     java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
                                     String line;
@@ -616,38 +619,47 @@ public class MainActivity extends AppCompatActivity {
                             }
                             
                             if (!installed_ok) {
-                                final String finalErr = errorLog;
+                                // Fallback to standard package installer
                                 runOnUiThread(() -> {
-                                    Toast.makeText(MainActivity.this, "Install failed!\n" + finalErr, Toast.LENGTH_LONG).show();
+                                    try {
+                                        android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                                        android.net.Uri apkUri = androidx.core.content.FileProvider.getUriForFile(MainActivity.this, getPackageName() + ".provider", apkFile);
+                                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(MainActivity.this, "Installation failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                     btnInstall.setText("INSTALL");
                                     btnInstall.setEnabled(true);
                                     pbInstall.setVisibility(View.GONE);
                                 });
-                                return; // abort
-                            }
-                            
-                            runOnUiThread(() -> {
-                                btnInstall.setText("OPEN");
-                                btnInstall.setEnabled(true);
-                                try {
-                                    android.content.SharedPreferences p = getSharedPreferences("prefs", MODE_PRIVATE);
-                                    org.json.JSONArray cachedApps = new org.json.JSONArray(p.getString("cached_apps", "[]"));
-                                    boolean exists = false;
-                                    for (int i = 0; i < cachedApps.length(); i++) {
-                                        if (cachedApps.getJSONObject(i).optString("package_name").equals(app.optString("package_name"))) {
-                                            exists = true; break;
+                            } else {
+                                runOnUiThread(() -> {
+                                    btnInstall.setText("OPEN");
+                                    btnInstall.setEnabled(true);
+                                    pbInstall.setVisibility(View.GONE);
+                                    try {
+                                        android.content.SharedPreferences p = getSharedPreferences("prefs", MODE_PRIVATE);
+                                        org.json.JSONArray cachedApps = new org.json.JSONArray(p.getString("cached_apps", "[]"));
+                                        boolean exists = false;
+                                        for (int i = 0; i < cachedApps.length(); i++) {
+                                            if (cachedApps.getJSONObject(i).optString("package_name").equals(app.optString("package_name"))) {
+                                                exists = true; break;
+                                            }
                                         }
-                                    }
-                                    if (!exists) {
-                                        cachedApps.put(app);
-                                        p.edit().putString("cached_apps", cachedApps.toString()).apply();
-                                        if (!appsList.contains(app)) appsList.add(app);
-                                    }
-                                } catch (Exception ex) {}
-                                btnInstall.setOnClickListener(v2 -> {
-                                    Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
-                                    if (launchIntent != null) MainActivity.this.startActivity(launchIntent);
+                                        if (!exists) {
+                                            cachedApps.put(app);
+                                            p.edit().putString("cached_apps", cachedApps.toString()).apply();
+                                        }
+                                    } catch (Exception e) {}
+                                    filterApps();
                                 });
+                            }
+                            btnInstall.setOnClickListener(v2 -> {
+                                Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                                if (launchIntent != null) MainActivity.this.startActivity(launchIntent);
                             });
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -188,14 +188,18 @@ public class AppDetailActivity extends AppCompatActivity {
                                     java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
                                     byte[] buf = new byte[65536];
                                     int len;
-                                    while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-                                    in.close();
-                                    
-                                    if (isSu) {
-                                        try { out.write("\nexit\n".getBytes()); } catch(Exception e){}
+                                    try {
+                                        while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                        out.flush();
+                                        if (isSu) {
+                                            out.write("\nexit\n".getBytes());
+                                            out.flush();
+                                        }
+                                        out.close();
+                                    } catch (Exception streamErr) {
+                                        errorLog += "Stream closed early: " + streamErr.getMessage() + ". ";
                                     }
-                                    out.flush();
-                                    out.close();
+                                    in.close();
                                     
                                     java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream()));
                                     String line;
@@ -225,9 +229,17 @@ public class AppDetailActivity extends AppCompatActivity {
                             }
                             
                             if (!installed_ok) {
-                                final String finalErr = errorLog;
                                 runOnUiThread(() -> {
-                                    Toast.makeText(AppDetailActivity.this, "Install failed!\n" + finalErr, Toast.LENGTH_LONG).show();
+                                    try {
+                                        android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                                        android.net.Uri apkUri = androidx.core.content.FileProvider.getUriForFile(AppDetailActivity.this, getPackageName() + ".provider", apkFile);
+                                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(AppDetailActivity.this, "Installation failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                     detailInstallBtn.setText("INSTALL");
                                     detailInstallBtn.setEnabled(true);
                                     detailProgressBar.setVisibility(View.GONE);

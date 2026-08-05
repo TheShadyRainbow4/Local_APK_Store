@@ -44,3 +44,4 @@ raw elite_cert
 raw elite_cert_pfx
 string app_name
 style Theme.LegacyMarket
+xml provider_paths
