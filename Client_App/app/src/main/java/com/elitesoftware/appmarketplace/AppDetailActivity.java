@@ -65,11 +65,24 @@ public class AppDetailActivity extends AppCompatActivity {
             detailIcon.setImageResource(R.mipmap.ic_launcher);
             
             android.widget.Spinner detailVersionSpinner = findViewById(R.id.detailVersionSpinner);
-            java.util.List<String> versionLabels = new java.util.ArrayList<>();
+            java.util.List<org.json.JSONObject> sortedVersions = new java.util.ArrayList<>();
             org.json.JSONArray versionsArr = app.getJSONArray("versions");
             for (int i = 0; i < versionsArr.length(); i++) {
-                versionLabels.add(versionsArr.getJSONObject(i).getString("version"));
+                sortedVersions.add(versionsArr.getJSONObject(i));
             }
+            java.util.Collections.sort(sortedVersions, (o1, o2) -> {
+                return compareVersions(o2.optString("version"), o1.optString("version")); // descending
+            });
+            // Update the original array to match sorted order (for installAction indexing)
+            org.json.JSONArray newVersionsArr = new org.json.JSONArray();
+            java.util.List<String> versionLabels = new java.util.ArrayList<>();
+            for (org.json.JSONObject vObj : sortedVersions) {
+                newVersionsArr.put(vObj);
+                versionLabels.add(vObj.getString("version"));
+            }
+            app.put("versions", newVersionsArr);
+            versionsArr = newVersionsArr;
+            
             android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, versionLabels);
             detailVersionSpinner.setAdapter(adapter);
             
@@ -78,20 +91,13 @@ public class AppDetailActivity extends AppCompatActivity {
                 loadImageAsync(iconUrl, detailIcon);
             }
             
-            boolean installed = false;
-            boolean updateAvailable = false;
+            String pkgName = app.optString("package_name");
+            String installedVersionTemp = null;
             try {
-                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(app.optString("package_name"), 0);
-                installed = true;
-                String installedVersion = pi.versionName;
-                org.json.JSONArray updateVersionsArr = app.getJSONArray("versions");
-                if (updateVersionsArr.length() > 0) {
-                    String serverVersion = updateVersionsArr.getJSONObject(updateVersionsArr.length() - 1).getString("version");
-                    if (installedVersion != null && !installedVersion.equals(serverVersion)) {
-                        updateAvailable = true;
-                    }
-                }
+                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(pkgName, 0);
+                installedVersionTemp = pi.versionName;
             } catch (Exception e) {}
+            final String installedVersion = installedVersionTemp;
 
             View.OnClickListener installAction = v -> {
                 detailInstallBtn.setEnabled(false);
@@ -120,7 +126,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             
                             InputStream input = new BufferedInputStream(url.openStream(), 8192);
                             String safeName = app.optString("name").replaceAll(" ", "_");
-                            File apkFile = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), safeName + "_v" + selectedVer + ".apk");
+                            File apkFile = new File(getExternalFilesDir(null), safeName + "_v" + selectedVer + ".apk");
                             OutputStream output = new FileOutputStream(apkFile);
                             
                             byte data[] = new byte[1024];
@@ -210,25 +216,36 @@ public class AppDetailActivity extends AppCompatActivity {
                     }).start();
                 };
             
-            if (installed && !updateAvailable) {
-                detailInstallBtn.setText("OPEN");
-                detailInstallBtn.setOnClickListener(v -> {
-                    if (app.optString("package_name").equals(getPackageName())) {
-                        Toast.makeText(AppDetailActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
-                        finish();
-                        return;
-                    }
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
-                    if (launchIntent != null) {
-                        startActivity(launchIntent);
+            detailVersionSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                    String selected = versionLabels.get(position);
+                    if (installedVersion != null) {
+                        if (selected.equals(installedVersion)) {
+                            detailInstallBtn.setText("OPEN");
+                            detailInstallBtn.setOnClickListener(v -> {
+                                if (pkgName.equals(getPackageName())) {
+                                    Toast.makeText(AppDetailActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    return;
+                                }
+                                Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkgName);
+                                if (launchIntent != null) startActivity(launchIntent);
+                                else Toast.makeText(AppDetailActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
+                            });
+                        } else {
+                            int cmp = compareVersions(selected, installedVersion);
+                            detailInstallBtn.setText(cmp > 0 ? "UPDATE" : "DOWNGRADE");
+                            detailInstallBtn.setOnClickListener(installAction);
+                        }
                     } else {
-                        Toast.makeText(AppDetailActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
+                        detailInstallBtn.setText("INSTALL");
+                        detailInstallBtn.setOnClickListener(installAction);
                     }
-                });
-            } else {
-                detailInstallBtn.setText(updateAvailable ? "UPDATE" : "INSTALL");
-                detailInstallBtn.setOnClickListener(installAction);
-            }
+                }
+                @Override
+                public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            });
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,6 +254,21 @@ public class AppDetailActivity extends AppCompatActivity {
         }
     }
     
+    private int compareVersions(String v1, String v2) {
+        if (v1 == null) v1 = "";
+        if (v2 == null) v2 = "";
+        String[] parts1 = v1.replace("v", "").split("\\.");
+        String[] parts2 = v2.replace("v", "").split("\\.");
+        int length = Math.max(parts1.length, parts2.length);
+        for (int i = 0; i < length; i++) {
+            int p1 = i < parts1.length && !parts1[i].isEmpty() ? Integer.parseInt(parts1[i].replaceAll("[^0-9]", "0")) : 0;
+            int p2 = i < parts2.length && !parts2[i].isEmpty() ? Integer.parseInt(parts2[i].replaceAll("[^0-9]", "0")) : 0;
+            if (p1 < p2) return -1;
+            if (p1 > p2) return 1;
+        }
+        return 0;
+    }
+
     private static java.util.HashMap<String, android.graphics.Bitmap> imageCache = new java.util.HashMap<>();
     
     private void loadImageAsync(String urlStr, ImageView imageView) {

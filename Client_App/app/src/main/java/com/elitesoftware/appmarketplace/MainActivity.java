@@ -374,19 +374,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkForSelfUpdate(JSONObject app) {
+    private int compareVersions(String v1, String v2) {
+        if (v1 == null) v1 = "";
+        if (v2 == null) v2 = "";
+        String[] parts1 = v1.replace("v", "").split("\\.");
+        String[] parts2 = v2.replace("v", "").split("\\.");
+        int length = Math.max(parts1.length, parts2.length);
+        for (int i = 0; i < length; i++) {
+            int p1 = i < parts1.length && !parts1[i].isEmpty() ? Integer.parseInt(parts1[i].replaceAll("[^0-9]", "0")) : 0;
+            int p2 = i < parts2.length && !parts2[i].isEmpty() ? Integer.parseInt(parts2[i].replaceAll("[^0-9]", "0")) : 0;
+            if (p1 < p2) return -1;
+            if (p1 > p2) return 1;
+        }
+        return 0;
+    }
+
+    private void checkSelfUpdate(JSONObject app) {
         try {
             if (!app.getString("package_name").equals("com.elitesoftware.appmarketplace")) return;
             JSONArray versions = app.getJSONArray("versions");
             String latestVer = "";
             for (int i = 0; i < versions.length(); i++) {
                 String ver = versions.getJSONObject(i).getString("version");
-                if (ver.compareTo(latestVer) > 0) latestVer = ver;
+                if (compareVersions(ver, latestVer) > 0) latestVer = ver;
             }
             android.content.pm.PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String currentVer = pInfo.versionName;
             
-            if (latestVer.compareTo(currentVer) > 0) {
+            if (compareVersions(latestVer, currentVer) > 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Store Update Available");
                 builder.setMessage("A new version of the Marketplace (" + latestVer + ") is available. View update?");
@@ -440,33 +455,26 @@ public class MainActivity extends AppCompatActivity {
             }
             
             boolean installed = false;
+            boolean updateAvailable = false;
             try {
-                MainActivity.this.getPackageManager().getPackageInfo(app.optString("package_name"), 0);
+                android.content.pm.PackageInfo pi = MainActivity.this.getPackageManager().getPackageInfo(app.optString("package_name"), 0);
                 installed = true;
+                String installedVersion = pi.versionName;
+                org.json.JSONArray versions = app.getJSONArray("versions");
+                String latestVer = "";
+                for (int i = 0; i < versions.length(); i++) {
+                    String ver = versions.getJSONObject(i).getString("version");
+                    if (compareVersions(ver, latestVer) > 0) latestVer = ver;
+                }
+                if (compareVersions(latestVer, installedVersion) > 0) updateAvailable = true;
             } catch (Exception e) {}
             
             ProgressBar pbInstall = convertView.findViewById(R.id.pbInstall);
             
-            if (installed) {
-                btnInstall.setText("OPEN");
-                btnInstall.setOnClickListener(v -> {
-                    if (app.optString("package_name").equals(MainActivity.this.getPackageName())) {
-                        Toast.makeText(MainActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
-                    if (launchIntent != null) {
-                        MainActivity.this.startActivity(launchIntent);
-                    } else {
-                        Toast.makeText(MainActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                btnInstall.setText("INSTALL");
-                btnInstall.setOnClickListener(v -> {
-                    btnInstall.setEnabled(false);
-                    pbInstall.setVisibility(View.VISIBLE);
-                    pbInstall.setProgress(0);
+            View.OnClickListener installAction = v -> {
+                btnInstall.setEnabled(false);
+                pbInstall.setVisibility(View.VISIBLE);
+                pbInstall.setProgress(0);
                     
                     new Thread(() -> {
                         try {
@@ -479,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
                             java.io.InputStream input = new java.io.BufferedInputStream(url.openStream(), 8192);
                             String ver = app.getJSONArray("versions").getJSONObject(0).getString("version");
                             String safeName = app.optString("name").replaceAll(" ", "_");
-                            java.io.File apkFile = new java.io.File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), safeName + "_v" + ver + ".apk");
+                            java.io.File apkFile = new java.io.File(MainActivity.this.getExternalFilesDir(null), safeName + "_v" + ver + ".apk");
                             java.io.OutputStream output = new java.io.FileOutputStream(apkFile);
                             
                             byte data[] = new byte[1024];
@@ -557,7 +565,25 @@ public class MainActivity extends AppCompatActivity {
                             });
                         }
                     }).start();
+            };
+            
+            if (installed && !updateAvailable) {
+                btnInstall.setText("OPEN");
+                btnInstall.setOnClickListener(v -> {
+                    if (app.optString("package_name").equals(MainActivity.this.getPackageName())) {
+                        Toast.makeText(MainActivity.this, "You are already using this app!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent launchIntent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(app.optString("package_name"));
+                    if (launchIntent != null) {
+                        MainActivity.this.startActivity(launchIntent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
+                    }
                 });
+            } else {
+                btnInstall.setText(updateAvailable ? "UPDATE" : "INSTALL");
+                btnInstall.setOnClickListener(installAction);
             }
             
             return convertView;
