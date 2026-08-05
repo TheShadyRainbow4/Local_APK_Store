@@ -207,7 +207,7 @@ public class AppDetailActivity extends AppCompatActivity {
                                     Toast.makeText(AppDetailActivity.this, "Install failed!\n" + finalErr, Toast.LENGTH_LONG).show();
                                     detailInstallBtn.setText("INSTALL");
                                     detailInstallBtn.setEnabled(true);
-                                    pbInstall.setVisibility(View.GONE);
+                                    detailProgressBar.setVisibility(View.GONE);
                                 });
                                 return; // abort
                             }
