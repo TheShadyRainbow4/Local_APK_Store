@@ -55,7 +55,7 @@ foreach ($app in $dbObj.apps) {
                 "version" = $rawVer
                 "file" = $apkFileName
             }
-            $app.versions += $newVer
+            $app.versions = @($newVer) + $app.versions
         }
     }
 }
