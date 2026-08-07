@@ -55,7 +55,7 @@ void UpdateServerStatusUI();
 HWND hwndTab = NULL;
 HWND hwndApps = NULL; // SysListView32
 HIMAGELIST hSmallIcons = NULL;
-std::string g_aaptPath = "NOT_FOUND";
+std::string g_aaptPath = "";
 HWND hwndName = NULL;
 HWND hwndPackage = NULL;
 HWND hwndVersion = NULL;
@@ -387,8 +387,11 @@ std::string GetAaptPath() {
         if (fs::exists(path)) {
             g_aaptPath = path;
             return g_aaptPath;
+        } else {
+            LogToFileAndUI("aapt path not found: " + path);
         }
     }
+    LogToFileAndUI("aapt NOT FOUND ANYWHERE!");
     g_aaptPath = "NOT_FOUND";
     return "";
 }
@@ -453,7 +456,9 @@ void ExtractApkMetadataAndIcon(const std::string& apkPath, json& appNode) {
     if (aaptPath.empty()) return;
 
     std::string absApkPath = fs::absolute(apkPath).string();
+    LogToFileAndUI("Starting extraction for " + absApkPath + " with aapt: " + aaptPath);
     std::string dump = RunAaptBadging(aaptPath, absApkPath);
+    LogToFileAndUI("Finished extracting " + absApkPath + " with aapt dump len: " + std::to_string(dump.length()));
 
     std::string pkg = "";
     size_t pkgPos = dump.find("package: name='");
@@ -757,6 +762,7 @@ void saveDb(const json& j) {
 }
 
 void RefreshAppList() {
+    LogToFileAndUI("Starting RefreshAppList...");
     dbCache = loadDb();
     bool dbUpdated = false;
     if (fs::exists(apkDir)) {
@@ -793,6 +799,7 @@ void RefreshAppList() {
     for (auto& app : dbCache["apps"]) {
         std::string pkg = app.value("package_name", "");
         std::string iconVal = app.value("icon", "");
+        LogToFileAndUI("Checking app pkg: " + pkg + ", iconVal: " + iconVal);
         if (iconVal.empty() || pkg.empty() || pkg.find("unknown.package") == 0 || !fs::exists(fs::path(imgDir) / iconVal)) {
             std::string apkFile = "";
             if (app.contains("versions") && !app["versions"].empty()) {
@@ -800,7 +807,7 @@ void RefreshAppList() {
             }
             if (!apkFile.empty()) {
                 std::string fullApkPath = apkDir + "/" + apkFile;
-                if (fs::exists(fullApkPath)) {
+                LogToFileAndUI("Checking " + fullApkPath); if (fs::exists(fullApkPath)) {
                     ExtractApkMetadataAndIcon(fullApkPath, app);
                     dbUpdated = true;
                 }
