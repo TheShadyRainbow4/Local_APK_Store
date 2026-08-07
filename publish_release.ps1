@@ -7,7 +7,8 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     $dbObj = Get-Content "Manager_App/db.json" -Raw | ConvertFrom-Json
     foreach ($app in $dbObj.apps) {
         if ($app.package_name -eq "com.elitesoftware.appmarketplace") {
-            $latestVer = $app.versions[0].version
+            $sortedVers = $app.versions | Sort-Object { [version]($_.version -replace '^v?(\d+\.\d+)$', "`$1.0" -replace '^v?(\d+\.\d+\.\d+).*', "`$1") } -Descending
+            $latestVer = $sortedVers[0].version
             $verParts = $latestVer.Split('.')
             $patch = [int]$verParts[2] + 1
             $Version = "v" + $verParts[0] + "." + $verParts[1] + "." + $patch
