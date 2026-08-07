@@ -26,8 +26,12 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.55",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.55.apk"
+                                          "version":  "1.0.56",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.56.apk"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.55.apk",
+                                          "version":  "1.0.55"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.54.apk",
@@ -498,28 +502,6 @@
                                       {
                                           "file":  "Nostalgia.ver.9.0.01.build.900100000.apk",
                                           "version":  "9.0.01"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "icon":  "Notification.Edge.ver.1.0.5.build.6_icon.png",
-                     "name":  "Notification Edge",
-                     "package_name":  "com.sallysoft.NotiCenter",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "Notification.Edge.ver.1.0.5.build.6.apk",
-                                          "version":  "1.0.5"
                                       }
                                   ]
                  },
@@ -998,6 +980,27 @@
                      "versions":  [
                                       {
                                           "file":  "iOS-6_Icons_1.3.6.336_2007.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "Notification.Edge.ver.1.0.5.build.6.apk",
+                     "package_name":  "unknown.package.Notification.Edge.ver.1.0.5.build.6.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Notification.Edge.ver.1.0.5.build.6.apk",
                                           "version":  "1.0"
                                       }
                                   ]

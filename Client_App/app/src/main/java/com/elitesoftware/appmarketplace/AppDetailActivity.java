@@ -168,18 +168,18 @@ public class AppDetailActivity extends AppCompatActivity {
                                 Process p = null;
                                 boolean isSu = false;
                                 if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                                    p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                    p = Shizuku.newProcess(new String[]{"pm", "install", "-r", "-S", String.valueOf(apkFile.length())}, null, null);
                                 } else {
                                     try {
                                         if (com.rosan.dhizuku.api.Dhizuku.isPermissionGranted()) {
-                                            p = com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
+                                            p = com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"pm", "install", "-r", "-S", String.valueOf(apkFile.length())}, null, null);
                                         }
                                     } catch(Exception e) {}
                                     if (p == null) {
                                         // SU fallback
                                         isSu = true;
                                         p = Runtime.getRuntime().exec("su");
-                                        p.getOutputStream().write(("pm install -S " + apkFile.length() + "\n").getBytes());
+                                        p.getOutputStream().write(("pm install -r -S " + apkFile.length() + "\n").getBytes());
                                     }
                                 }
                                 
@@ -231,12 +231,32 @@ public class AppDetailActivity extends AppCompatActivity {
                             if (!installed_ok) {
                                 runOnUiThread(() -> {
                                     try {
-                                        android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
-                                        android.net.Uri apkUri = androidx.core.content.FileProvider.getUriForFile(AppDetailActivity.this, getPackageName() + ".provider", apkFile);
-                                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                                        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                        startActivity(intent);
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                            android.content.pm.PackageInstaller packageInstaller = getPackageManager().getPackageInstaller();
+                                            android.content.pm.PackageInstaller.SessionParams params = new android.content.pm.PackageInstaller.SessionParams(
+                                                    android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+                                            int sessionId = packageInstaller.createSession(params);
+                                            android.content.pm.PackageInstaller.Session session = packageInstaller.openSession(sessionId);
+                                            java.io.OutputStream out = session.openWrite("package", 0, -1);
+                                            java.io.FileInputStream in = new java.io.FileInputStream(apkFile);
+                                            byte[] buffer = new byte[65536];
+                                            int c;
+                                            while ((c = in.read(buffer)) != -1) out.write(buffer, 0, c);
+                                            session.fsync(out);
+                                            in.close();
+                                            out.close();
+                                            
+                                            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_MAIN);
+                                            android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(AppDetailActivity.this, 0, intent, android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE);
+                                            session.commit(pendingIntent.getIntentSender());
+                                        } else {
+                                            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                                            android.net.Uri apkUri = androidx.core.content.FileProvider.getUriForFile(AppDetailActivity.this, getPackageName() + ".provider", apkFile);
+                                            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                            intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                            startActivity(intent);
+                                        }
                                     } catch (Exception e) {
                                         Toast.makeText(AppDetailActivity.this, "Installation failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
