@@ -12,24 +12,24 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_1.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_1.png"
-    },
-    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_app_detail.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\activity_app_detail.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_custom_progress_bar.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/custom_progress_bar.xml"
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_app_detail.xml.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_app_detail.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_list_item_app.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\list_item_app.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_3.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_3.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_5.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_5.png"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_1.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_1.png"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_main.xml.flat",
@@ -44,12 +44,20 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\raw\\elite_cert.cer"
     },
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_custom_progress_bar.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\custom_progress_bar.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_3.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_3.png"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_settings.png.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\settings.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_5.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_5.png"
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_list_item_app.xml.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/list_item_app.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\raw_elite_cert_pfx.pfx.flat",
