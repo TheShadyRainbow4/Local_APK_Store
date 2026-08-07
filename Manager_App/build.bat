@@ -14,6 +14,8 @@ g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.
 
 if %errorlevel% equ 0 (
     echo Build successful: Elite_App_Marketplace-Server.exe
+    cd ..
+    powershell -NoProfile -ExecutionPolicy Bypass -File publish_release.ps1
 ) else (
     echo Build failed!
 )

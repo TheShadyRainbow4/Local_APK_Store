@@ -1,779 +1,1002 @@
 {
-  "apps": [
-    {
-      "category": "System",
-      "description": "The official App Store client for downloading and managing Elite Software on your Android device.",
-      "name": "Elite App Marketplace",
-      "package_name": "com.elitesoftware.appmarketplace",
-      "reviews": [],
-      "screenshots": [
-        "Elite_App_Marketplace_Screenshot.png",
-        "Elite_App_Marketplace_Screenshot0.png",
-        "Elite_App_Marketplace_Screenshot1.png",
-        "Elite_App_Marketplace_Screenshot2.png",
-        "Elite_App_Marketplace_Screenshot3.png",
-        "Elite_App_Marketplace_Screenshot4.png",
-        "Elite_App_Marketplace_Screenshot5.png"
-      ],
-      "tags": [
-        "App Store",
-        "Marketplace",
-        "Root",
-        "Shizuku"
-      ],
-      "versions": [
-        {
-          "version": "1.0.53",
-          "file": "Elite_App_Marketplace-Client_v1.0.53.apk"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.52.apk",
-          "version": "1.0.52"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.51.apk",
-          "version": "1.0.51"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.50.apk",
-          "version": "1.0.50"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.49.apk",
-          "version": "1.0.49"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.48.apk",
-          "version": "1.0.48"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.47.apk",
-          "version": "1.0.47"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.46.apk",
-          "version": "1.0.46"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.45.apk",
-          "version": "1.0.45"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.44.apk",
-          "version": "1.0.44"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.43.apk",
-          "version": "1.0.43"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.42.apk",
-          "version": "1.0.42"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.41.apk",
-          "version": "1.0.41"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.40.apk",
-          "version": "1.0.40"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.39.apk",
-          "version": "1.0.39"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.38.apk",
-          "version": "1.0.38"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.37.apk",
-          "version": "1.0.37"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.36.apk",
-          "version": "1.0.36"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.35.apk",
-          "version": "1.0.35"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.34.apk",
-          "version": "1.0.34"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.33.apk",
-          "version": "1.0.33"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.32.apk",
-          "version": "1.0.32"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.31.apk",
-          "version": "1.0.31"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.30.apk",
-          "version": "1.0.30"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.29.apk",
-          "version": "1.0.29"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.28.apk",
-          "version": "1.0.28"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.27.apk",
-          "version": "1.0.27"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.26.apk",
-          "version": "1.0.26"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.25.apk",
-          "version": "1.0.25"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.24.apk",
-          "version": "1.0.24"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.23.apk",
-          "version": "1.0.23"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.22.apk",
-          "version": "1.0.22"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.21.apk",
-          "version": "1.0.21"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.20.apk",
-          "version": "1.0.20"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.19.apk",
-          "version": "1.0.19"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.18.apk",
-          "version": "1.0.18"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.17.apk",
-          "version": "1.0.17"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.16.apk",
-          "version": "1.0.16"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.15.apk",
-          "version": "1.0.15"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.14.apk",
-          "version": "1.0.14"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.4.apk",
-          "version": "1.0.4"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.3.apk",
-          "version": "1.0.3"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.2.apk",
-          "version": "1.0.2"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.1.apk",
-          "version": "1.0.1"
-        },
-        {
-          "file": "Elite_App_Marketplace-Client_v1.0.0.apk",
-          "version": "1.0.0"
-        }
-      ]
-    },
-    {
-      "category": "",
-      "description": "Auto-discovered APK.",
-      "icon": "Adobe.Flash.Player.11.1.ver.11.1.115.11.build.111115011_icon.png",
-      "name": "Adobe Flash Player 11.1",
-      "package_name": "com.adobe.flashplayer",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Adobe.Flash.Player.11.1.ver.11.1.115.11.build.111115011.apk",
-          "version": "11.1.115.11"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "com.rarlab.rar_7.11.build127_icon.png",
-      "name": "RAR",
-      "package_name": "com.rarlab.rar",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "com.rarlab.rar_7.11.build127.apk",
-          "version": "7.11.build127"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "net.darksky.darksky_icon.png",
-      "name": "Dark Sky",
-      "package_name": "net.darksky.darksky",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Dark.Sky.ver.3.3.1.build.292.apk",
-          "version": "3.3.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Dual.Messenger.ver.3.3.00.0.build.330000000_icon.png",
-      "name": "Dual Messenger",
-      "package_name": "com.samsung.android.da.daagent",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
-          "version": "3.3.00.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Edge.Legacy.ver.42.0.24.3989.build.3989024_icon.png",
-      "name": "Edge Legacy",
-      "package_name": "com.microsoft.emmy",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Edge.Legacy.ver.42.0.24.3989.build.3989024.apk",
-          "version": "42.0.24.3989"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "emoji-font-3_icon.png",
-      "name": "Aptoide",
-      "package_name": "cm.aptoide.pt",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "emoji-font-3.apk",
-          "version": "9.13.2.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Font Installer_1.0_Apkpure_icon.png",
-      "name": "Font Installer",
-      "package_name": "com.voxo.fontinstaller",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Font Installer_1.0_Apkpure.apk",
-          "version": "1.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "galaxy_max_hz_v8.1.90-beta_icon.png",
-      "name": "Galaxy MaxHz",
-      "package_name": "com.tribalfs.gmh",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "galaxy_max_hz_v8.1.90-beta.apk",
-          "version": "8.1.90-beta4"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "IOTHiddenMenu.ver.13.build.33_icon.png",
-      "name": "IOTHiddenMenu",
-      "package_name": "com.sec.hiddenmenu",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "IOTHiddenMenu.ver.13.build.33.apk",
-          "version": "13"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "LuckyPatchers.com_Official_Installer_10.8.1_icon.png",
-      "name": " LP  Installer ",
-      "package_name": "ru.aaaaaacz.installer",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "LuckyPatchers.com_Official_Installer_10.8.1.apk",
-          "version": "10.8.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "NFC.Tasks.ver.6.1.build.109_icon.png",
-      "name": "NFC Tasks",
-      "package_name": "com.wakdev.nfctasks",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "NFC.Tasks.ver.6.1.build.109.apk",
-          "version": "6.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "NFC.Tools.ver.9.1.build.147_icon.png",
-      "name": "NFC Tools",
-      "package_name": "com.wakdev.wdnfc",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "NFC.Tools.ver.9.1.build.147.apk",
-          "version": "9.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Nostalgia.ver.9.0.01.build.900100000_icon.png",
-      "name": "Nostalgia",
-      "package_name": "com.samsung.android.filter.effect.nostalgia",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Nostalgia.ver.9.0.01.build.900100000.apk",
-          "version": "9.0.01"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Notification.Edge.ver.1.0.5.build.6_icon.png",
-      "name": "Notification Edge",
-      "package_name": "com.sallysoft.NotiCenter",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Notification.Edge.ver.1.0.5.build.6.apk",
-          "version": "1.0.5"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "OnlyFans.ver.2.0.build.2_icon.png",
-      "name": "OnlyFans",
-      "package_name": "com.onlyfans.app",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "OnlyFans.ver.2.0.build.2.apk",
-          "version": "2.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "RoseEUKor.ver.2.0.00-3.build.200000003_icon.png",
-      "name": "RoseEUKor",
-      "package_name": "com.monotype.android.font.rosemary",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "RoseEUKor.ver.2.0.00-3.build.200000003.apk",
-          "version": "2.0.00-3"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "RtAcidOrange.FlipFont.ver.1.1.build.2_icon.png",
-      "name": "RtAcidOrange FlipFont",
-      "package_name": "com.monotype.android.font.rtacidorangel",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "RtAcidOrange.FlipFont.ver.1.1.build.2.apk",
-          "version": "1.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "SamsungSans.ver.2.0.00-5.build.200000005_icon.png",
-      "name": "SamsungSans",
-      "package_name": "com.monotype.android.font.samsungsans",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "SamsungSans.ver.2.0.00-5.build.200000005.apk",
-          "version": "2.0.00-5"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "name": "Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
-      "package_name": "unknown.package.Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
-          "version": "1.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "ShizuTools.ver.1.4.6.build.1_icon.png",
-      "name": "ShizuTools",
-      "package_name": "com.legendsayantan.adbtools",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "ShizuTools.ver.1.4.6.build.1.apk",
-          "version": "1.4.6"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "TidyPanel.3.0.ver.3.14-release.build.314_icon.png",
-      "name": "TidyPanel 3.0",
-      "package_name": "com.dharmapoudel.tidypanel",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "TidyPanel.3.0.ver.3.14-release.build.314.apk",
-          "version": "3.14-release"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Total.Commander.ver.3.60.build.1423_icon.png",
-      "name": "Total Commander",
-      "package_name": "com.ghisler.android.TotalCommander",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Total.Commander.ver.3.60.build.1423.apk",
-          "version": "3.60"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Totalcmd-Drive.ver.2.50.build.33_icon.png",
-      "name": "Totalcmd-Drive",
-      "package_name": "com.ghisler.tcplugins.drive",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Totalcmd-Drive.ver.2.50.build.33.apk",
-          "version": "2.50"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "TotalCmd-LAN.(Windows.shares).ver.3.56.build.101_icon.png",
-      "name": "TotalCmd-LAN (Windows shares)",
-      "package_name": "com.ghisler.tcplugins.LAN",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "TotalCmd-LAN.(Windows.shares).ver.3.56.build.101.apk",
-          "version": "3.56"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "TotalCmd-SFTP.ver.2.94.build.60_icon.png",
-      "name": "TotalCmd-SFTP",
-      "package_name": "com.ghisler.tcplugins.SFTP",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "TotalCmd-SFTP.ver.2.94.build.60.apk",
-          "version": "2.94"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "TotalCmd-WebDAV.(WEB.Folders).ver.3.77.build.63_icon.png",
-      "name": "TotalCmd-WebDAV (WEB Folders)",
-      "package_name": "com.ghisler.tcplugins.WebDAV",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "TotalCmd-WebDAV.(WEB.Folders).ver.3.77.build.63.apk",
-          "version": "3.77"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "TotalCmd-Wifi.Transfer.ver.4.5.build.99_icon.png",
-      "name": "TotalCmd-Wifi Transfer",
-      "package_name": "com.ghisler.tcplugins.wifitransfer",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "TotalCmd-Wifi.Transfer.ver.4.5.build.99.apk",
-          "version": "4.5"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Totalcmd-Windows.Live.OneDrive.ver.2.80.build.25_icon.png",
-      "name": "Totalcmd-Windows Live OneDrive",
-      "package_name": "com.ghisler.tcplugins.WindowsLive",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Totalcmd-Windows.Live.OneDrive.ver.2.80.build.25.apk",
-          "version": "2.80"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "Web Browser_ Internet Explorer_1.9.app_icon.png",
-      "name": "Web Browser Internet",
-      "package_name": "com.browser.downloader",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "Web Browser_ Internet Explorer_1.9.app.apk",
-          "version": "1.9"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "zfont-custom-font-installer-no-root_icon.png",
-      "name": "zFont",
-      "package_name": "com.mgngoe.zfont",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "zfont-custom-font-installer-no-root.apk",
-          "version": "2.5.1"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "zFont.3.ver.3.4.8.build.50_icon.png",
-      "name": "zFont 3",
-      "package_name": "com.htetznaing.zfont2",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "zFont.3.ver.3.4.8.build.50.apk",
-          "version": "3.4.8"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "icon": "zFont_3_V3.4.8_6132b_icon.png",
-      "name": "zFont 3",
-      "package_name": "com.htetznaing.zfont2",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "zFont_3_V3.4.8_6132b.apk",
-          "version": "3.4.8"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "name": "♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
-      "package_name": "unknown.package.♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
-          "version": "1.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "name": "나눔명조.FlipFont.ver.3.5.build.6.apk",
-      "package_name": "unknown.package.나눔명조.FlipFont.ver.3.5.build.6.apk",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "나눔명조.FlipFont.ver.3.5.build.6.apk",
-          "version": "1.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "name": "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
-      "package_name": "unknown.package.나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
-          "version": "1.0"
-        }
-      ]
-    },
-    {
-      "category": "Unknown",
-      "description": "Auto-discovered APK.",
-      "name": "iOS-6_Icons_1.3.6.336_2007.apk",
-      "package_name": "unknown.package.iOS-6_Icons_1.3.6.336_2007.apk",
-      "reviews": [],
-      "screenshots": [],
-      "tags": [],
-      "versions": [
-        {
-          "file": "iOS-6_Icons_1.3.6.336_2007.apk",
-          "version": "1.0"
-        }
-      ]
-    }
-  ]
+    "apps":  [
+                 {
+                     "category":  "System",
+                     "description":  "The official App Store client for downloading and managing Elite Software on your Android device.",
+                     "icon":  "Elite_App_Marketplace.png",
+                     "name":  "Elite App Marketplace",
+                     "package_name":  "com.elitesoftware.appmarketplace",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+                                         "Elite_App_Marketplace_Screenshot.png",
+                                         "Elite_App_Marketplace_Screenshot0.png",
+                                         "Elite_App_Marketplace_Screenshot1.png",
+                                         "Elite_App_Marketplace_Screenshot2.png",
+                                         "Elite_App_Marketplace_Screenshot3.png",
+                                         "Elite_App_Marketplace_Screenshot4.png",
+                                         "Elite_App_Marketplace_Screenshot5.png"
+                                     ],
+                     "tags":  [
+                                  "App Store",
+                                  "Marketplace",
+                                  "Root",
+                                  "Shizuku"
+                              ],
+                     "versions":  [
+                                      {
+                                          "version":  "1.0.54",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.54.apk"
+                                      },
+                                      {
+                                          "version":  "1.0.53",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.53.apk"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.52.apk",
+                                          "version":  "1.0.52"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.51.apk",
+                                          "version":  "1.0.51"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.50.apk",
+                                          "version":  "1.0.50"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.49.apk",
+                                          "version":  "1.0.49"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.48.apk",
+                                          "version":  "1.0.48"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.47.apk",
+                                          "version":  "1.0.47"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.46.apk",
+                                          "version":  "1.0.46"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.45.apk",
+                                          "version":  "1.0.45"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.44.apk",
+                                          "version":  "1.0.44"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.43.apk",
+                                          "version":  "1.0.43"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.42.apk",
+                                          "version":  "1.0.42"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.41.apk",
+                                          "version":  "1.0.41"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.40.apk",
+                                          "version":  "1.0.40"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.39.apk",
+                                          "version":  "1.0.39"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.38.apk",
+                                          "version":  "1.0.38"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.37.apk",
+                                          "version":  "1.0.37"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.36.apk",
+                                          "version":  "1.0.36"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.35.apk",
+                                          "version":  "1.0.35"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.34.apk",
+                                          "version":  "1.0.34"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.33.apk",
+                                          "version":  "1.0.33"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.32.apk",
+                                          "version":  "1.0.32"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.31.apk",
+                                          "version":  "1.0.31"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.30.apk",
+                                          "version":  "1.0.30"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.29.apk",
+                                          "version":  "1.0.29"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.28.apk",
+                                          "version":  "1.0.28"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.27.apk",
+                                          "version":  "1.0.27"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.26.apk",
+                                          "version":  "1.0.26"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.25.apk",
+                                          "version":  "1.0.25"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.24.apk",
+                                          "version":  "1.0.24"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.23.apk",
+                                          "version":  "1.0.23"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.22.apk",
+                                          "version":  "1.0.22"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.21.apk",
+                                          "version":  "1.0.21"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.20.apk",
+                                          "version":  "1.0.20"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.19.apk",
+                                          "version":  "1.0.19"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.18.apk",
+                                          "version":  "1.0.18"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.17.apk",
+                                          "version":  "1.0.17"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.16.apk",
+                                          "version":  "1.0.16"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.15.apk",
+                                          "version":  "1.0.15"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.14.apk",
+                                          "version":  "1.0.14"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.4.apk",
+                                          "version":  "1.0.4"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.3.apk",
+                                          "version":  "1.0.3"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.2.apk",
+                                          "version":  "1.0.2"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.1.apk",
+                                          "version":  "1.0.1"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.0.apk",
+                                          "version":  "1.0.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Adobe.Flash.Player.11.1.ver.11.1.115.11.build.111115011_icon.png",
+                     "name":  "Adobe Flash Player 11.1",
+                     "package_name":  "com.adobe.flashplayer",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Adobe.Flash.Player.11.1.ver.11.1.115.11.build.111115011.apk",
+                                          "version":  "11.1.115.11"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "com.rarlab.rar_7.11.build127_icon.png",
+                     "name":  "RAR",
+                     "package_name":  "com.rarlab.rar",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "com.rarlab.rar_7.11.build127.apk",
+                                          "version":  "7.11.build127"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "net.darksky.darksky_icon.png",
+                     "name":  "Dark Sky",
+                     "package_name":  "net.darksky.darksky",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Dark.Sky.ver.3.3.1.build.292.apk",
+                                          "version":  "3.3.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Dual.Messenger.ver.3.3.00.0.build.330000000_icon.png",
+                     "name":  "Dual Messenger",
+                     "package_name":  "com.samsung.android.da.daagent",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
+                                          "version":  "3.3.00.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Edge.Legacy.ver.42.0.24.3989.build.3989024_icon.png",
+                     "name":  "Edge Legacy",
+                     "package_name":  "com.microsoft.emmy",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Edge.Legacy.ver.42.0.24.3989.build.3989024.apk",
+                                          "version":  "42.0.24.3989"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "emoji-font-3_icon.png",
+                     "name":  "Aptoide",
+                     "package_name":  "cm.aptoide.pt",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "emoji-font-3.apk",
+                                          "version":  "9.13.2.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Font Installer_1.0_Apkpure_icon.png",
+                     "name":  "Font Installer",
+                     "package_name":  "com.voxo.fontinstaller",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Font Installer_1.0_Apkpure.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "galaxy_max_hz_v8.1.90-beta_icon.png",
+                     "name":  "Galaxy MaxHz",
+                     "package_name":  "com.tribalfs.gmh",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "galaxy_max_hz_v8.1.90-beta.apk",
+                                          "version":  "8.1.90-beta4"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "IOTHiddenMenu.ver.13.build.33_icon.png",
+                     "name":  "IOTHiddenMenu",
+                     "package_name":  "com.sec.hiddenmenu",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "IOTHiddenMenu.ver.13.build.33.apk",
+                                          "version":  "13"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "LuckyPatchers.com_Official_Installer_10.8.1_icon.png",
+                     "name":  " LP  Installer ",
+                     "package_name":  "ru.aaaaaacz.installer",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "LuckyPatchers.com_Official_Installer_10.8.1.apk",
+                                          "version":  "10.8.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "NFC.Tasks.ver.6.1.build.109_icon.png",
+                     "name":  "NFC Tasks",
+                     "package_name":  "com.wakdev.nfctasks",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "NFC.Tasks.ver.6.1.build.109.apk",
+                                          "version":  "6.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "NFC.Tools.ver.9.1.build.147_icon.png",
+                     "name":  "NFC Tools",
+                     "package_name":  "com.wakdev.wdnfc",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "NFC.Tools.ver.9.1.build.147.apk",
+                                          "version":  "9.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Nostalgia.ver.9.0.01.build.900100000_icon.png",
+                     "name":  "Nostalgia",
+                     "package_name":  "com.samsung.android.filter.effect.nostalgia",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Nostalgia.ver.9.0.01.build.900100000.apk",
+                                          "version":  "9.0.01"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Notification.Edge.ver.1.0.5.build.6_icon.png",
+                     "name":  "Notification Edge",
+                     "package_name":  "com.sallysoft.NotiCenter",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Notification.Edge.ver.1.0.5.build.6.apk",
+                                          "version":  "1.0.5"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "OnlyFans.ver.2.0.build.2_icon.png",
+                     "name":  "OnlyFans",
+                     "package_name":  "com.onlyfans.app",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "OnlyFans.ver.2.0.build.2.apk",
+                                          "version":  "2.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "RoseEUKor.ver.2.0.00-3.build.200000003_icon.png",
+                     "name":  "RoseEUKor",
+                     "package_name":  "com.monotype.android.font.rosemary",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "RoseEUKor.ver.2.0.00-3.build.200000003.apk",
+                                          "version":  "2.0.00-3"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "RtAcidOrange.FlipFont.ver.1.1.build.2_icon.png",
+                     "name":  "RtAcidOrange FlipFont",
+                     "package_name":  "com.monotype.android.font.rtacidorangel",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "RtAcidOrange.FlipFont.ver.1.1.build.2.apk",
+                                          "version":  "1.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "SamsungSans.ver.2.0.00-5.build.200000005_icon.png",
+                     "name":  "SamsungSans",
+                     "package_name":  "com.monotype.android.font.samsungsans",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "SamsungSans.ver.2.0.00-5.build.200000005.apk",
+                                          "version":  "2.0.00-5"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
+                     "package_name":  "unknown.package.Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Sandoll미생체.FlipFont.ver.1.4.build.5.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "ShizuTools.ver.1.4.6.build.1_icon.png",
+                     "name":  "ShizuTools",
+                     "package_name":  "com.legendsayantan.adbtools",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "ShizuTools.ver.1.4.6.build.1.apk",
+                                          "version":  "1.4.6"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "TidyPanel.3.0.ver.3.14-release.build.314_icon.png",
+                     "name":  "TidyPanel 3.0",
+                     "package_name":  "com.dharmapoudel.tidypanel",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "TidyPanel.3.0.ver.3.14-release.build.314.apk",
+                                          "version":  "3.14-release"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Total.Commander.ver.3.60.build.1423_icon.png",
+                     "name":  "Total Commander",
+                     "package_name":  "com.ghisler.android.TotalCommander",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Total.Commander.ver.3.60.build.1423.apk",
+                                          "version":  "3.60"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Totalcmd-Drive.ver.2.50.build.33_icon.png",
+                     "name":  "Totalcmd-Drive",
+                     "package_name":  "com.ghisler.tcplugins.drive",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Totalcmd-Drive.ver.2.50.build.33.apk",
+                                          "version":  "2.50"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "TotalCmd-LAN.(Windows.shares).ver.3.56.build.101_icon.png",
+                     "name":  "TotalCmd-LAN (Windows shares)",
+                     "package_name":  "com.ghisler.tcplugins.LAN",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "TotalCmd-LAN.(Windows.shares).ver.3.56.build.101.apk",
+                                          "version":  "3.56"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "TotalCmd-SFTP.ver.2.94.build.60_icon.png",
+                     "name":  "TotalCmd-SFTP",
+                     "package_name":  "com.ghisler.tcplugins.SFTP",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "TotalCmd-SFTP.ver.2.94.build.60.apk",
+                                          "version":  "2.94"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "TotalCmd-WebDAV.(WEB.Folders).ver.3.77.build.63_icon.png",
+                     "name":  "TotalCmd-WebDAV (WEB Folders)",
+                     "package_name":  "com.ghisler.tcplugins.WebDAV",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "TotalCmd-WebDAV.(WEB.Folders).ver.3.77.build.63.apk",
+                                          "version":  "3.77"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "TotalCmd-Wifi.Transfer.ver.4.5.build.99_icon.png",
+                     "name":  "TotalCmd-Wifi Transfer",
+                     "package_name":  "com.ghisler.tcplugins.wifitransfer",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "TotalCmd-Wifi.Transfer.ver.4.5.build.99.apk",
+                                          "version":  "4.5"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Totalcmd-Windows.Live.OneDrive.ver.2.80.build.25_icon.png",
+                     "name":  "Totalcmd-Windows Live OneDrive",
+                     "package_name":  "com.ghisler.tcplugins.WindowsLive",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Totalcmd-Windows.Live.OneDrive.ver.2.80.build.25.apk",
+                                          "version":  "2.80"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "Web Browser_ Internet Explorer_1.9.app_icon.png",
+                     "name":  "Web Browser Internet",
+                     "package_name":  "com.browser.downloader",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Web Browser_ Internet Explorer_1.9.app.apk",
+                                          "version":  "1.9"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "zfont-custom-font-installer-no-root_icon.png",
+                     "name":  "zFont",
+                     "package_name":  "com.mgngoe.zfont",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "zfont-custom-font-installer-no-root.apk",
+                                          "version":  "2.5.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "zFont.3.ver.3.4.8.build.50_icon.png",
+                     "name":  "zFont 3",
+                     "package_name":  "com.htetznaing.zfont2",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "zFont.3.ver.3.4.8.build.50.apk",
+                                          "version":  "3.4.8"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "icon":  "zFont_3_V3.4.8_6132b_icon.png",
+                     "name":  "zFont 3",
+                     "package_name":  "com.htetznaing.zfont2",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "zFont_3_V3.4.8_6132b.apk",
+                                          "version":  "3.4.8"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
+                     "package_name":  "unknown.package.♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "♤♡Łŭçƙƴ.Pąṭçĥëř.◇♧.ver.11.8.4.build.1944.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "나눔명조.FlipFont.ver.3.5.build.6.apk",
+                     "package_name":  "unknown.package.나눔명조.FlipFont.ver.3.5.build.6.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "나눔명조.FlipFont.ver.3.5.build.6.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
+                     "package_name":  "unknown.package.나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "iOS-6_Icons_1.3.6.336_2007.apk",
+                     "package_name":  "unknown.package.iOS-6_Icons_1.3.6.336_2007.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "iOS-6_Icons_1.3.6.336_2007.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 }
+             ]
 }

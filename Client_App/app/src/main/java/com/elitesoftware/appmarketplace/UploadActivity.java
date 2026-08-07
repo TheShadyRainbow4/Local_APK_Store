@@ -73,6 +73,39 @@ public class UploadActivity extends AppCompatActivity {
             if (requestCode == PICK_APK_REQUEST) {
                 apkUri = data.getData();
                 txtApkStatus.setText("APK Selected: " + getFileName(apkUri));
+                
+                new Thread(() -> {
+                    try {
+                        InputStream is = getContentResolver().openInputStream(apkUri);
+                        java.io.File tempFile = new java.io.File(getCacheDir(), "temp.apk");
+                        java.io.FileOutputStream fos = new java.io.FileOutputStream(tempFile);
+                        byte[] buffer = new byte[8192];
+                        int read;
+                        while ((read = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, read);
+                        }
+                        fos.close();
+                        is.close();
+                        
+                        android.content.pm.PackageManager pm = getPackageManager();
+                        android.content.pm.PackageInfo info = pm.getPackageArchiveInfo(tempFile.getAbsolutePath(), 0);
+                        if (info != null) {
+                            info.applicationInfo.sourceDir = tempFile.getAbsolutePath();
+                            info.applicationInfo.publicSourceDir = tempFile.getAbsolutePath();
+                            
+                            CharSequence label = info.applicationInfo.loadLabel(pm);
+                            runOnUiThread(() -> {
+                                editPackage.setText(info.packageName);
+                                editVersion.setText(info.versionName);
+                                if (label != null) {
+                                    editName.setText(label.toString());
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             } else if (requestCode == PICK_SCREENSHOTS_REQUEST) {
                 screenshotUris.clear();
                 if (data.getClipData() != null) {

@@ -73,6 +73,7 @@ HWND btnClearForm = NULL;
 HWND btnAddScreenshot = NULL;
 HWND btnClearScreenshots = NULL;
 HWND lstScreenshots = NULL;
+HIMAGELIST g_hImgListSS = NULL;
 HWND hwndPreview = NULL;
 
 std::vector<HWND> invLabels;
@@ -595,6 +596,35 @@ void ParseApkMetadata(std::string apkPath) {
     LogMessage("Extracted metadata and icon from " + apkPath);
 }
 
+
+int AddImageToImageList(HIMAGELIST hIml, const std::string& path) {
+    if (!fs::exists(path)) return -1;
+    std::wstring wpath(path.begin(), path.end());
+    Gdiplus::Bitmap* bmp = Gdiplus::Bitmap::FromFile(wpath.c_str());
+    int idx = -1;
+    if (bmp && bmp->GetLastStatus() == Gdiplus::Ok) {
+        int w = bmp->GetWidth();
+        int h = bmp->GetHeight();
+        float scale = std::min((float)100/w, (float)100/h);
+        int newW = std::max(1, (int)(w * scale));
+        int newH = std::max(1, (int)(h * scale));
+        Gdiplus::Bitmap* resized = new Gdiplus::Bitmap(100, 100, PixelFormat32bppARGB);
+        Gdiplus::Graphics g(resized);
+        g.Clear(Gdiplus::Color(255,255,255,255));
+        g.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+        g.DrawImage(bmp, (100-newW)/2, (100-newH)/2, newW, newH);
+        HBITMAP hBmp = NULL;
+        resized->GetHBITMAP(Gdiplus::Color(255, 255, 255), &hBmp);
+        if (hBmp) {
+            idx = ImageList_Add(hIml, hBmp, NULL);
+            DeleteObject(hBmp);
+        }
+        delete resized;
+        delete bmp;
+    }
+    return idx;
+}
+
 void UpdatePreviewImage(std::string path) {
     if (hPreviewBitmap) { DeleteObject(hPreviewBitmap); hPreviewBitmap = NULL; }
     if (fs::exists(path)) {
@@ -881,15 +911,17 @@ void LoadAppIntoForm(int index) {
         }
     }
     SetWindowTextA(hwndTags, tagsStr.c_str());
-    ListView_DeleteAllItems(lstScreenshots);
+    ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS);
     screenshots.clear();
     if (app.contains("screenshots")) {
         for (auto& s : app["screenshots"]) {
             std::string sPath = imgDir + "\\" + s.get<std::string>();
             screenshots.push_back(sPath);
+            int imgIdx = AddImageToImageList(g_hImgListSS, sPath);
             LVITEMA lvi = {0};
-            lvi.mask = LVIF_TEXT;
+            lvi.mask = LVIF_TEXT | LVIF_IMAGE;
             lvi.iItem = ListView_GetItemCount(lstScreenshots);
+            lvi.iImage = imgIdx;
             lvi.pszText = (LPSTR)s.get<std::string>().c_str();
             ListView_InsertItem(lstScreenshots, &lvi);
         }
@@ -916,7 +948,7 @@ void ClearForm() {
     SetWindowTextA(hwndName, ""); SetWindowTextA(hwndPackage, "");
     SetWindowTextA(hwndVersion, ""); SetWindowTextA(hwndCat, "");
     SetWindowTextA(hwndDesc, ""); SetWindowTextA(hwndTags, "");
-    ListView_DeleteAllItems(lstScreenshots);
+    ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS);
     screenshots.clear(); filePath[0] = '\0';
     SetWindowTextA(hwndApkLabel, "No APK selected");
     UpdatePreviewImage("");
@@ -2011,9 +2043,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             }
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
                 screenshots.push_back(path);
+                int imgIdx = AddImageToImageList(g_hImgListSS, path);
                 LVITEMA lvi = {0};
-                lvi.mask = LVIF_TEXT;
+                lvi.mask = LVIF_TEXT | LVIF_IMAGE;
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
+                lvi.iImage = imgIdx;
                 std::string fname = fs::path(path).filename().string();
                 lvi.pszText = (LPSTR)fname.c_str();
                 ListView_InsertItem(lstScreenshots, &lvi);
@@ -2277,8 +2311,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hwndDesc = CreateWindowExA(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
 
         invLabels.push_back(CreateWindowA("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
-        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL | LVS_NOCOLUMNHEADER | LVS_SHOWSELALWAYS, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
+        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
         ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
+        ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_NORMAL);
         LVCOLUMNA lvcSS = {0};
         lvcSS.mask = LVCF_WIDTH;
         lvcSS.cx = 140; // width of column
@@ -2443,16 +2478,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileNameA(&ofn)) {
                 screenshots.push_back(imgPath);
+                int imgIdx = AddImageToImageList(g_hImgListSS, imgPath);
                 LVITEMA lvi = {0};
-                lvi.mask = LVIF_TEXT;
+                lvi.mask = LVIF_TEXT | LVIF_IMAGE;
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
+                lvi.iImage = imgIdx;
                 std::string fname = fs::path(imgPath).filename().string();
                 lvi.pszText = (LPSTR)fname.c_str();
                 ListView_InsertItem(lstScreenshots, &lvi);
                 UpdatePreviewImage(screenshots.back());
             }
         }
-        else if (wmId == 4) { screenshots.clear(); ListView_DeleteAllItems(lstScreenshots); UpdatePreviewImage(""); }
+        else if (wmId == 4) { screenshots.clear(); ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS); UpdatePreviewImage(""); }
         else if (wmId == 5) ClearForm();
         else if (wmId == 6) DeleteSelectedApp();
         else if (wmId == 7) ShowWindow(hwnd, SW_HIDE);

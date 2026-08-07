@@ -1,9 +1,21 @@
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$Version
+    [string]$Version = ""
 )
 $ErrorActionPreference = 'Stop'
 
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    $dbObj = Get-Content "Manager_App/db.json" -Raw | ConvertFrom-Json
+    foreach ($app in $dbObj.apps) {
+        if ($app.package_name -eq "com.elitesoftware.appmarketplace") {
+            $latestVer = $app.versions[0].version
+            $verParts = $latestVer.Split('.')
+            $patch = [int]$verParts[2] + 1
+            $Version = "v" + $verParts[0] + "." + $verParts[1] + "." + $patch
+            break
+        }
+    }
+    Write-Host "Auto-incremented version to $Version"
+}
 $rawVer = $Version.Replace("v", "")
 $verParts = $rawVer.Split('.')
 $verCode = 1
@@ -18,14 +30,7 @@ $gradle = $gradle -replace 'versionCode \d+', "versionCode $verCode"
 $gradle = $gradle -replace 'versionName ".*"', "versionName ""$rawVer"""
 $gradle | Set-Content $gradlePath
 
-Write-Host "Building C++ Server Manager..."
-Stop-Process -Name "Elite_App_Marketplace-Server" -Force -ErrorAction SilentlyContinue
-Start-Sleep -Seconds 2
-cd Manager_App
-windres resource.rc -O coff -o resource.res
-gcc -O2 -c miniz.c -o miniz.o
-g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.o resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32 -static -static-libgcc -static-libstdc++
-cd ..
+
 
 Write-Host "Building Android APK..."
 cd Client_App
