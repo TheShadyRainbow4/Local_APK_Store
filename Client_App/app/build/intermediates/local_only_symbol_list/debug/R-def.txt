@@ -1,7 +1,11 @@
 R_DEF: Internal format may change without notice
 local
 drawable btn_3d
+drawable custom_progress_bar
 drawable ic_settings
+drawable loading_bar_1
+drawable loading_bar_3
+drawable loading_bar_5
 drawable rounded_bg
 drawable settings
 id btnBack

@@ -2908,6 +2908,7 @@ drawable btn_radio_off_mtrl
 drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
+drawable custom_progress_bar
 drawable design_fab_background
 drawable design_ic_visibility
 drawable design_ic_visibility_off
@@ -2926,6 +2927,9 @@ drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable ic_search_black_24
 drawable ic_settings
+drawable loading_bar_1
+drawable loading_bar_3
+drawable loading_bar_5
 drawable m3_appbar_background
 drawable m3_avd_hide_password
 drawable m3_avd_show_password

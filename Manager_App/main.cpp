@@ -1243,7 +1243,22 @@ void ServerThread() {
                         app["tags"] = j["tags"];
                     }
                     if (j.contains("screenshots") && j["screenshots"].is_array()) {
-                        app["screenshots"] = j["screenshots"];
+                        if (!app.contains("screenshots") || !app["screenshots"].is_array()) {
+                            app["screenshots"] = j["screenshots"];
+                        } else {
+                            for (auto& newS : j["screenshots"]) {
+                                bool sFound = false;
+                                for (auto& oldS : app["screenshots"]) {
+                                    if (oldS == newS) {
+                                        sFound = true;
+                                        break;
+                                    }
+                                }
+                                if (!sFound) {
+                                    app["screenshots"].push_back(newS);
+                                }
+                            }
+                        }
                     }
                     if (j.contains("versions") && j["versions"].is_array()) {
                         // Merge versions

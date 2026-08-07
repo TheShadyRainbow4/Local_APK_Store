@@ -69,6 +69,28 @@
                  {
                      "category":  "Unknown",
                      "description":  "Auto-discovered APK.",
+                     "icon":  "com.andrerinas.headunitrevived_icon.png",
+                     "name":  "Open Headunit",
+                     "package_name":  "com.andrerinas.headunitrevived",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "com.andrerinas.headunitrevived_3.2.2.apk",
+                                          "version":  "3.2.2"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
                      "icon":  "com.browser.downloader_icon.png",
                      "name":  "Web Browser Internet",
                      "package_name":  "com.browser.downloader",
@@ -128,12 +150,16 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.65",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.65.apk"
+                                          "version":  "1.0.66",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.66.apk"
                                       },
                                       {
-                                          "version":  "1.0.64",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.64.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.65.apk",
+                                          "version":  "1.0.65"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.64.apk",
+                                          "version":  "1.0.64"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.62.apk",
@@ -959,6 +985,17 @@
                                   ]
                  },
                  {
+                     "icon":  "rk.android.app.shortcutmaker_icon.png",
+                     "name":  "Shortcut Maker",
+                     "package_name":  "rk.android.app.shortcutmaker",
+                     "versions":  [
+                                      {
+                                          "file":  "rk.android.app.shortcutmaker_v123.apk",
+                                          "version":  "5.0.7"
+                                      }
+                                  ]
+                 },
+                 {
                      "category":  "Unknown",
                      "description":  "Auto-discovered APK.",
                      "icon":  "ru.aaaaaacz.installer_icon.png",
@@ -977,6 +1014,17 @@
                                       {
                                           "file":  "LuckyPatchers.com_Official_Installer_10.8.1.apk",
                                           "version":  "10.8.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "icon":  "zed.rainxch.githubstore_icon.png",
+                     "name":  "Komi Store",
+                     "package_name":  "zed.rainxch.githubstore",
+                     "versions":  [
+                                      {
+                                          "file":  "Komi-Store-1.9.2.apk",
+                                          "version":  "1.9.2"
                                       }
                                   ]
                  },
