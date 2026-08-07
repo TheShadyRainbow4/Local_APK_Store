@@ -26,8 +26,12 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.56",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.56.apk"
+                                          "version":  "1.0.57",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.57.apk"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.56.apk",
+                                          "version":  "1.0.56"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.55.apk",
@@ -288,28 +292,6 @@
                  {
                      "category":  "Unknown",
                      "description":  "Auto-discovered APK.",
-                     "icon":  "Dual.Messenger.ver.3.3.00.0.build.330000000_icon.png",
-                     "name":  "Dual Messenger",
-                     "package_name":  "com.samsung.android.da.daagent",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
-                                          "version":  "3.3.00.0"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
                      "icon":  "Edge.Legacy.ver.42.0.24.3989.build.3989024_icon.png",
                      "name":  "Edge Legacy",
                      "package_name":  "com.microsoft.emmy",
@@ -326,28 +308,6 @@
                                       {
                                           "file":  "Edge.Legacy.ver.42.0.24.3989.build.3989024.apk",
                                           "version":  "42.0.24.3989"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "icon":  "emoji-font-3_icon.png",
-                     "name":  "Aptoide",
-                     "package_name":  "cm.aptoide.pt",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "emoji-font-3.apk",
-                                          "version":  "9.13.2.1"
                                       }
                                   ]
                  },
@@ -392,28 +352,6 @@
                                       {
                                           "file":  "galaxy_max_hz_v8.1.90-beta.apk",
                                           "version":  "8.1.90-beta4"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "icon":  "IOTHiddenMenu.ver.13.build.33_icon.png",
-                     "name":  "IOTHiddenMenu",
-                     "package_name":  "com.sec.hiddenmenu",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "IOTHiddenMenu.ver.13.build.33.apk",
-                                          "version":  "13"
                                       }
                                   ]
                  },
@@ -480,28 +418,6 @@
                                       {
                                           "file":  "NFC.Tools.ver.9.1.build.147.apk",
                                           "version":  "9.1"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "icon":  "Nostalgia.ver.9.0.01.build.900100000_icon.png",
-                     "name":  "Nostalgia",
-                     "package_name":  "com.samsung.android.filter.effect.nostalgia",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "Nostalgia.ver.9.0.01.build.900100000.apk",
-                                          "version":  "9.0.01"
                                       }
                                   ]
                  },
@@ -1001,6 +917,90 @@
                      "versions":  [
                                       {
                                           "file":  "Notification.Edge.ver.1.0.5.build.6.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "emoji-font-3.apk",
+                     "package_name":  "unknown.package.emoji-font-3.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "emoji-font-3.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "Nostalgia.ver.9.0.01.build.900100000.apk",
+                     "package_name":  "unknown.package.Nostalgia.ver.9.0.01.build.900100000.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Nostalgia.ver.9.0.01.build.900100000.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "IOTHiddenMenu.ver.13.build.33.apk",
+                     "package_name":  "unknown.package.IOTHiddenMenu.ver.13.build.33.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "IOTHiddenMenu.ver.13.build.33.apk",
+                                          "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Unknown",
+                     "description":  "Auto-discovered APK.",
+                     "name":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
+                     "package_name":  "unknown.package.Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+
+                              ],
+                     "versions":  [
+                                      {
+                                          "file":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
                                           "version":  "1.0"
                                       }
                                   ]

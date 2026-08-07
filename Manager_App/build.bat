@@ -1,4 +1,11 @@
 @echo off
+if "%~1"=="logging" goto :logging
+
+echo Starting build process... Output is being written to build_log.txt
+call "%~f0" logging > "%~dp0build_log.txt" 2>&1
+exit
+
+:logging
 echo Terminating running instances...
 taskkill /F /IM Elite_App_Marketplace-Server.exe >nul 2>&1
 taskkill /F /IM LocalAPKStore.exe >nul 2>&1

@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Marketplace Settings");
-        String[] options = {"Install Root Certificate", "Install PFX Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black"};
+        String[] options = {"Install Root Certificate", "Install PFX Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black", "View Latest Release on GitHub", "View Local Server Website"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) installCertificate();
             else if (which == 1) installPfxCertificate();
@@ -240,6 +240,20 @@ public class MainActivity extends AppCompatActivity {
                 else if (which == 5) prefs.edit().putString("theme", "dark").apply();
                 else if (which == 6) prefs.edit().putString("theme", "amoled").apply();
                 recreate();
+            }
+            else if (which == 7) {
+                android.content.Intent browserIntent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/TheShadyRainbow4/Local_APK_Store/releases/latest"));
+                startActivity(browserIntent);
+            }
+            else if (which == 8) {
+                android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                String serverIp = prefs.getString("server_ip", "");
+                if (!serverIp.isEmpty()) {
+                    android.content.Intent browserIntent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("http://" + serverIp + ":8552/"));
+                    startActivity(browserIntent);
+                } else {
+                    android.widget.Toast.makeText(this, "No server IP configured. Connect to server first.", android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
         builder.show();

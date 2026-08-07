@@ -956,12 +956,34 @@ void ClearForm() {
 
 void DeleteSelectedApp() {
     if (selectedAppIndex >= 0 && selectedAppIndex < (int)dbCache["apps"].size()) {
-        if (MessageBoxA(hwndMain, "Are you sure you want to delete the selected application entry?", "Confirm Delete", MB_YESNO | MB_ICONQUESTION) == IDYES) {
+        if (MessageBoxA(hwndMain, "Are you sure you want to delete the selected application entry AND its files from disk?", "Confirm Delete", MB_YESNO | MB_ICONQUESTION) == IDYES) {
+            auto& app = dbCache["apps"][selectedAppIndex];
+            if (app.contains("versions")) {
+                for (auto& v : app["versions"]) {
+                    std::string apkFile = v.value("file", "");
+                    if (!apkFile.empty()) {
+                        std::string fullPath = apkDir + "/" + apkFile;
+                        try { if (fs::exists(fullPath)) fs::remove(fullPath); } catch(...) {}
+                    }
+                }
+            }
+            std::string iconFile = app.value("icon", "");
+            if (!iconFile.empty()) {
+                std::string fullIconPath = imgDir + "/" + iconFile;
+                try { if (fs::exists(fullIconPath)) fs::remove(fullIconPath); } catch(...) {}
+            }
+            if (app.contains("screenshots")) {
+                for (auto& s : app["screenshots"]) {
+                    std::string ssFile = s.get<std::string>();
+                    std::string fullSsPath = imgDir + "/" + ssFile;
+                    try { if (fs::exists(fullSsPath)) fs::remove(fullSsPath); } catch(...) {}
+                }
+            }
             dbCache["apps"].erase(dbCache["apps"].begin() + selectedAppIndex);
             saveDb(dbCache);
             ClearForm();
             RefreshAppList();
-            LogToFileAndUI("Deleted application entry at index " + std::to_string(selectedAppIndex));
+            LogToFileAndUI("Deleted application entry and files at index " + std::to_string(selectedAppIndex));
         }
     } else {
         MessageBoxA(hwndMain, "Please select an application to delete.", "No Selection", MB_OK | MB_ICONINFORMATION);
@@ -1240,6 +1262,48 @@ svrPtr->Post("/api/disconnect", [](const httplib::Request& req, httplib::Respons
     });
     svrPtr->set_mount_point("/apks", apkDir.c_str());
     svrPtr->set_mount_point("/images", imgDir.c_str());
+
+    svrPtr->Get("/", [](const httplib::Request& req, httplib::Response& res) {
+        std::string latestMarketplaceApk = "";
+        std::string latestVersionStr = "1.0";
+        json dbCache = loadDb();
+        for (auto& app : dbCache["apps"]) {
+            if (app.value("package_name", "") == "com.elitesoftware.appmarketplace") {
+                if (app.contains("versions") && !app["versions"].empty()) {
+                    latestMarketplaceApk = app["versions"].back().value("file", "");
+                    latestVersionStr = app["versions"].back().value("version", "1.0");
+                }
+                break;
+            }
+        }
+        
+        std::string html = R"(
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Elite App Marketplace</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <style>
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; text-align: center; padding: 50px; color: #333; }
+                    .container { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+                    h1 { color: #2c3e50; }
+                    p { font-size: 1.1em; color: #7f8c8d; line-height: 1.6; }
+                    .btn { display: inline-block; background-color: #27ae60; color: white; padding: 15px 30px; font-size: 1.2em; text-decoration: none; border-radius: 5px; margin-top: 20px; transition: background 0.3s; }
+                    .btn:hover { background-color: #219653; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Elite App Marketplace</h1>
+                    <p>Welcome to the Elite Software App Store! Download the latest version of the Marketplace client directly to your Android device.</p>
+                    <p>Current Version: <strong>v)" + latestVersionStr + R"(</strong></p>
+                    <a href="/apks/)" + latestMarketplaceApk + R"(" class="btn">Download Latest APK</a>
+                </div>
+            </body>
+            </html>
+        )";
+        res.set_content(html, "text/html");
+    });
 
     // Removed testSock check to avoid TIME_WAIT blocking the port for httplib
     LogMessage("HTTP API Listening on port " + std::to_string(serverPort));
