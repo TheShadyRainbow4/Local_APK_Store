@@ -2,17 +2,17 @@
     "apk_dir": "apks",
     "img_dir": "images",
     "list_cols": [
-        110,
-        130,
+        193,
+        311,
         55,
         60,
         70
     ],
-    "listview_width": 794,
+    "listview_width": 715,
     "server_port": 8552,
-    "window_height": 823,
+    "window_height": 822,
     "window_maximized": false,
-    "window_width": 1328,
-    "window_x": 170,
-    "window_y": 101
+    "window_width": 1249,
+    "window_x": 2357,
+    "window_y": 204
 }

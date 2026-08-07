@@ -24,7 +24,7 @@ Start-Sleep -Seconds 2
 cd Manager_App
 windres resource.rc -O coff -o resource.res
 gcc -O2 -c miniz.c -o miniz.o
-g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.o resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32
+g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.o resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32 -static -static-libgcc -static-libstdc++
 cd ..
 
 Write-Host "Building Android APK..."
