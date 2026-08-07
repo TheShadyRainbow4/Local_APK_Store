@@ -227,13 +227,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Marketplace Settings");
+        String currentServerIp = getSharedPreferences("prefs", MODE_PRIVATE).getString("server_ip", "None");
+        builder.setTitle("Marketplace Settings (" + currentServerIp + ":8552)");
         String[] options = {"Install Root Certificate", "Install PFX Certificate", "Manually Add Server IP", "Refresh Store", "Theme: Light", "Theme: Dark", "Theme: AMOLED Black", "View Latest Release on GitHub", "View Local Server Website"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) installCertificate();
             else if (which == 1) installPfxCertificate();
             else if (which == 2) promptForServerIP();
-            else if (which == 3) { appsList.clear(); filterApps(); discoverServers(); }
+            else if (which == 3) { appsList.clear(); serverIPs.clear(); filterApps(); discoverServers(); }
             else if (which >= 4 && which <= 6) {
                 android.content.SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 if (which == 4) prefs.edit().putString("theme", "light").apply();
@@ -299,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(input);
         builder.setPositiveButton("Add", (dialog, which) -> {
             String ip = input.getText().toString();
+            getSharedPreferences("prefs", MODE_PRIVATE).edit().putString("server_ip", ip).apply();
             synchronized (serverIPs) {
                 if (!serverIPs.contains(ip)) {
                     serverIPs.add(ip);
@@ -356,6 +358,7 @@ public class MainActivity extends AppCompatActivity {
                         String response = new String(receivePacket.getData(), 0, receivePacket.getLength(), "UTF-8").trim();
                         if (response.equals("ELITE_MARKET_HERE")) {
                             String ip = receivePacket.getAddress().getHostAddress();
+                            getSharedPreferences("prefs", MODE_PRIVATE).edit().putString("server_ip", ip).apply();
                             synchronized (serverIPs) {
                                 if (!serverIPs.contains(ip)) {
                                     serverIPs.add(ip);

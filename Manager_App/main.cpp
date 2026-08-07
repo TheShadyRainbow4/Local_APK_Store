@@ -75,6 +75,7 @@ HWND btnClearScreenshots = NULL;
 HWND lstScreenshots = NULL;
 HIMAGELIST g_hImgListSS = NULL;
 HWND hwndPreview = NULL;
+std::string lastPreviewPath = "";
 
 std::vector<HWND> invLabels;
 
@@ -626,6 +627,7 @@ int AddImageToImageList(HIMAGELIST hIml, const std::string& path) {
 }
 
 void UpdatePreviewImage(std::string path) {
+    lastPreviewPath = path;
     if (hPreviewBitmap) { DeleteObject(hPreviewBitmap); hPreviewBitmap = NULL; }
     if (fs::exists(path)) {
         std::wstring wpath(path.begin(), path.end());
@@ -919,24 +921,19 @@ void LoadAppIntoForm(int index) {
             screenshots.push_back(sPath);
             int imgIdx = AddImageToImageList(g_hImgListSS, sPath);
             LVITEMA lvi = {0};
-            lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+            lvi.mask = LVIF_IMAGE;
             lvi.iItem = ListView_GetItemCount(lstScreenshots);
             lvi.iImage = imgIdx;
-            lvi.pszText = (LPSTR)s.get<std::string>().c_str();
             ListView_InsertItem(lstScreenshots, &lvi);
         }
     }
     filePath[0] = '\0';
     SetWindowTextA(hwndApkLabel, "No new APK selected");
-    if (screenshots.size() > 0) {
-        UpdatePreviewImage(screenshots[0]);
+    std::string iconP = app.value("icon", "");
+    if (!iconP.empty() && fs::exists(imgDir + "\\" + iconP)) {
+        UpdatePreviewImage(imgDir + "\\" + iconP);
     } else {
-        std::string iconP = app.value("icon", "");
-        if (!iconP.empty() && fs::exists(imgDir + "\\" + iconP)) {
-            UpdatePreviewImage(imgDir + "\\" + iconP);
-        } else {
-            UpdatePreviewImage("");
-        }
+        UpdatePreviewImage("");
     }
 }
 
@@ -2109,14 +2106,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
             }
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
-                screenshots.push_back(path);
-                int imgIdx = AddImageToImageList(g_hImgListSS, path);
+                OPENFILENAMEA ofn = {0}; char imgPath[MAX_PATH] = {0}; strcpy(imgPath, path);
+                screenshots.push_back(imgPath);
+                int imgIdx = AddImageToImageList(g_hImgListSS, imgPath);
                 LVITEMA lvi = {0};
-                lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+                lvi.mask = LVIF_IMAGE;
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
                 lvi.iImage = imgIdx;
-                std::string fname = fs::path(path).filename().string();
-                lvi.pszText = (LPSTR)fname.c_str();
                 ListView_InsertItem(lstScreenshots, &lvi);
                 UpdatePreviewImage(screenshots.back());
                 addedScreenshot = true;
@@ -2293,9 +2289,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 }
             }
         }
-        else if (pnmh->hwndFrom == lstScreenshots && (pnmh->code == LVN_ITEMCHANGED || pnmh->code == NM_CLICK)) {
+        else if (pnmh->hwndFrom == lstScreenshots && pnmh->code == NM_DBLCLK) {
             int sIdx = ListView_GetNextItem(lstScreenshots, -1, LVNI_SELECTED);
-            if (sIdx >= 0 && sIdx < (int)screenshots.size()) UpdatePreviewImage(screenshots[sIdx]);
+            if (sIdx >= 0 && sIdx < (int)screenshots.size()) {
+                ShellExecuteA(NULL, "open", screenshots[sIdx].c_str(), NULL, NULL, SW_SHOWNORMAL);
+            }
         }
         break;
     }
@@ -2378,15 +2376,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hwndDesc = CreateWindowExA(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
 
         invLabels.push_back(CreateWindowA("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
-        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
+        g_hImgListSS = ImageList_Create(120, 200, ILC_COLOR32 | ILC_MASK, 1, 10);
+        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
         ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-        ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_NORMAL);
+        ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_SMALL);
         LVCOLUMNA lvcSS = {0};
         lvcSS.mask = LVCF_WIDTH;
         lvcSS.cx = 140; // width of column
         ListView_InsertColumn(lstScreenshots, 0, &lvcSS);
         
-        hwndPreview = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | WS_EX_CLIENTEDGE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
+        hwndPreview = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | WS_EX_CLIENTEDGE | SS_NOTIFY, 0, 0, 0, 0, hwndTab, (HMENU)40, hInstance, NULL);
         btnAddScreenshot = CreateWindowA("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)3, hInstance, NULL);
         btnClearScreenshots = CreateWindowA("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)4, hInstance, NULL);
         
@@ -2479,6 +2478,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         int wmId = LOWORD(wParam);
         int wmEvent = HIWORD(wParam);
 
+        if (wmId == 40 && wmEvent == STN_DBLCLK) {
+            if (!lastPreviewPath.empty()) {
+                ShellExecuteA(NULL, "open", lastPreviewPath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+            }
+            break;
+        }
+
         if (wmId == 600 || (HWND)lParam == hwndLogLink) {
             OpenLogFile();
         }
@@ -2556,7 +2562,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 UpdatePreviewImage(screenshots.back());
             }
         }
-        else if (wmId == 4) { screenshots.clear(); ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS); UpdatePreviewImage(""); }
+        else if (wmId == 4) { screenshots.clear(); ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS); }
         else if (wmId == 5) ClearForm();
         else if (wmId == 6) DeleteSelectedApp();
         else if (wmId == 7) ShowWindow(hwnd, SW_HIDE);

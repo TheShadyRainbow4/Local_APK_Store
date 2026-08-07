@@ -86,9 +86,9 @@ public class AppDetailActivity extends AppCompatActivity {
             android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, versionLabels);
             detailVersionSpinner.setAdapter(adapter);
             
-                        if (app.has("icon") && !app.optString("icon").isEmpty()) {
+            if (app.has("icon") && !app.optString("icon").isEmpty()) {
                 String iconVal = app.optString("icon");
-                String iconUrl = iconVal.startsWith("local://") ? iconVal : "http://" + ip + ":8552/images/" + iconVal;
+                String iconUrl = iconVal.startsWith("local://") ? iconVal : "http://" + ip + ":8552/images/" + iconVal.replace(" ", "%20");
                 loadImageAsync(iconUrl, detailIcon);
             }
             
@@ -103,7 +103,7 @@ public class AppDetailActivity extends AppCompatActivity {
                 org.json.JSONArray screenshots = app.getJSONArray("screenshots");
                 for (int i = 0; i < screenshots.length(); i++) {
                     String screenshotName = screenshots.getString(i);
-                    String screenshotUrl = "http://" + ip + ":8552/images/" + screenshotName;
+                    String screenshotUrl = "http://" + ip + ":8552/images/" + screenshotName.replace(" ", "%20");
                     
                     ImageView imgView = new ImageView(this);
                     android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(
