@@ -26,8 +26,12 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.57",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.57.apk"
+                                          "version":  "1.0.58",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.58.apk"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.57.apk",
+                                          "version":  "1.0.57"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.56.apk",
@@ -903,27 +907,6 @@
                  {
                      "category":  "Unknown",
                      "description":  "Auto-discovered APK.",
-                     "name":  "Notification.Edge.ver.1.0.5.build.6.apk",
-                     "package_name":  "unknown.package.Notification.Edge.ver.1.0.5.build.6.apk",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "Notification.Edge.ver.1.0.5.build.6.apk",
-                                          "version":  "1.0"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
                      "name":  "emoji-font-3.apk",
                      "package_name":  "unknown.package.emoji-font-3.apk",
                      "reviews":  [
@@ -943,65 +926,22 @@
                                   ]
                  },
                  {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "name":  "Nostalgia.ver.9.0.01.build.900100000.apk",
-                     "package_name":  "unknown.package.Nostalgia.ver.9.0.01.build.900100000.apk",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
+                     "name":  "AirPlay Server",
+                     "package_name":  "io.github.jqssun.airplay",
                      "versions":  [
                                       {
-                                          "file":  "Nostalgia.ver.9.0.01.build.900100000.apk",
-                                          "version":  "1.0"
+                                          "file":  "io.github.jqssun.airplay_v30.apk",
+                                          "version":  "0.0.30"
                                       }
                                   ]
                  },
                  {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "name":  "IOTHiddenMenu.ver.13.build.33.apk",
-                     "package_name":  "unknown.package.IOTHiddenMenu.ver.13.build.33.apk",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
+                     "name":  "Bubble Notice",
+                     "package_name":  "io.github.gracethings.bubblenotice",
                      "versions":  [
                                       {
-                                          "file":  "IOTHiddenMenu.ver.13.build.33.apk",
-                                          "version":  "1.0"
-                                      }
-                                  ]
-                 },
-                 {
-                     "category":  "Unknown",
-                     "description":  "Auto-discovered APK.",
-                     "name":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
-                     "package_name":  "unknown.package.Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
-                     "reviews":  [
-
-                                 ],
-                     "screenshots":  [
-
-                                     ],
-                     "tags":  [
-
-                              ],
-                     "versions":  [
-                                      {
-                                          "file":  "Dual.Messenger.ver.3.3.00.0.build.330000000.apk",
-                                          "version":  "1.0"
+                                          "file":  "io.github.gracethings.bubblenotice_v10.apk",
+                                          "version":  "1.0.0"
                                       }
                                   ]
                  }
