@@ -228,6 +228,9 @@ public class UploadActivity extends AppCompatActivity {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
+        conn.setChunkedStreamingMode(8192);
+        conn.setRequestProperty("Expect", "100-continue");
+        conn.setRequestProperty("Connection", "Keep-Alive");
         conn.setRequestProperty("X-File-Name", filename);
         
         InputStream is = getContentResolver().openInputStream(uri);

@@ -26,12 +26,16 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.54",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.54.apk"
+                                          "version":  "1.0.55",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.55.apk"
                                       },
                                       {
-                                          "version":  "1.0.53",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.53.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.54.apk",
+                                          "version":  "1.0.54"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.53.apk",
+                                          "version":  "1.0.53"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.52.apk",

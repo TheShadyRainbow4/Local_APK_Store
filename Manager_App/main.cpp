@@ -1060,6 +1060,9 @@ void RefreshClientListView() {
 
 void ServerThread() {
     svrPtr = new httplib::Server();
+    svrPtr->set_payload_max_length(1024ull * 1024ull * 1024ull * 2ull); // 2GB Max Upload Size
+    svrPtr->set_read_timeout(600, 0); // 10 minutes timeout
+    svrPtr->set_write_timeout(600, 0); // 10 minutes timeout
     svrPtr->set_logger([](const httplib::Request& req, const httplib::Response& res) {
         LogMessage(req.method + " " + req.path + " -> " + std::to_string(res.status));
     });
