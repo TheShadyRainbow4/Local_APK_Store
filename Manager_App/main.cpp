@@ -987,6 +987,21 @@ void DeleteSelectedApp() {
     }
 }
 
+std::string GetLocalIP() {
+    SOCKET sd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sd == INVALID_SOCKET) return "";
+    sockaddr_in serv = {};
+    serv.sin_family = AF_INET;
+    serv.sin_addr.s_addr = inet_addr("8.8.8.8");
+    serv.sin_port = htons(53);
+    connect(sd, (const sockaddr*)&serv, sizeof(serv));
+    sockaddr_in name = {};
+    int namelen = sizeof(name);
+    getsockname(sd, (sockaddr*)&name, &namelen);
+    closesocket(sd);
+    return inet_ntoa(name.sin_addr);
+}
+
 void UDPDiscoveryThread() {
     udpSock = socket(AF_INET, SOCK_DGRAM, 0);
     sockaddr_in addr = {};
@@ -1002,9 +1017,10 @@ void UDPDiscoveryThread() {
         if (bytes > 0) {
             buffer[bytes] = '\0';
             if (strcmp(buffer, "ELITE_MARKET_DISCOVER") == 0) {
-                LogMessage("UDP Broadcast Received: Replying ELITE_MARKET_HERE");
-                const char* reply = "ELITE_MARKET_HERE";
-                sendto(udpSock, reply, strlen(reply), 0, (sockaddr*)&clientAddr, clientLen);
+                std::string myIp = GetLocalIP();
+                std::string reply = "ELITE_MARKET_HERE:" + myIp;
+                LogMessage("UDP Broadcast Received: Replying " + reply);
+                sendto(udpSock, reply.c_str(), reply.length(), 0, (sockaddr*)&clientAddr, clientLen);
             }
         } else {
             break; 

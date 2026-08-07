@@ -35,12 +35,20 @@ $gradle | Set-Content $gradlePath
 Write-Host "Building Android APK..."
 cd Client_App
 ./build_apk.ps1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: APK Build Failed! Aborting release." -ForegroundColor Red
+    exit 1
+}
 cd ..
 
 Write-Host "Signing Android APK..."
 $toolsDir = "C:\AndroidBuildTools"
 $apksigner = (Get-ChildItem -Path "$toolsDir\android-sdk\build-tools" -Filter "apksigner.bat" -Recurse | Select-Object -First 1).FullName
 & $apksigner sign --ks "C:\Users\Administrator\Desktop\Local_APK_Store\Elite-EasySigner\EliteSoftware_Special.pfx" --ks-pass pass:Minecraft145!! --out "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Client_App\app\build\outputs\apk\debug\app-debug.apk"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: APK Signing Failed! Aborting release." -ForegroundColor Red
+    exit 1
+}
 
 Write-Host "Injecting newest APK into Server's DB..."
 $apkFileName = "Elite_App_Marketplace-Client_$Version.apk"

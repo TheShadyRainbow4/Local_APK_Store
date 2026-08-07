@@ -356,14 +356,18 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         socket.receive(receivePacket);
                         String response = new String(receivePacket.getData(), 0, receivePacket.getLength(), "UTF-8").trim();
-                        if (response.equals("ELITE_MARKET_HERE")) {
+                        if (response.startsWith("ELITE_MARKET_HERE")) {
                             String ip = receivePacket.getAddress().getHostAddress();
-                            getSharedPreferences("prefs", MODE_PRIVATE).edit().putString("server_ip", ip).apply();
+                            if (response.contains(":")) {
+                                ip = response.split(":")[1];
+                            }
+                            final String finalIp = ip;
+                            getSharedPreferences("prefs", MODE_PRIVATE).edit().putString("server_ip", finalIp).apply();
                             synchronized (serverIPs) {
-                                if (!serverIPs.contains(ip)) {
-                                    serverIPs.add(ip);
-                                    runOnUiThread(() -> Toast.makeText(this, "Found server: " + ip, Toast.LENGTH_SHORT).show());
-                                    fetchAppsFromServer(ip, currentSearchQuery);
+                                if (!serverIPs.contains(finalIp)) {
+                                    serverIPs.add(finalIp);
+                                    runOnUiThread(() -> Toast.makeText(this, "Found server: " + finalIp, Toast.LENGTH_SHORT).show());
+                                    fetchAppsFromServer(finalIp, currentSearchQuery);
                                     startHeartbeat();
                                 }
                             }

@@ -24,5 +24,5 @@ if %errorlevel% equ 0 (
     cd ..
     powershell -NoProfile -ExecutionPolicy Bypass -File publish_release.ps1
 ) else (
-    echo Build failed!
+    echo Error: EXE Build failed! Aborting release.
 )
