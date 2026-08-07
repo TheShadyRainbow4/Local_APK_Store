@@ -808,7 +808,36 @@ void RefreshAppList() {
         }
     }
 
-    if (dbUpdated) saveDb(dbCache);
+    if (dbUpdated) {
+        // Merge apps with the same package_name
+        std::map<std::string, json> mergedApps;
+        for (auto& app : dbCache["apps"]) {
+            std::string pkg = app.value("package_name", "");
+            if (mergedApps.find(pkg) == mergedApps.end()) {
+                mergedApps[pkg] = app;
+            } else {
+                if (app.contains("versions")) {
+                    for (auto& v : app["versions"]) {
+                        bool versionExists = false;
+                        for (auto& mv : mergedApps[pkg]["versions"]) {
+                            if (mv.value("file", "") == v.value("file", "")) {
+                                versionExists = true;
+                                break;
+                            }
+                        }
+                        if (!versionExists) {
+                            mergedApps[pkg]["versions"].push_back(v);
+                        }
+                    }
+                }
+            }
+        }
+        dbCache["apps"].clear();
+        for (auto& pair : mergedApps) {
+            dbCache["apps"].push_back(pair.second);
+        }
+        saveDb(dbCache);
+    }
 
     // Refresh Category Combobox
     SendMessageA(hwndCat, CB_RESETCONTENT, 0, 0);
@@ -2122,9 +2151,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
             }
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
-                OPENFILENAMEA ofn = {0}; char imgPath[MAX_PATH] = {0}; strcpy(imgPath, path);
-                screenshots.push_back(imgPath);
-                int imgIdx = AddImageToImageList(g_hImgListSS, imgPath);
+                screenshots.push_back(path);
+                int imgIdx = AddImageToImageList(g_hImgListSS, path);
                 LVITEMA lvi = {0};
                 lvi.mask = LVIF_IMAGE;
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
@@ -2393,13 +2421,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         invLabels.push_back(CreateWindowA("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
         g_hImgListSS = ImageList_Create(120, 200, ILC_COLOR32 | ILC_MASK, 1, 10);
-        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
-        ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-        ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_SMALL);
-        LVCOLUMNA lvcSS = {0};
-        lvcSS.mask = LVCF_WIDTH;
-        lvcSS.cx = 140; // width of column
-        ListView_InsertColumn(lstScreenshots, 0, &lvcSS);
+        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
+        ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_DOUBLEBUFFER);
+        ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_NORMAL);
         
         hwndPreview = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | WS_EX_CLIENTEDGE | SS_NOTIFY, 0, 0, 0, 0, hwndTab, (HMENU)40, hInstance, NULL);
         btnAddScreenshot = CreateWindowA("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)3, hInstance, NULL);
