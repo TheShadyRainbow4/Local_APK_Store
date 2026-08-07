@@ -496,7 +496,7 @@ void ExtractApkMetadataAndIcon(const std::string& apkPath, json& appNode) {
         }
     }
     if (!vName.empty() && appNode.contains("versions") && !appNode["versions"].empty()) {
-        if (appNode["versions"][0].value("version", "") == "1.0") {
+        if (appNode["versions"][0].value("version", "") == "1.0" || appNode["versions"][0].value("version", "") == "v1.0") {
             appNode["versions"][0]["version"] = vName;
         }
     }
@@ -504,6 +504,7 @@ void ExtractApkMetadataAndIcon(const std::string& apkPath, json& appNode) {
     std::string pkgNameStr = appNode.value("package_name", "");
     if (pkgNameStr.empty() || pkgNameStr.rfind("unknown.package", 0) == 0) {
         pkgNameStr = fs::path(apkPath).stem().string();
+        appNode["package_name"] = pkgNameStr;
     }
 
     std::string candidatePng = "";
@@ -606,14 +607,14 @@ int AddImageToImageList(HIMAGELIST hIml, const std::string& path) {
     if (bmp && bmp->GetLastStatus() == Gdiplus::Ok) {
         int w = bmp->GetWidth();
         int h = bmp->GetHeight();
-        float scale = std::min((float)100/w, (float)100/h);
+        float scale = std::min((float)120/w, (float)200/h);
         int newW = std::max(1, (int)(w * scale));
         int newH = std::max(1, (int)(h * scale));
-        Gdiplus::Bitmap* resized = new Gdiplus::Bitmap(100, 100, PixelFormat32bppARGB);
+        Gdiplus::Bitmap* resized = new Gdiplus::Bitmap(120, 200, PixelFormat32bppARGB);
         Gdiplus::Graphics g(resized);
         g.Clear(Gdiplus::Color(255,255,255,255));
         g.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-        g.DrawImage(bmp, (100-newW)/2, (100-newH)/2, newW, newH);
+        g.DrawImage(bmp, (120-newW)/2, (200-newH)/2, newW, newH);
         HBITMAP hBmp = NULL;
         resized->GetHBITMAP(Gdiplus::Color(255, 255, 255), &hBmp);
         if (hBmp) {
@@ -639,11 +640,12 @@ void UpdatePreviewImage(std::string path) {
             float scale = std::min((float)maxDim/w, (float)maxDim/h);
             int newW = std::max(1, (int)(w * scale));
             int newH = std::max(1, (int)(h * scale));
-            Bitmap* resized = new Bitmap(newW, newH, PixelFormat32bppARGB);
+            Bitmap* resized = new Bitmap(maxDim, maxDim, PixelFormat32bppARGB);
             Graphics g(resized);
+            g.Clear(Color(255, 240, 240, 240));
             g.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-            g.DrawImage(bmp, 0, 0, newW, newH);
-            resized->GetHBITMAP(Color(255, 255, 255), &hPreviewBitmap);
+            g.DrawImage(bmp, (maxDim-newW)/2, (maxDim-newH)/2, newW, newH);
+            resized->GetHBITMAP(Color(255, 240, 240, 240), &hPreviewBitmap);
             delete resized;
             delete bmp;
         }
@@ -1596,12 +1598,7 @@ LRESULT CALLBACK AboutDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         SetWindowPos(hwnd, NULL, x, y, 450, 200, SWP_NOZORDER);
         break;
     }
-    case WM_CTLCOLORSTATIC:
-    case WM_CTLCOLORBTN: {
-        HDC hdcStatic = (HDC)wParam;
-        SetBkMode(hdcStatic, TRANSPARENT);
-        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
-    }
+
     case WM_COMMAND: {
         int id = LOWORD(wParam);
         if (id == IDOK || id == IDCANCEL) {
@@ -1720,12 +1717,7 @@ LRESULT CALLBACK HelpDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         SetWindowPos(hwnd, NULL, x, y, 510, 440, SWP_NOZORDER);
         break;
     }
-    case WM_CTLCOLORSTATIC:
-    case WM_CTLCOLORBTN: {
-        HDC hdcStatic = (HDC)wParam;
-        SetBkMode(hdcStatic, TRANSPARENT);
-        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
-    }
+
     case WM_COMMAND: {
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
             DestroyWindow(hwnd);
@@ -1832,12 +1824,7 @@ LRESULT CALLBACK SettingsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         SetWindowPos(hwnd, NULL, x, y, 430, 240, SWP_NOZORDER);
         break;
     }
-    case WM_CTLCOLORSTATIC:
-    case WM_CTLCOLORBTN: {
-        HDC hdcStatic = (HDC)wParam;
-        SetBkMode(hdcStatic, TRANSPARENT);
-        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
-    }
+
     case WM_COMMAND: {
         int id = LOWORD(wParam);
         if (id == IDOK) {
@@ -2075,7 +2062,7 @@ LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         }
         HDC hdc = (HDC)wp;
         SetBkMode(hdc, TRANSPARENT);
-        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
+        return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
     }
     if (msg == WM_CTLCOLORBTN) {
         HDC hdc = (HDC)wp;
@@ -2585,7 +2572,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             OPENFILENAMEA ofn; ZeroMemory(&ofn, sizeof(ofn)); ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd; ofn.lpstrFile = filePath; ofn.lpstrFile[0] = '\0';
             ofn.nMaxFile = sizeof(filePath); ofn.lpstrFilter = "APK Files\0*.apk\0All Files\0*.*\0";
-            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
             if (GetOpenFileNameA(&ofn)) {
                 SetWindowTextA(hwndApkLabel, filePath);
                 ParseApkMetadata(filePath);
@@ -2596,7 +2583,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             OPENFILENAMEA ofn; ZeroMemory(&ofn, sizeof(ofn)); ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hwnd; ofn.lpstrFile = imgPath; ofn.lpstrFile[0] = '\0';
             ofn.nMaxFile = sizeof(imgPath); ofn.lpstrFilter = "Image Files\0*.png;*.jpg;*.jpeg\0All Files\0*.*\0";
-            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
             if (GetOpenFileNameA(&ofn)) {
                 screenshots.push_back(imgPath);
                 int imgIdx = AddImageToImageList(g_hImgListSS, imgPath);
@@ -2627,13 +2614,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     case WM_CLOSE:
         ShowWindow(hwnd, SW_HIDE);
         return 0;
-    case WM_CTLCOLORSTATIC:
-    case WM_CTLCOLORBTN: {
-        HDC hdcStatic = (HDC)wParam;
-        HWND hwndControl = (HWND)lParam;
-        SetBkMode(hdcStatic, TRANSPARENT);
-        return (LRESULT)GetStockObject(HOLLOW_BRUSH);
-    }
     case WM_DESTROY:
         SaveConfig(hwnd);
         if (g_hAppIcon) { DestroyIcon(g_hAppIcon); g_hAppIcon = NULL; }
@@ -2655,6 +2635,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     char path[MAX_PATH];
     GetModuleFileNameA(NULL, path, MAX_PATH);
+    fs::path exeDir = fs::path(path).parent_path();
+    SetCurrentDirectoryA(exeDir.string().c_str());
+
     fs::path exePath = path;
     fs::current_path(exePath.parent_path());
 
