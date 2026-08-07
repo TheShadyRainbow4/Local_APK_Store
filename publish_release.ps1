@@ -54,6 +54,16 @@ Write-Host "Injecting newest APK into Server's DB..."
 $apkFileName = "Elite_App_Marketplace-Client_$Version.apk"
 Copy-Item "Client_App\app\build\outputs\apk\debug\app-release-signed.apk" "Manager_App\apks\$apkFileName" -Force
 
+Write-Host "Building Windows Server EXE..."
+cd Manager_App
+Stop-Process -Name "Elite_App_Marketplace-Server" -ErrorAction SilentlyContinue
+cmd /c "gcc -O2 -c miniz.c && g++ -O2 -mwindows -std=c++17 -o Elite_App_Marketplace-Server.exe main.cpp miniz.o resource.res -lcomctl32 -lws2_32 -lgdiplus -lole32 -static -static-libgcc -static-libstdc++"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: Windows Server EXE Build Failed! Aborting release." -ForegroundColor Red
+    exit 1
+}
+cd ..
+
 Write-Host "Updating db.json..."
 $dbPath = "Manager_App/db.json"
 $dbStr = Get-Content $dbPath -Raw

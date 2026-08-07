@@ -387,11 +387,8 @@ std::string GetAaptPath() {
         if (fs::exists(path)) {
             g_aaptPath = path;
             return g_aaptPath;
-        } else {
-            LogToFileAndUI("aapt path not found: " + path);
         }
     }
-    LogToFileAndUI("aapt NOT FOUND ANYWHERE!");
     g_aaptPath = "NOT_FOUND";
     return "";
 }
@@ -456,9 +453,7 @@ void ExtractApkMetadataAndIcon(const std::string& apkPath, json& appNode) {
     if (aaptPath.empty()) return;
 
     std::string absApkPath = fs::absolute(apkPath).string();
-    LogToFileAndUI("Starting extraction for " + absApkPath + " with aapt: " + aaptPath);
     std::string dump = RunAaptBadging(aaptPath, absApkPath);
-    LogToFileAndUI("Finished extracting " + absApkPath + " with aapt dump len: " + std::to_string(dump.length()));
 
     std::string pkg = "";
     size_t pkgPos = dump.find("package: name='");
@@ -1053,8 +1048,7 @@ void UDPDiscoveryThread() {
         if (bytes > 0) {
             buffer[bytes] = '\0';
             if (strcmp(buffer, "ELITE_MARKET_DISCOVER") == 0) {
-                std::string myIp = GetLocalIP();
-                std::string reply = "ELITE_MARKET_HERE:" + myIp;
+                std::string reply = "ELITE_MARKET_HERE";
                 LogMessage("UDP Broadcast Received: Replying " + reply);
                 sendto(udpSock, reply.c_str(), reply.length(), 0, (sockaddr*)&clientAddr, clientLen);
             }
@@ -1273,6 +1267,8 @@ void ServerThread() {
             }
 
             saveDb(db);
+            
+            PostMessageA(hwndMain, WM_COMMAND, 2004, 0);
             
             // Trigger UI refresh
             PostMessageA(hwndMain, WM_COMMAND, 5000, 0);
@@ -1814,6 +1810,7 @@ LRESULT CALLBACK SettingsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 
         CreateWindowExA(0, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDHORZ, 15, 160, 390, 2, hwnd, NULL, NULL, NULL);
 
+        HWND hBtnWebsite = CreateWindowA("BUTTON", "Open Local Server Website", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 15, 172, 170, 28, hwnd, (HMENU)1003, NULL, NULL);
         HWND hBtnOkay = CreateWindowA("BUTTON", "Okay", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 195, 172, 100, 28, hwnd, (HMENU)IDOK, NULL, NULL);
         HWND hBtnCancel = CreateWindowA("BUTTON", "Cancel", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 305, 172, 100, 28, hwnd, (HMENU)IDCANCEL, NULL, NULL);
 
@@ -1823,6 +1820,7 @@ LRESULT CALLBACK SettingsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         SendMessageA(hTxtApkDir, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
         SendMessageA(lblImgDir, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
         SendMessageA(hTxtImgDir, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
+        SendMessageA(hBtnWebsite, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
         SendMessageA(hBtnOkay, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
         SendMessageA(hBtnCancel, WM_SETFONT, (WPARAM)hNormalFont, TRUE);
 
@@ -1860,6 +1858,9 @@ LRESULT CALLBACK SettingsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
             DestroyWindow(hwnd);
         } else if (id == IDCANCEL) {
             DestroyWindow(hwnd);
+        } else if (id == 1003) {
+            std::string url = "http://127.0.0.1:" + std::to_string(serverPort) + "/";
+            ShellExecuteA(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
         }
         break;
     }
@@ -2069,7 +2070,7 @@ LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         return SendMessageA(GetParent(hwnd), msg, wp, lp);
     }
     if (msg == WM_CTLCOLORSTATIC) {
-        if ((HWND)lp == hwndLog || (HWND)lp == hwndClientList) {
+        if ((HWND)lp == hwndLog || (HWND)lp == hwndClientList || (HWND)lp == hwndPreview) {
             return CallWindowProcA(OldTabProc, hwnd, msg, wp, lp);
         }
         HDC hdc = (HDC)wp;
@@ -2165,7 +2166,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
                 lvi.iImage = imgIdx;
                 ListView_InsertItem(lstScreenshots, &lvi);
-                UpdatePreviewImage(screenshots.back());
                 addedScreenshot = true;
             } else if (ext == ".apk") {
                 SetWindowTextA(hwndApkLabel, path);
@@ -2428,9 +2428,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         invLabels.push_back(CreateWindowA("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
         g_hImgListSS = ImageList_Create(120, 200, ILC_COLOR32 | ILC_MASK, 1, 10);
-        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
+        lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
         ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_DOUBLEBUFFER);
         ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_NORMAL);
+        ListView_SetIconSpacing(lstScreenshots, 150, 210);
         
         hwndPreview = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | WS_EX_CLIENTEDGE | SS_NOTIFY, 0, 0, 0, 0, hwndTab, (HMENU)40, hInstance, NULL);
         btnAddScreenshot = CreateWindowA("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)3, hInstance, NULL);
@@ -2600,13 +2601,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 screenshots.push_back(imgPath);
                 int imgIdx = AddImageToImageList(g_hImgListSS, imgPath);
                 LVITEMA lvi = {0};
-                lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+                lvi.mask = LVIF_IMAGE;
                 lvi.iItem = ListView_GetItemCount(lstScreenshots);
                 lvi.iImage = imgIdx;
-                std::string fname = fs::path(imgPath).filename().string();
-                lvi.pszText = (LPSTR)fname.c_str();
                 ListView_InsertItem(lstScreenshots, &lvi);
-                UpdatePreviewImage(screenshots.back());
             }
         }
         else if (wmId == 4) { screenshots.clear(); ListView_DeleteAllItems(lstScreenshots); ImageList_RemoveAll(g_hImgListSS); }
