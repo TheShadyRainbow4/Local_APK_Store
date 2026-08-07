@@ -70,3 +70,12 @@ cmd.exe /c "build.bat"
    - **Restart:** Automatically launches the newly compiled Windows Server Executable.
 
 **CRITICAL RULE:** Never separate the build and publish steps. `build.bat` must always remain the entry point, and it must always seamlessly trigger `publish_release.ps1` upon a successful compile.
+
+**Build Logging Details:**
+- `build.bat` uses a self-logging pattern to prevent it from hanging in the background and keeping the terminal process stuck. 
+- When executed, the outer script intercepts execution, creates a `build_log.txt` file (wiping the old one cleanly), pipes the entire compilation run into the log file, and immediately calls `exit` when finished to gracefully close the parent process. 
+
+## 4. Android Client Self-Update Architecture
+The Elite App Marketplace Android application contains built-in self-updating architecture that must handle edge cases when the Android OS attempts to kill the package while it's being updated.
+- **Root/Shizuku Path:** Automated background installations via Shizuku (`pm install`) *must* include the `-r` flag (`pm install -r -S <size>`) so that the package manager knows to overwrite the existing APK, rather than throwing an `INSTALL_FAILED_ALREADY_EXISTS` exception.
+- **Standard Fallback Path:** For non-rooted updates, we do not use `Intent.ACTION_VIEW` targeting a local `FileProvider` because Android violently kills the running app during the self-update process, terminating the `FileProvider` mid-stream and corrupting the install. Instead, the application invokes the **PackageInstaller Session API** to stream the raw APK payload directly into the Android OS's staging area *before* committing the install.
