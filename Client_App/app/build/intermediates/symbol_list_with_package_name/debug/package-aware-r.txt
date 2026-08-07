@@ -3380,6 +3380,9 @@ id save_overlay_view
 id sawtooth
 id scale
 id screen
+id screenshotsContainer
+id screenshotsLabel
+id screenshotsScrollView
 id scroll
 id scrollIndicatorDown
 id scrollIndicatorUp

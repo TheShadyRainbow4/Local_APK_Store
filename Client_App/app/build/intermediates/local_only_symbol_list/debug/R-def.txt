@@ -28,6 +28,9 @@ id etSearch
 id ivAppIcon
 id lvApps
 id pbInstall
+id screenshotsContainer
+id screenshotsLabel
+id screenshotsScrollView
 id tabApps
 id tabDownloads
 id tabGames

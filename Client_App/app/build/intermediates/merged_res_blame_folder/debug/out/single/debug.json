@@ -4,12 +4,20 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\btn_3d.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\xml_provider_paths.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\xml\\provider_paths.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\mipmap-xxhdpi_ic_launcher.png.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_app_detail.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\activity_app_detail.xml"
+    },
+    {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_app_detail.xml.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_app_detail.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_list_item_app.xml.flat",
@@ -42,9 +50,5 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_rounded_bg.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\rounded_bg.xml"
-    },
-    {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/xml_provider_paths.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/xml/provider_paths.xml"
     }
 ]

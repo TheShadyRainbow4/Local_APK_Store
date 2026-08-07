@@ -166,6 +166,31 @@
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:id="@+id/screenshotsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Screenshots"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+            <HorizontalScrollView
+                android:id="@+id/screenshotsScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/screenshotsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
                 
         </LinearLayout>
     </ScrollView>
