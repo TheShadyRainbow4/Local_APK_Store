@@ -636,19 +636,22 @@ void UpdatePreviewImage(std::string path) {
         if (bmp && bmp->GetLastStatus() == Ok) {
             int w = bmp->GetWidth();
             int h = bmp->GetHeight();
-            int maxDim = 100;
-            float scale = std::min((float)maxDim/w, (float)maxDim/h);
+            RECT rc; GetClientRect(hwndPreview, &rc);
+            int cw = rc.right - rc.left;
+            int ch = rc.bottom - rc.top;
+            if (cw <= 0) cw = 160;
+            if (ch <= 0) ch = 140;
+            float scale = std::min((float)cw/w, (float)ch/h);
             int newW = std::max(1, (int)(w * scale));
             int newH = std::max(1, (int)(h * scale));
-            Bitmap* resized = new Bitmap(maxDim, maxDim, PixelFormat32bppARGB);
+            Bitmap* resized = new Bitmap(cw, ch, PixelFormat32bppARGB);
             Graphics g(resized);
-            g.Clear(Color(255, 240, 240, 240));
+            g.Clear(Color(255, 255, 255, 255));
             g.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-            g.DrawImage(bmp, (maxDim-newW)/2, (maxDim-newH)/2, newW, newH);
-            resized->GetHBITMAP(Color(255, 240, 240, 240), &hPreviewBitmap);
+            g.DrawImage(bmp, (cw-newW)/2, (ch-newH)/2, newW, newH);
+            resized->GetHBITMAP(Color(255, 255, 255), &hPreviewBitmap);
             delete resized;
-            delete bmp;
-        }
+        }    delete bmp;
     }
     SendMessageA(hwndPreview, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hPreviewBitmap);
 }
@@ -1498,21 +1501,38 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
 
     json db = loadDb();
     bool exists = false;
-    for (auto& app : db["apps"]) {
-        if (app["package_name"] == pkg) {
-            exists = true;
-            if (!apkName.empty()) {
-                bool vExists = false;
-                for (auto& v : app["versions"]) {
-                    if (v["version"] == ver) { vExists = true; v["file"] = apkName; }
-                }
-                if (!vExists) app["versions"].push_back({{"version", ver}, {"file", apkName}});
+    if (selectedAppIndex >= 0 && selectedAppIndex < (int)db["apps"].size()) {
+        auto& app = db["apps"][selectedAppIndex];
+        exists = true;
+        app["package_name"] = pkg;
+        if (!apkName.empty()) {
+            bool vExists = false;
+            for (auto& v : app["versions"]) {
+                if (v["version"] == ver) { vExists = true; v["file"] = apkName; }
             }
-            app["name"] = name; app["description"] = desc; app["category"] = cat;
-            app["tags"] = tags; app["screenshots"] = copiedScreenshots;
-            std::string iconP = imgDir + "/" + pkg + "_icon.png";
-            if (fs::exists(iconP)) app["icon"] = pkg + "_icon.png";
-            break;
+            if (!vExists) app["versions"].push_back({{"version", ver}, {"file", apkName}});
+        }
+        app["name"] = name; app["description"] = desc; app["category"] = cat;
+        app["tags"] = tags; app["screenshots"] = copiedScreenshots;
+        std::string iconP = imgDir + "/" + pkg + "_icon.png";
+        if (fs::exists(iconP)) app["icon"] = pkg + "_icon.png";
+    } else {
+        for (auto& app : db["apps"]) {
+            if (app["package_name"] == pkg) {
+                exists = true;
+                if (!apkName.empty()) {
+                    bool vExists = false;
+                    for (auto& v : app["versions"]) {
+                        if (v["version"] == ver) { vExists = true; v["file"] = apkName; }
+                    }
+                    if (!vExists) app["versions"].push_back({{"version", ver}, {"file", apkName}});
+                }
+                app["name"] = name; app["description"] = desc; app["category"] = cat;
+                app["tags"] = tags; app["screenshots"] = copiedScreenshots;
+                std::string iconP = imgDir + "/" + pkg + "_icon.png";
+                if (fs::exists(iconP)) app["icon"] = pkg + "_icon.png";
+                break;
+            }
         }
     }
     if (!exists) {
@@ -2057,7 +2077,7 @@ LRESULT CALLBACK TabProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         return SendMessageA(GetParent(hwnd), msg, wp, lp);
     }
     if (msg == WM_CTLCOLORSTATIC) {
-        if ((HWND)lp == hwndLog || (HWND)lp == hwndClientList || (HWND)lp == hwndPreview) {
+        if ((HWND)lp == hwndLog || (HWND)lp == hwndClientList || (HWND)lp == hwndPreview || (HWND)lp == hwndApkLabel) {
             return CallWindowProcA(OldTabProc, hwnd, msg, wp, lp);
         }
         HDC hdc = (HDC)wp;
@@ -2414,18 +2434,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hwndDesc = CreateWindowExA(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
 
         invLabels.push_back(CreateWindowA("STATIC", "Screenshots:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
-        g_hImgListSS = ImageList_Create(120, 200, ILC_COLOR32 | ILC_MASK, 1, 10);
+        g_hImgListSS = ImageList_Create(120, 200, ILC_COLOR32, 1, 10);
         lstScreenshots = CreateWindowExA(WS_EX_CLIENTEDGE, WC_LISTVIEWA, "", WS_CHILD | WS_VISIBLE | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOCOLUMNHEADER, 0, 0, 0, 0, hwndTab, (HMENU)30, hInstance, NULL);
         ListView_SetExtendedListViewStyle(lstScreenshots, LVS_EX_DOUBLEBUFFER);
         ListView_SetImageList(lstScreenshots, g_hImgListSS, LVSIL_NORMAL);
         ListView_SetIconSpacing(lstScreenshots, 150, 210);
         
-        hwndPreview = CreateWindowA("STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | WS_EX_CLIENTEDGE | SS_NOTIFY, 0, 0, 0, 0, hwndTab, (HMENU)40, hInstance, NULL);
-        btnAddScreenshot = CreateWindowA("BUTTON", "Add Screenshot", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)3, hInstance, NULL);
+        hwndPreview = CreateWindowExA(WS_EX_CLIENTEDGE, "STATIC", "", WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE | SS_NOTIFY, 0, 0, 0, 0, hwndTab, (HMENU)40, hInstance, NULL);
+        btnAddScreenshot = CreateWindowA("BUTTON", "Add Image", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)3, hInstance, NULL);
         btnClearScreenshots = CreateWindowA("BUTTON", "Clear All", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)4, hInstance, NULL);
         
         invLabels.push_back(CreateWindowA("STATIC", "APK File:", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL));
-        hwndApkLabel = CreateWindowExA(WS_EX_CLIENTEDGE, "STATIC", " No APK selected", WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
+        hwndApkLabel = CreateWindowExA(WS_EX_CLIENTEDGE, "EDIT", " No APK selected", WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_READONLY, 0, 0, 0, 0, hwndTab, NULL, hInstance, NULL);
         btnBrowse = CreateWindowA("BUTTON", "Browse APK...", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)1, hInstance, NULL);
         btnDelete = CreateWindowA("BUTTON", "Delete Selected", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)6, hInstance, NULL);
         btnClearForm = CreateWindowA("BUTTON", "New App", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 0, 0, 0, hwndTab, (HMENU)5, hInstance, NULL);
