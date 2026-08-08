@@ -881,8 +881,8 @@ void RefreshAppList() {
         auto& app = dbCache["apps"][i];
         std::string name = app.value("name", "Unknown");
         std::string pkg = app.value("package_name", "unknown.pkg");
-        std::string version = app.contains("versions") && !app["versions"].empty() ? app["versions"].back().value("version", "1.0") : "1.0";
-        std::string apkFile = app.contains("versions") && !app["versions"].empty() ? app["versions"].back().value("file", "") : "";
+        std::string version = app.contains("versions") && !app["versions"].empty() ? app["versions"].front().value("version", "1.0") : "1.0";
+        std::string apkFile = app.contains("versions") && !app["versions"].empty() ? app["versions"].front().value("file", "") : "";
         std::string sizeStr = "N/A";
         if (!apkFile.empty()) {
             std::string fullPath = apkDir + "/" + apkFile;
@@ -937,7 +937,7 @@ void LoadAppIntoForm(int index) {
     SetWindowTextA(hwndName, app.value("name", "").c_str());
     SetWindowTextA(hwndPackage, app.value("package_name", "").c_str());
     if (app.contains("versions") && app["versions"].size() > 0) {
-        SetWindowTextA(hwndVersion, app["versions"].back().value("version", "").c_str());
+        SetWindowTextA(hwndVersion, app["versions"].front().value("version", "").c_str());
     } else { SetWindowTextA(hwndVersion, ""); }
     SetWindowTextA(hwndCat, app.value("category", "").c_str());
     SetWindowTextA(hwndDesc, app.value("description", "").c_str());
@@ -1272,7 +1272,7 @@ void ServerThread() {
                                 }
                             }
                             if (!vFound) {
-                                app["versions"].push_back(newV);
+                                app["versions"].insert(app["versions"].begin(), newV);
                             }
                         }
                     }
@@ -1525,7 +1525,7 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
             for (auto& v : app["versions"]) {
                 if (v["version"] == ver) { vExists = true; v["file"] = apkName; }
             }
-            if (!vExists) app["versions"].push_back({{"version", ver}, {"file", apkName}});
+            if (!vExists) app["versions"].insert(app["versions"].begin(), {{"version", ver}, {"file", apkName}});
         }
         app["name"] = name; app["description"] = desc; app["category"] = cat;
         app["tags"] = tags; app["screenshots"] = copiedScreenshots;
@@ -1540,7 +1540,7 @@ void ProcessApp(std::string apk, std::string name, std::string pkg, std::string 
                     for (auto& v : app["versions"]) {
                         if (v["version"] == ver) { vExists = true; v["file"] = apkName; }
                     }
-                    if (!vExists) app["versions"].push_back({{"version", ver}, {"file", apkName}});
+                    if (!vExists) app["versions"].insert(app["versions"].begin(), {{"version", ver}, {"file", apkName}});
                 }
                 app["name"] = name; app["description"] = desc; app["category"] = cat;
                 app["tags"] = tags; app["screenshots"] = copiedScreenshots;
