@@ -68,16 +68,12 @@
             android:focusable="false"
             android:focusableInTouchMode="false" />
 
-        <ProgressBar
+        <com.elitesoftware.appmarketplace.EliteProgressBar
             android:id="@+id/pbInstall"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/custom_progress_bar"
             android:layout_width="match_parent"
-            android:layout_height="16dp"
+            android:layout_height="24dp"
             android:layout_below="@+id/ivAppIcon"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            android:progress="0"
-            android:max="100" />
+            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>

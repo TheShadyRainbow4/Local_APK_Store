@@ -133,15 +133,12 @@
                 android:shadowDy="1"
                 android:shadowRadius="1" />
 
-            <ProgressBar
+            <com.elitesoftware.appmarketplace.EliteProgressBar
                 android:id="@+id/detailProgressBar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:progressDrawable="@drawable/custom_progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="24dp"
                 android:layout_marginTop="8dp"
-                android:visibility="gone"
-                android:max="100" />
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
