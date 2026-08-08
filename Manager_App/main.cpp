@@ -1335,8 +1335,8 @@ svrPtr->Post("/api/disconnect", [](const httplib::Request& req, httplib::Respons
         for (auto& app : dbCache["apps"]) {
             if (app.value("package_name", "") == "com.elitesoftware.appmarketplace") {
                 if (app.contains("versions") && !app["versions"].empty()) {
-                    latestMarketplaceApk = app["versions"].back().value("file", "");
-                    latestVersionStr = app["versions"].back().value("version", "1.0");
+                    latestMarketplaceApk = app["versions"].front().value("file", "");
+                    latestVersionStr = app["versions"].front().value("version", "1.0");
                 }
                 break;
             }

@@ -2927,8 +2927,12 @@ drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable ic_search_black_24
 drawable ic_settings
+drawable loading_animation
+drawable loading_bar_0
 drawable loading_bar_1
+drawable loading_bar_2
 drawable loading_bar_3
+drawable loading_bar_4
 drawable loading_bar_5
 drawable m3_appbar_background
 drawable m3_avd_hide_password

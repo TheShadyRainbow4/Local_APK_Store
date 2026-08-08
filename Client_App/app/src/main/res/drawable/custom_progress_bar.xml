@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@android:id/background">
-        <shape android:shape="rectangle">
-            <corners android:radius="12dp" />
-            <solid android:color="#E0E0E0" />
-            <stroke android:width="1dp" android:color="#BDBDBD" />
-        </shape>
-    </item>
+    <item android:id="@android:id/background" android:drawable="@drawable/loading_bar_0" />
     <item android:id="@android:id/progress">
-        <clip>
-            <bitmap
-                android:src="@drawable/loading_bar_3"
-                android:tileMode="repeat" />
-        </clip>
+        <clip android:drawable="@drawable/loading_animation" />
     </item>
 </layer-list>

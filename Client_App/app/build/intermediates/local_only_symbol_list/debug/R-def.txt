@@ -3,8 +3,12 @@ local
 drawable btn_3d
 drawable custom_progress_bar
 drawable ic_settings
+drawable loading_animation
+drawable loading_bar_0
 drawable loading_bar_1
+drawable loading_bar_2
 drawable loading_bar_3
+drawable loading_bar_4
 drawable loading_bar_5
 drawable rounded_bg
 drawable settings
