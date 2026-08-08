@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme inheriting from legacy Holo theme or an AppCompat equivalent that looks old -->
+    <style name="Theme.LegacyMarket" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#669900</item> <!-- Old Android Market Green -->
+        <item name="colorPrimaryDark">#4d7300</item>
+        <item name="colorAccent">#33b5e5</item> <!-- Old Holo Blue -->
+        <!-- Disable modern round corners and elevations if possible, though AppCompat handles much of this -->
+        <item name="android:windowBackground">#F0F0F0</item>
+    </style>
+</resources>

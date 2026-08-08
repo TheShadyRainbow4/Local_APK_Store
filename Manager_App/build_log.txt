@@ -1,0 +1,80 @@
+Terminating running instances...
+Cleaning old builds...
+Building Manager App...
+Build successful: Elite_App_Marketplace-Server.exe
+Auto-incremented version to v1.0.69
+Updating Android build.gradle version...
+Building Android APK...
+Accepting Android SDK Licenses...
+Building the APK using Gradle...
+Starting a Gradle Daemon, 1 busy and 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:dexBuilderDebug UP-TO-DATE
+> Task :app:mergeProjectDexDebug UP-TO-DATE
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+BUILD SUCCESSFUL in 8s
+30 actionable tasks: 7 executed, 23 up-to-date
+APK Built Successfully at app\build\outputs\apk\debug\app-debug.apk
+Signing Android APK...
+Injecting newest APK into Server's DB...
+Building Windows Server EXE...
+Updating db.json...
+Committing and Pushing to Git...
+warning: in the working copy of 'Client_App/app/build/intermediates/compatible_screen_manifest/debug/output-metadata.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/merged_manifest/debug/AndroidManifest.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/merged_manifests/debug/output-metadata.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/packaged_manifests/debug/AndroidManifest.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/packaged_manifests/debug/output-metadata.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/processed_res/debug/out/output-metadata.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/runtime_symbol_list/debug/R.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/outputs/apk/debug/output-metadata.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Client_App/app/build/outputs/logs/manifest-merger-debug-report.txt', LF will be replaced by CRLF the next time Git touches it
+[master fa620f3] Auto-build and release v1.0.69
+ 25 files changed, 29 insertions(+), 25 deletions(-)
+ create mode 100644 Manager_App/apks/Elite_App_Marketplace-Client_v1.0.69.apk
+To https://github.com/TheShadyRainbow4/Local_APK_Store.git
+   ebf5377..fa620f3  master -> master
+Creating GitHub Release...
+https://github.com/TheShadyRainbow4/Local_APK_Store/releases/tag/v1.0.69
+Restarting Server...
+Publish complete for v1.0.69

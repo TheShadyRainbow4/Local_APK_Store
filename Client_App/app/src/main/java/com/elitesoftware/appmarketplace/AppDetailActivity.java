@@ -22,21 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AppDetailActivity extends AppCompatActivity {
-    private void startProgressAnimation(android.widget.ProgressBar pb) {
-        android.graphics.drawable.Drawable d = pb.getProgressDrawable();
-        if (d instanceof android.graphics.drawable.LayerDrawable) {
-            android.graphics.drawable.LayerDrawable ld = (android.graphics.drawable.LayerDrawable) d;
-            android.graphics.drawable.Drawable clip = ld.findDrawableByLayerId(android.R.id.progress);
-            if (clip instanceof android.graphics.drawable.ClipDrawable) {
-                if (android.os.Build.VERSION.SDK_INT >= 23) {
-                    android.graphics.drawable.Drawable inner = ((android.graphics.drawable.ClipDrawable) clip).getDrawable();
-                    if (inner instanceof android.graphics.drawable.AnimationDrawable) {
-                        ((android.graphics.drawable.AnimationDrawable) inner).start();
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +56,7 @@ public class AppDetailActivity extends AppCompatActivity {
             TextView detailCategory = findViewById(R.id.detailCategory);
             TextView detailDesc = findViewById(R.id.detailDesc);
             Button detailInstallBtn = findViewById(R.id.detailInstallBtn);
-            ProgressBar detailProgressBar = findViewById(R.id.detailProgressBar);
+            com.elitesoftware.appmarketplace.EliteProgressBar detailProgressBar = findViewById(R.id.detailProgressBar);
             ImageView detailIcon = findViewById(R.id.detailIcon);
             
             detailName.setText(app.optString("name", "Unknown"));
@@ -155,7 +140,6 @@ public class AppDetailActivity extends AppCompatActivity {
                 detailInstallBtn.setEnabled(false);
                 detailProgressBar.setVisibility(View.VISIBLE);
                 detailProgressBar.setProgress(0);
-                startProgressAnimation(detailProgressBar);
                 
                 new Thread(() -> {
                         try {

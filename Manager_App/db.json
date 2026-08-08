@@ -150,12 +150,12 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.69",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.69.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.69.apk",
+                                          "version":  "1.0.69"
                                       },
                                       {
-                                          "version":  "1.0.68",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.68.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.68.apk",
+                                          "version":  "1.0.68"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.67.apk",
@@ -1103,6 +1103,30 @@
                                       {
                                           "file":  "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
                                           "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "screenshots":  [
+
+                                     ],
+                     "description":  "A floating Gemini widget for the launcher.",
+                     "reviews":  [
+
+                                 ],
+                     "icon":  "",
+                     "category":  "Tools",
+                     "tags":  [
+                                  "Gemini",
+                                  "Widget",
+                                  "Floating"
+                              ],
+                     "package_name":  "com.elitesoftware.geminiwidget",
+                     "name":  "Elite Gemini Widget",
+                     "versions":  [
+                                      {
+                                          "version":  "1.0.0",
+                                          "file":  "EliteGeminiWidget_v1.0.0.apk"
                                       }
                                   ]
                  }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload App / Update Listing"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/editPackage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Package Name (Required)" />
+
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="App Name" />
+
+        <EditText
+            android:id="@+id/editVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Version (e.g. 1.0.0)" />
+
+        <EditText
+            android:id="@+id/editCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Category" />
+
+        <EditText
+            android:id="@+id/editDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:lines="4"
+            android:gravity="top"/>
+
+        <Button
+            android:id="@+id/btnSelectApk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select APK File"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/txtApkStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No APK selected"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnSelectScreenshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="Select Screenshots" />
+
+        <TextView
+            android:id="@+id/txtScreenshotsStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0 screenshots selected"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload to Store"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_3d"
+            android:shadowColor="#556b2f"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1" />
+
+    </LinearLayout>
+</ScrollView>
