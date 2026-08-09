@@ -1,82 +1,86 @@
 [
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_btn_3d.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\btn_3d.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\xml_provider_paths.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\xml\\provider_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
         "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/mipmap-xxhdpi_ic_launcher.png.flat",
         "source": "com.elitesoftware.appmarketplace.app-main-30:/mipmap-xxhdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_1.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_1.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_app_detail.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\activity_app_detail.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_ic_settings.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/ic_settings.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_animation.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_animation.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_2.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_2.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_list_item_app.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\list_item_app.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_btn_3d.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/btn_3d.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_5.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_5.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_app_detail.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_app_detail.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_1.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_1.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/raw_elite_cert.cer.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/raw/elite_cert.cer"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_ic_settings.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\ic_settings.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_custom_progress_bar.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/custom_progress_bar.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\raw_elite_cert.cer.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\raw\\elite_cert.cer"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_3.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_3.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\activity_main.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_upload.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_upload.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_0.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_0.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/raw_elite_cert_pfx.pfx.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/raw/elite_cert_pfx.pfx"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_custom_progress_bar.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\custom_progress_bar.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_animation.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_animation.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_3.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_3.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_list_item_app.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/list_item_app.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_settings.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\settings.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_5.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_5.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_2.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_2.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_4.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_4.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\raw_elite_cert_pfx.pfx.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\raw\\elite_cert_pfx.pfx"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_settings.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/settings.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_loading_bar_4.png.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_4.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_activity_main.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/activity_main.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\layout_activity_upload.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\layout\\activity_upload.xml"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_rounded_bg.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/rounded_bg.xml"
-    },
-    {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/xml_provider_paths.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/xml/provider_paths.xml"
-    },
-    {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_0.png.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_0.png"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\drawable_rounded_bg.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\rounded_bg.xml"
     }
 ]

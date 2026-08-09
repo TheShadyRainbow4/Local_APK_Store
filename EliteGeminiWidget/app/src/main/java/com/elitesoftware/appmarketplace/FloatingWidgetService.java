@@ -1,15 +1,10 @@
 package com.elitesoftware.appmarketplace;
 
 import android.app.Service;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +13,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class FloatingWidgetService extends Service {
     private WindowManager mWindowManager;
@@ -31,10 +23,8 @@ public class FloatingWidgetService extends Service {
     private WindowManager.LayoutParams params;
     private LinearLayout header;
     private WebView webView;
-    private boolean isPinned = false;
-    
-    private Timer timer;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private ImageView collapsedIcon;
+    private boolean isCollapsed = false;
 
     @Override
     public IBinder onBind(Intent intent) { return null; }
@@ -58,18 +48,13 @@ public class FloatingWidgetService extends Service {
         Button resizeBtn = new Button(this);
         resizeBtn.setText("Scale");
         
-        Button pinBtn = new Button(this);
-        pinBtn.setText("Pin");
-        pinBtn.setOnClickListener(v -> {
-            isPinned = true;
-            header.setVisibility(View.GONE);
-            Toast.makeText(FloatingWidgetService.this, "Pinned to Launcher!", Toast.LENGTH_SHORT).show();
-            // Optional: You could lock touches or keep it interactive. We keep WebView interactive.
-        });
+        Button minBtn = new Button(this);
+        minBtn.setText("_");
+        minBtn.setOnClickListener(v -> toggleCollapse());
         
         header.addView(closeBtn);
+        header.addView(minBtn);
         header.addView(resizeBtn);
-        header.addView(pinBtn);
         
         webView = new WebView(this);
         WebSettings webSettings = webView.getSettings();
@@ -79,8 +64,14 @@ public class FloatingWidgetService extends Service {
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("https://gemini.google.com/");
         
+        collapsedIcon = new ImageView(this);
+        collapsedIcon.setImageResource(R.mipmap.ic_launcher);
+        collapsedIcon.setVisibility(View.GONE);
+        collapsedIcon.setOnClickListener(v -> toggleCollapse());
+        
         ((LinearLayout)mFloatingWidget).addView(header);
         ((LinearLayout)mFloatingWidget).addView(webView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        ((LinearLayout)mFloatingWidget).addView(collapsedIcon, new LinearLayout.LayoutParams(150, 150));
         
         int layoutFlag;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -100,7 +91,7 @@ public class FloatingWidgetService extends Service {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingWidget, params);
 
-        header.setOnTouchListener(new View.OnTouchListener() {
+        View.OnTouchListener dragListener = new View.OnTouchListener() {
             private int initialX, initialY;
             private float initialTouchX, initialTouchY;
 
@@ -116,10 +107,19 @@ public class FloatingWidgetService extends Service {
                         params.y = initialY + (int) (event.getRawY() - initialTouchY);
                         mWindowManager.updateViewLayout(mFloatingWidget, params);
                         return true;
+                    case MotionEvent.ACTION_UP:
+                        // Trigger click if it was a quick tap on the collapsed icon
+                        if (isCollapsed && Math.abs(event.getRawX() - initialTouchX) < 10 && Math.abs(event.getRawY() - initialTouchY) < 10) {
+                            toggleCollapse();
+                        }
+                        return true;
                 }
                 return false;
             }
-        });
+        };
+
+        header.setOnTouchListener(dragListener);
+        collapsedIcon.setOnTouchListener(dragListener);
         
         resizeBtn.setOnTouchListener(new View.OnTouchListener() {
             private int initialWidth, initialHeight;
@@ -143,56 +143,34 @@ public class FloatingWidgetService extends Service {
                 return false;
             }
         });
-        
-        startForegroundAppMonitor();
     }
     
-    private void startForegroundAppMonitor() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isPinned) return;
-                
-                String currentApp = getForegroundApp();
-                boolean isLauncher = currentApp.contains("launcher") || 
-                                     currentApp.equals("com.sec.android.app.launcher") || 
-                                     currentApp.equals("com.elitesoftware.geminiwidget") ||
-                                     currentApp.equals("com.android.systemui");
-                                     
-                handler.post(() -> {
-                    if (isLauncher) {
-                        mFloatingWidget.setVisibility(View.VISIBLE);
-                    } else {
-                        mFloatingWidget.setVisibility(View.GONE);
-                    }
-                });
-            }
-        }, 0, 500);
-    }
-    
-    private String getForegroundApp() {
-        UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-        long time = System.currentTimeMillis();
-        List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
-        if (appList != null && appList.size() > 0) {
-            UsageStats myStats = null;
-            for (UsageStats usageStats : appList) {
-                if (myStats == null || myStats.getLastTimeUsed() < usageStats.getLastTimeUsed()) {
-                    myStats = usageStats;
-                }
-            }
-            if (myStats != null) {
-                return myStats.getPackageName();
-            }
+    private int oldWidth = 600;
+    private int oldHeight = 800;
+
+    private void toggleCollapse() {
+        isCollapsed = !isCollapsed;
+        if (isCollapsed) {
+            oldWidth = params.width;
+            oldHeight = params.height;
+            header.setVisibility(View.GONE);
+            webView.setVisibility(View.GONE);
+            collapsedIcon.setVisibility(View.VISIBLE);
+            params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        } else {
+            header.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.VISIBLE);
+            collapsedIcon.setVisibility(View.GONE);
+            params.width = oldWidth;
+            params.height = oldHeight;
         }
-        return "";
+        mWindowManager.updateViewLayout(mFloatingWidget, params);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (timer != null) timer.cancel();
         if (mFloatingWidget != null) mWindowManager.removeView(mFloatingWidget);
     }
 }

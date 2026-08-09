@@ -150,8 +150,8 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.70",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.70.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.70.apk",
+                                          "version":  "1.0.70"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.69.apk",
@@ -380,6 +380,34 @@
                                       {
                                           "file":  "Elite_App_Marketplace-Client_.apk",
                                           "version":  "1.0"
+                                      }
+                                  ]
+                 },
+                 {
+                     "category":  "Tools",
+                     "description":  "A floating Gemini widget for the launcher.",
+                     "icon":  "com.elitesoftware.geminiwidget_icon.png",
+                     "name":  "Elite Gemini Widget",
+                     "package_name":  "com.elitesoftware.geminiwidget",
+                     "reviews":  [
+
+                                 ],
+                     "screenshots":  [
+
+                                     ],
+                     "tags":  [
+                                  "Gemini",
+                                  "Widget",
+                                  "Floating"
+                              ],
+                     "versions":  [
+                                      {
+                                          "version":  "1.0.1",
+                                          "file":  "EliteGeminiWidget_v1.0.1.apk"
+                                      },
+                                      {
+                                          "file":  "EliteGeminiWidget_v1.0.0.apk",
+                                          "version":  "1.0.0"
                                       }
                                   ]
                  },
@@ -1107,30 +1135,6 @@
                                       {
                                           "file":  "나눔바른고딕.FlipFont.ver.1.5.build.6.apk",
                                           "version":  "1.0"
-                                      }
-                                  ]
-                 },
-                 {
-                     "screenshots":  [
-
-                                     ],
-                     "description":  "A floating Gemini widget for the launcher.",
-                     "reviews":  [
-
-                                 ],
-                     "icon":  "",
-                     "category":  "Tools",
-                     "tags":  [
-                                  "Gemini",
-                                  "Widget",
-                                  "Floating"
-                              ],
-                     "package_name":  "com.elitesoftware.geminiwidget",
-                     "name":  "Elite Gemini Widget",
-                     "versions":  [
-                                      {
-                                          "version":  "1.0.0",
-                                          "file":  "EliteGeminiWidget_v1.0.0.apk"
                                       }
                                   ]
                  }

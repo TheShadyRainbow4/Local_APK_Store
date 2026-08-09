@@ -10,7 +10,7 @@ $dbObj = $dbStr | ConvertFrom-Json
 if ([string]::IsNullOrWhiteSpace($Version)) {
     $app = $dbObj.apps | Where-Object { $_.package_name -eq "com.elitesoftware.geminiwidget" }
     if ($app) {
-        $sortedVers = $app.versions | Sort-Object { [version]($_.version -replace '^v?(\d+\.\d+)$', "${1}.0" -replace '^v?(\d+\.\d+\.\d+).*', "$1") } -Descending
+        $sortedVers = $app.versions | Sort-Object { [version]($_.version -replace '^v?(\d+\.\d+)$', '${1}.0' -replace '^v?(\d+\.\d+\.\d+).*', '$1') } -Descending
         $latestVer = $sortedVers[0].version
         $verParts = $latestVer.Split('.')
         $patch = [int]$verParts[2] + 1
