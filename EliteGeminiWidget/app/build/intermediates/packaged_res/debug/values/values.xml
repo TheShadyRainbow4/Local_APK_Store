@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Market</string>
+    <string name="app_name">eliteWindow-Frame.work</string>
     <style name="Theme.LegacyMarket" parent="Theme.AppCompat.Light.DarkActionBar">
         
         <item name="colorPrimary">#669900</item> 

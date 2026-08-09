@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.geminiwidget"
-    android:versionCode="10006"
-    android:versionName="1.0.6" >
+    android:versionCode="10007"
+    android:versionName="1.0.7" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -30,17 +30,58 @@
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Elite Gemini Widget"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true" >
+
+        <!-- Custom Frame Builder -->
         <activity
-            android:name="com.elitesoftware.appmarketplace.MainActivity"
-            android:exported="true" >
+            android:name="com.elitesoftware.appmarketplace.CustomFrameActivity"
+            android:exported="true"
+            android:label="Custom Frame" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Gemini Window -->
+        <activity
+            android:name="com.elitesoftware.appmarketplace.GeminiLauncherActivity"
+            android:exported="true"
+            android:label="Elite Gemini" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Settings Window -->
+        <activity
+            android:name="com.elitesoftware.appmarketplace.SettingsLauncherActivity"
+            android:exported="true"
+            android:label="Elite Settings" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Share Target -->
+        <activity
+            android:name="com.elitesoftware.appmarketplace.ShareReceiverActivity"
+            android:exported="true"
+            android:label="Open in Elite Frame" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 

@@ -424,6 +424,10 @@
                               ],
                      "versions":  [
                                       {
+                                          "version":  "1.0.7",
+                                          "file":  "EliteGeminiWidget_v1.0.7.apk"
+                                      },
+                                      {
                                           "version":  "1.0.6",
                                           "file":  "EliteGeminiWidget_v1.0.6.apk"
                                       },
