@@ -50,7 +50,10 @@ layout activity_app_detail
 layout activity_main
 layout activity_upload
 layout list_item_app
+mipmap ic_custom_frame
+mipmap ic_gemini_star
 mipmap ic_launcher
+mipmap ic_settings
 raw elite_cert
 raw elite_cert_pfx
 string app_name

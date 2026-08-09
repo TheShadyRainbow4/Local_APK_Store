@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.geminiwidget"
-    android:versionCode="10007"
-    android:versionName="1.0.7" >
+    android:versionCode="10008"
+    android:versionName="1.0.8" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -39,6 +39,7 @@
         <activity
             android:name="com.elitesoftware.appmarketplace.CustomFrameActivity"
             android:exported="true"
+            android:icon="@mipmap/ic_custom_frame"
             android:label="Custom Frame" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +52,7 @@
         <activity
             android:name="com.elitesoftware.appmarketplace.GeminiLauncherActivity"
             android:exported="true"
+            android:icon="@mipmap/ic_gemini_star"
             android:label="Elite Gemini" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,6 +65,7 @@
         <activity
             android:name="com.elitesoftware.appmarketplace.SettingsLauncherActivity"
             android:exported="true"
+            android:icon="@mipmap/ic_settings"
             android:label="Elite Settings" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

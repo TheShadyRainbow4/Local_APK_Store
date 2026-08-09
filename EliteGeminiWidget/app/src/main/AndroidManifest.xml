@@ -19,6 +19,7 @@
         <activity
             android:name=".CustomFrameActivity"
             android:label="Custom Frame"
+            android:icon="@mipmap/ic_custom_frame"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +31,7 @@
         <activity
             android:name=".GeminiLauncherActivity"
             android:label="Elite Gemini"
+            android:icon="@mipmap/ic_gemini_star"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +43,7 @@
         <activity
             android:name=".SettingsLauncherActivity"
             android:label="Elite Settings"
+            android:icon="@mipmap/ic_settings"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

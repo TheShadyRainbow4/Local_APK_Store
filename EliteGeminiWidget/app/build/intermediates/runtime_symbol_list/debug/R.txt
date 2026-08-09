@@ -3730,7 +3730,10 @@ int layout select_dialog_item_material 0x7f0b0069
 int layout select_dialog_multichoice_material 0x7f0b006a
 int layout select_dialog_singlechoice_material 0x7f0b006b
 int layout support_simple_spinner_dropdown_item 0x7f0b006c
-int mipmap ic_launcher 0x7f0d0000
+int mipmap ic_custom_frame 0x7f0d0000
+int mipmap ic_gemini_star 0x7f0d0001
+int mipmap ic_launcher 0x7f0d0002
+int mipmap ic_settings 0x7f0d0003
 int plurals mtrl_badge_content_description 0x7f0e0000
 int raw elite_cert 0x7f0f0000
 int raw elite_cert_pfx 0x7f0f0001

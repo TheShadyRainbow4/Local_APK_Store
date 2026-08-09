@@ -1,5 +1,9 @@
 [
     {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/mipmap-xxhdpi_ic_settings.png.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/mipmap-xxhdpi/ic_settings.png"
+    },
+    {
         "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/mipmap-xxhdpi_ic_launcher.png.flat",
         "source": "com.elitesoftware.appmarketplace.app-main-30:/mipmap-xxhdpi/ic_launcher.png"
     },
@@ -48,6 +52,10 @@
         "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_animation.xml"
     },
     {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/mipmap-xxhdpi_ic_custom_frame.png.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/mipmap-xxhdpi/ic_custom_frame.png"
+    },
+    {
         "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_list_item_app.xml.flat",
         "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/list_item_app.xml"
     },
@@ -58,6 +66,10 @@
     {
         "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_loading_bar_4.png.flat",
         "source": "com.elitesoftware.appmarketplace.app-main-30:/drawable/loading_bar_4.png"
+    },
+    {
+        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/mipmap-xxhdpi_ic_gemini_star.png.flat",
+        "source": "com.elitesoftware.appmarketplace.app-main-30:/mipmap-xxhdpi/ic_gemini_star.png"
     },
     {
         "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/drawable_settings.png.flat",
