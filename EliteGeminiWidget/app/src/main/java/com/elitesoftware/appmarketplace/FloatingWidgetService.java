@@ -65,8 +65,8 @@ public class FloatingWidgetService extends Service {
 
         // Windows Vista Aero Glass Style Frame
         GradientDrawable frameDrawable = new GradientDrawable();
-        frameDrawable.setColor(Color.argb(120, 255, 255, 255)); // Semi-transparent glass body
-        frameDrawable.setStroke(2, Color.argb(180, 255, 255, 255)); // Bright glass edge
+        frameDrawable.setColor(Color.argb(90, 0, 0, 0)); // Dark glassy body
+        frameDrawable.setStroke(2, Color.argb(200, 255, 255, 255)); // Bright glass edge
         frameDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
 
         final LinearLayout windowFrame = new LinearLayout(this);
@@ -78,7 +78,7 @@ public class FloatingWidgetService extends Service {
         // Aero Titlebar
         GradientDrawable titleDrawable = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Color.argb(160, 255, 255, 255), Color.argb(80, 200, 220, 255), Color.argb(120, 150, 190, 255)}
+                new int[]{Color.argb(140, 255, 255, 255), Color.argb(60, 255, 255, 255), Color.argb(40, 150, 150, 150)}
         );
         titleDrawable.setCornerRadii(new float[]{16, 16, 16, 16, 0, 0, 0, 0});
         
@@ -105,18 +105,7 @@ public class FloatingWidgetService extends Service {
         LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         header.addView(alphaSlider, sliderParams);
 
-        // Toggle slider on title long press
-        titleView.setOnLongClickListener(v -> {
-            if (alphaSlider.getVisibility() == View.VISIBLE) {
-                alphaSlider.setVisibility(View.GONE);
-                titleParams.weight = 1.0f;
-            } else {
-                alphaSlider.setVisibility(View.VISIBLE);
-                titleParams.weight = 0.0f; // Give space to slider
-            }
-            titleView.setLayoutParams(titleParams);
-            return true;
-        });
+        // Toggle slider is now handled by custom drag listener logic
 
         // Vista Style Window Buttons
         LinearLayout buttonContainer = new LinearLayout(this);
@@ -303,6 +292,23 @@ public class FloatingWidgetService extends Service {
             private int initialX, initialY;
             private float initialTouchX, initialTouchY;
             private boolean isMoving = false;
+            private android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
+            private Runnable longPressRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (!isMoving) {
+                        if (alphaSlider.getVisibility() == View.VISIBLE) {
+                            alphaSlider.setVisibility(View.GONE);
+                            titleParams.weight = 1.0f;
+                        } else {
+                            alphaSlider.setVisibility(View.VISIBLE);
+                            titleParams.weight = 0.0f;
+                        }
+                        titleView.setLayoutParams(titleParams);
+                    }
+                }
+            };
+            
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -310,10 +316,12 @@ public class FloatingWidgetService extends Service {
                         initialX = params.x; initialY = params.y;
                         initialTouchX = event.getRawX(); initialTouchY = event.getRawY();
                         isMoving = false;
-                        return false; // let view process for clicks/long-clicks
+                        handler.postDelayed(longPressRunnable, 500);
+                        return true; // Consume event
                     case MotionEvent.ACTION_MOVE:
                         if (!isMoving && (Math.abs(event.getRawX() - initialTouchX) > 10 || Math.abs(event.getRawY() - initialTouchY) > 10)) {
                             isMoving = true;
+                            handler.removeCallbacks(longPressRunnable); // Cancel long press
                             // Un-maximize if dragging
                             if (params.width == WindowManager.LayoutParams.MATCH_PARENT) {
                                 params.width = oldSize[0];
@@ -332,17 +340,15 @@ public class FloatingWidgetService extends Service {
                             params.x = initialX + (int) (event.getRawX() - initialTouchX);
                             params.y = initialY + (int) (event.getRawY() - initialTouchY);
                             mWindowManager.updateViewLayout(mFloatingWidget, params);
-                            return true; // consume event
                         }
-                        return false;
+                        return true;
                     case MotionEvent.ACTION_UP:
-                        if (isMoving) {
-                            return true;
-                        } else if (v == collapsedIcon) {
+                    case MotionEvent.ACTION_CANCEL:
+                        handler.removeCallbacks(longPressRunnable);
+                        if (!isMoving && v == collapsedIcon) {
                             toggleCollapse.onClick(v);
-                            return true;
                         }
-                        return false;
+                        return true;
                 }
                 return false;
             }
@@ -401,11 +407,11 @@ public class FloatingWidgetService extends Service {
         
         GradientDrawable bg = new GradientDrawable();
         if (isClose) {
-            bg.setColors(new int[]{Color.argb(220, 255, 100, 100), Color.argb(255, 180, 20, 20)});
+            bg.setColors(new int[]{Color.argb(200, 200, 50, 50), Color.argb(255, 150, 10, 10)});
             btn.setTextColor(Color.WHITE);
         } else {
-            bg.setColors(new int[]{Color.argb(90, 255, 255, 255), Color.argb(30, 255, 255, 255)});
-            btn.setTextColor(Color.BLACK);
+            bg.setColors(new int[]{Color.argb(40, 255, 255, 255), Color.argb(10, 255, 255, 255)});
+            btn.setTextColor(Color.WHITE);
         }
         bg.setCornerRadius(2);
         bg.setStroke(1, Color.argb(120, 255, 255, 255));
