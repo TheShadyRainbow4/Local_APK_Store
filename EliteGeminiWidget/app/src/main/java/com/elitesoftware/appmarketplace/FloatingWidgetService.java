@@ -122,7 +122,7 @@ public class FloatingWidgetService extends Service {
         header.addView(buttonContainer);
 
         View contentView = null;
-        if ("elite_settings".equals(pkg) || "com.android.settings".equals(pkg)) {
+        if ("elite_settings".equals(pkg)) {
             // Custom Elite Settings View
             LinearLayout settingsLayout = new LinearLayout(this);
             settingsLayout.setOrientation(LinearLayout.VERTICAL);
@@ -172,6 +172,9 @@ public class FloatingWidgetService extends Service {
                                 launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
                             } else if (pkg.equals("com.google.android.calculator")) {
                                 launchIntent = getPackageManager().getLaunchIntentForPackage("com.android.calculator2");
+                                if (launchIntent == null) {
+                                    launchIntent = getPackageManager().getLaunchIntentForPackage("com.sec.android.app.calculator");
+                                }
                             }
                         }
                     }

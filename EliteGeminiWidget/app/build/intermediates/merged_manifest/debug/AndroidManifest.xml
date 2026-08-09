@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.geminiwidget"
-    android:versionCode="10020"
-    android:versionName="1.0.20" >
+    android:versionCode="10021"
+    android:versionName="1.0.21" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -51,9 +51,12 @@
         <!-- Gemini Window -->
         <activity
             android:name="com.elitesoftware.appmarketplace.GeminiLauncherActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@mipmap/ic_gemini_star"
-            android:label="Elite Gemini" >
+            android:label="Elite Gemini"
+            android:noHistory="true"
+            android:taskAffinity="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,9 +67,12 @@
         <!-- Settings Window -->
         <activity
             android:name="com.elitesoftware.appmarketplace.SettingsLauncherActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@mipmap/ic_settings"
-            android:label="Elite Settings" >
+            android:label="Elite Settings"
+            android:noHistory="true"
+            android:taskAffinity="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,9 +97,12 @@
         <!-- Test App Launcher -->
         <activity
             android:name="com.elitesoftware.appmarketplace.TestAppLauncherActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Elite Test App" >
+            android:label="Elite Test App"
+            android:noHistory="true"
+            android:taskAffinity="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -110,9 +119,12 @@
         <!-- Custom Package Launcher -->
         <activity
             android:name="com.elitesoftware.appmarketplace.PackageLauncherActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="Launch Any App"
+            android:noHistory="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -124,9 +136,12 @@
         <!-- Calculator Launcher -->
         <activity
             android:name="com.elitesoftware.appmarketplace.CalculatorLauncherActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Elite Calculator" >
+            android:label="Elite Calculator"
+            android:noHistory="true"
+            android:taskAffinity="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
