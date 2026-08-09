@@ -156,8 +156,12 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.73",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.73.apk"
+                                          "version":  "1.0.74",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.74.apk"
+                                      },
+                                      {
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.73.apk",
+                                          "version":  "1.0.73"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.72.apk",
@@ -420,8 +424,8 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.2",
-                                          "file":  "EliteGeminiWidget_v1.0.2.apk"
+                                          "file":  "EliteGeminiWidget_v1.0.2.apk",
+                                          "version":  "1.0.2"
                                       },
                                       {
                                           "file":  "EliteGeminiWidget_v1.0.1.apk",

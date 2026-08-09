@@ -16,6 +16,10 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-31:\\drawable\\loading_bar_2.png"
     },
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-29:\\drawable_inset_3d.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-31:\\drawable\\inset_3d.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-29:\\drawable_loading_animation.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-31:\\drawable\\loading_animation.xml"
     },

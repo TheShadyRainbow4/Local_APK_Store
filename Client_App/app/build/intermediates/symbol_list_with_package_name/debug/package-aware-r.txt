@@ -2928,6 +2928,7 @@ drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable ic_search_black_24
 drawable ic_settings
+drawable inset_3d
 drawable loading_animation
 drawable loading_bar_0
 drawable loading_bar_1
@@ -3515,6 +3516,7 @@ id transition_transform
 id triangle
 id tvAppDesc
 id tvAppName
+id tvStatus
 id txtApkStatus
 id txtScreenshotsStatus
 id unchecked

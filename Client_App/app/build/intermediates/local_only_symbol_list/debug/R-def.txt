@@ -3,6 +3,7 @@ local
 drawable btn_3d
 drawable custom_progress_bar
 drawable ic_settings
+drawable inset_3d
 drawable loading_animation
 drawable loading_bar_0
 drawable loading_bar_1
@@ -46,6 +47,7 @@ id tabDownloads
 id tabGames
 id tvAppDesc
 id tvAppName
+id tvStatus
 id txtApkStatus
 id txtScreenshotsStatus
 layout activity_app_detail

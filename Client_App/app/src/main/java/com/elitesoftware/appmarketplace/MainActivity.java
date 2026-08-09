@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private int currentTab = 0; // 0=APPS, 1=GAMES, 2=DOWNLOADS
     private String currentSearchQuery = "";
     private AppAdapter adapter;
+    private android.widget.TextView tvStatus;
+    private android.widget.ListView lvApps;
     private ExecutorService executor = Executors.newFixedThreadPool(4);
     private ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> heartbeatFuture;
@@ -89,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        ListView lvApps = findViewById(R.id.lvApps);
+        lvApps = findViewById(R.id.lvApps);
+        tvStatus = findViewById(R.id.tvStatus);
         adapter = new AppAdapter();
         lvApps.setAdapter(adapter);
 
@@ -161,10 +164,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTabs() {
+
+        
         TextView tabApps = findViewById(R.id.tabApps);
         TextView tabGames = findViewById(R.id.tabGames);
         TextView tabDownloads = findViewById(R.id.tabDownloads);
-        
+
         android.view.View.OnClickListener tabListener = v -> {
             int unselectedColor = android.graphics.Color.parseColor("#888888"); // A neutral grey that looks fine in light and dark mode, or use context color
             tabApps.setTextColor(unselectedColor);
@@ -261,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
                     android.content.Intent browserIntent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("http://" + serverIp + ":8552/"));
                     startActivity(browserIntent);
                 } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                     android.widget.Toast.makeText(this, "No server IP configured. Connect to server first.", android.widget.Toast.LENGTH_SHORT).show();
                 }
             }
@@ -392,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
             }
             runOnUiThread(() -> {
                 if (serverIPs.isEmpty()) {
+                    if (tvStatus != null) tvStatus.setText("No servers found.");
                     Toast.makeText(this, "No servers found. Add IP manually in Settings.", Toast.LENGTH_LONG).show();
                 }
             });
@@ -590,6 +597,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                     p = Shizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
                                 } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                                     try {
                                         if (com.rosan.dhizuku.api.Dhizuku.isPermissionGranted()) {
                                             p = com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"pm", "install", "-S", String.valueOf(apkFile.length())}, null, null);
@@ -631,6 +639,7 @@ public class MainActivity extends AppCompatActivity {
                                             if (Shizuku.pingBinder() && Shizuku.checkSelfPermission() == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                                 Shizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
                                             } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                                                 try {
                                                     if (com.rosan.dhizuku.api.Dhizuku.isPermissionGranted()) {
                                                         com.rosan.dhizuku.api.Dhizuku.newProcess(new String[]{"sh", "-c", "am start -n " + getPackageName() + "/.MainActivity"}, null, null);
@@ -639,9 +648,11 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                     } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                                         errorLog += " Process returned non-zero. ";
                                     }
                                 } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                                     errorLog += "Shizuku/Dhizuku/SU is not available or permission denied. ";
                                 }
                             } catch (Exception e) {
@@ -666,6 +677,7 @@ public class MainActivity extends AppCompatActivity {
                                     pbInstall.setVisibility(View.GONE);
                                 });
                             } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                                 runOnUiThread(() -> {
                                     btnInstall.setText("OPEN");
                                     btnInstall.setEnabled(true);
@@ -714,10 +726,12 @@ public class MainActivity extends AppCompatActivity {
                     if (launchIntent != null) {
                         MainActivity.this.startActivity(launchIntent);
                     } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                         Toast.makeText(MainActivity.this, "App cannot be opened.", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
                 btnInstall.setText(updateAvailable ? "UPDATE" : "INSTALL");
                 btnInstall.setOnClickListener(installAction);
             }
@@ -754,6 +768,7 @@ public class MainActivity extends AppCompatActivity {
         if (model != null && manufacturer != null && model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
             return capitalize(model);
         } else {
+                    if (tvStatus != null) tvStatus.setText("Connected to " + serverIPs.size() + " server(s).");
             return capitalize(manufacturer) + " " + (model != null ? model : "");
         }
     }
@@ -882,5 +897,7 @@ public class MainActivity extends AppCompatActivity {
         sendDisconnect();
     }
 }
+
+
 
 
