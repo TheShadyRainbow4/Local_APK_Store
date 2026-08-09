@@ -144,13 +144,16 @@ public class FloatingWidgetService extends Service {
             settingsLayout.addView(infoText);
             contentView = settingsLayout;
         } else if (pkg != null && !pkg.isEmpty()) {
-            final android.view.TextureView textureView = new android.view.TextureView(this);
-            textureView.setSurfaceTextureListener(new android.view.TextureView.SurfaceTextureListener() {
+            final android.view.SurfaceView surfaceView = new android.view.SurfaceView(this);
+            surfaceView.getHolder().addCallback(new android.view.SurfaceHolder.Callback() {
                 android.hardware.display.VirtualDisplay virtualDisplay;
                 android.view.Surface mSurface;
                 @Override
-                public void onSurfaceTextureAvailable(android.graphics.SurfaceTexture surface, int width, int height) {
-                    mSurface = new android.view.Surface(surface);
+                public void surfaceCreated(android.view.SurfaceHolder holder) {
+                    mSurface = holder.getSurface();
+                    int width = surfaceView.getWidth();
+                    int height = surfaceView.getHeight();
+                    
                     android.hardware.display.DisplayManager displayManager = (android.hardware.display.DisplayManager) getSystemService(android.content.Context.DISPLAY_SERVICE);
                     virtualDisplay = displayManager.createVirtualDisplay(
                             "EliteVirtualDisplay",
@@ -184,26 +187,19 @@ public class FloatingWidgetService extends Service {
                     }
                 }
                 @Override
-                public void onSurfaceTextureSizeChanged(android.graphics.SurfaceTexture surface, int width, int height) {
+                public void surfaceChanged(android.view.SurfaceHolder holder, int format, int width, int height) {
                     if (virtualDisplay != null && width > 0 && height > 0) {
                         virtualDisplay.resize(width, height, 160);
                     }
                 }
                 @Override
-                public boolean onSurfaceTextureDestroyed(android.graphics.SurfaceTexture surface) {
+                public void surfaceDestroyed(android.view.SurfaceHolder holder) {
                     if (virtualDisplay != null) {
                         virtualDisplay.release();
                     }
-                    if (mSurface != null) {
-                        mSurface.release();
-                    }
-                    return true;
-                }
-                @Override
-                public void onSurfaceTextureUpdated(android.graphics.SurfaceTexture surface) {
                 }
             });
-            contentView = textureView;
+            contentView = surfaceView;
         } else {
             final WebView webView = new WebView(this);
             WebSettings webSettings = webView.getSettings();
@@ -249,7 +245,7 @@ public class FloatingWidgetService extends Service {
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 800, 1000, layoutFlag,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
         params.gravity = Gravity.TOP | Gravity.LEFT;
