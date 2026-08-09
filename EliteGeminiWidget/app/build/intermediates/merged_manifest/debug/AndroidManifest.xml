@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.geminiwidget"
-    android:versionCode="10017"
-    android:versionName="1.0.17" >
+    android:versionCode="10018"
+    android:versionName="1.0.18" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -114,6 +114,19 @@
             android:icon="@mipmap/ic_launcher"
             android:label="Launch Any App"
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Calculator Launcher -->
+        <activity
+            android:name="com.elitesoftware.appmarketplace.CalculatorLauncherActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Elite Calculator" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -94,6 +94,18 @@
             </intent-filter>
         </activity>
 
+        <!-- Calculator Launcher -->
+        <activity
+            android:name=".CalculatorLauncherActivity"
+            android:label="Elite Calculator"
+            android:icon="@mipmap/ic_launcher"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".FloatingWidgetService" android:enabled="true" android:exported="false" />
     </application>
 </manifest>

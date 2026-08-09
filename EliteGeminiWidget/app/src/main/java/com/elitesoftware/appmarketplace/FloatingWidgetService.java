@@ -159,11 +159,18 @@ public class FloatingWidgetService extends Service {
                             android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
                     );
 
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
-                    if (launchIntent == null && pkg.equals("com.android.settings")) {
-                        launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
-                    } else if (pkg.equals("com.elitesoftware.appmarketplace.testapp")) {
+                    Intent launchIntent = null;
+                    if (pkg.equals("com.elitesoftware.appmarketplace.testapp")) {
                         launchIntent = new Intent(FloatingWidgetService.this, TestAppActivity.class);
+                    } else {
+                        launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
+                        if (launchIntent == null) {
+                            if (pkg.equals("com.android.settings")) {
+                                launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                            } else if (pkg.equals("com.google.android.calculator")) {
+                                launchIntent = getPackageManager().getLaunchIntentForPackage("com.android.calculator2");
+                            }
+                        }
                     }
                     if (launchIntent != null) {
                         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
