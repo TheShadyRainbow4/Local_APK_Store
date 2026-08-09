@@ -81,6 +81,19 @@
             android:label="Test App"
             android:exported="true" />
 
+        <!-- Custom Package Launcher -->
+        <activity
+            android:name=".PackageLauncherActivity"
+            android:label="Launch Any App"
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".FloatingWidgetService" android:enabled="true" android:exported="false" />
     </application>
 </manifest>
