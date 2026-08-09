@@ -93,15 +93,38 @@ public class FloatingWidgetService extends Service {
         titleView.setTextColor(Color.BLACK);
         titleView.setTypeface(null, Typeface.BOLD);
         titleView.setShadowLayer(3, 1, 1, Color.WHITE);
+        titleView.setSingleLine(true);
+        titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         header.addView(titleView, titleParams);
 
-        // Transparency Slider
+        // Transparency Slider (now a flyout container)
+        LinearLayout sliderContainer = new LinearLayout(this);
+        sliderContainer.setOrientation(LinearLayout.HORIZONTAL);
+        sliderContainer.setBackgroundColor(Color.argb(200, 0, 0, 0));
+        sliderContainer.setPadding(10, 10, 10, 10);
+        sliderContainer.setVisibility(View.GONE); // Hidden by default
+
+        TextView sliderLabel = new TextView(this);
+        sliderLabel.setText("Opacity: ");
+        sliderLabel.setTextColor(Color.WHITE);
+        sliderContainer.addView(sliderLabel);
+
         SeekBar alphaSlider = new SeekBar(this);
         alphaSlider.setMax(255);
         alphaSlider.setProgress(255);
-        LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT);
-        header.addView(alphaSlider, sliderParams);
+        LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        sliderContainer.addView(alphaSlider, sliderParams);
+
+        // Toggle slider on title long press
+        titleView.setOnLongClickListener(v -> {
+            if (sliderContainer.getVisibility() == View.VISIBLE) {
+                sliderContainer.setVisibility(View.GONE);
+            } else {
+                sliderContainer.setVisibility(View.VISIBLE);
+            }
+            return true;
+        });
 
         // Vista Style Window Buttons
         LinearLayout buttonContainer = new LinearLayout(this);
@@ -130,7 +153,7 @@ public class FloatingWidgetService extends Service {
                             "EliteVirtualDisplay",
                             width > 0 ? width : 700, height > 0 ? height : 900, 160,
                             mSurface,
-                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
                     );
 
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
@@ -197,6 +220,7 @@ public class FloatingWidgetService extends Service {
         contentLayout.addView(grabHandle, grabParams);
 
         windowFrame.addView(header);
+        windowFrame.addView(sliderContainer); // Insert slider container just below header
         windowFrame.addView(contentLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
         
         mFloatingWidget.addView(windowFrame);
@@ -354,7 +378,9 @@ public class FloatingWidgetService extends Service {
         btn.setTypeface(null, Typeface.BOLD);
         btn.setPadding(0, 0, 0, 0);
         
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(70, 70); // Fixed size
+        // Make buttons rectangular like Vista
+        int width = isClose ? 100 : 80;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, 60);
         lp.setMargins(6, 0, 6, 0);
         btn.setLayoutParams(lp);
         
