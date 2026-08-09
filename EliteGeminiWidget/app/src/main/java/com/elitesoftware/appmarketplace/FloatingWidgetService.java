@@ -86,7 +86,7 @@ public class FloatingWidgetService extends Service {
         header.setBackground(titleDrawable);
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setPadding(15, 8, 15, 8);
+        header.setPadding(15, 4, 8, 4);
 
         TextView titleView = new TextView(this);
         titleView.setText(titleText);
@@ -129,6 +129,7 @@ public class FloatingWidgetService extends Service {
         // Vista Style Window Buttons
         LinearLayout buttonContainer = new LinearLayout(this);
         buttonContainer.setOrientation(LinearLayout.HORIZONTAL);
+        buttonContainer.setPadding(0, 0, 0, 0);
 
         Button minBtn = createVistaButton("_", false);
         Button maxBtn = createVistaButton("\u25A1", false);
@@ -157,8 +158,11 @@ public class FloatingWidgetService extends Service {
                     );
 
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
+                    if (launchIntent == null && pkg.equals("com.android.settings")) {
+                        launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                    }
                     if (launchIntent != null) {
-                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         android.app.ActivityOptions options = android.app.ActivityOptions.makeBasic();
                         try {
                             options.setLaunchDisplayId(virtualDisplay.getDisplay().getDisplayId());
@@ -298,6 +302,16 @@ public class FloatingWidgetService extends Service {
                     case MotionEvent.ACTION_MOVE:
                         if (Math.abs(event.getRawX() - initialTouchX) > 10 || Math.abs(event.getRawY() - initialTouchY) > 10) {
                             isMoving = true;
+                            // Un-maximize if dragging
+                            if (params.width == WindowManager.LayoutParams.MATCH_PARENT) {
+                                params.width = oldSize[0];
+                                params.height = oldSize[1];
+                                // Adjust position so mouse is roughly in center of restored header
+                                initialX = (int) (event.getRawX() - (params.width / 2));
+                                initialY = (int) event.getRawY() - 30; // offset for touch
+                                params.x = initialX;
+                                params.y = initialY;
+                            }
                         }
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
                         params.y = initialY + (int) (event.getRawY() - initialTouchY);
@@ -379,9 +393,9 @@ public class FloatingWidgetService extends Service {
         btn.setPadding(0, 0, 0, 0);
         
         // Make buttons rectangular like Vista
-        int width = isClose ? 100 : 80;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, 60);
-        lp.setMargins(6, 0, 6, 0);
+        int width = isClose ? 85 : 65;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, 50);
+        lp.setMargins(0, 0, 0, 0); // No gaps between buttons in Vista
         btn.setLayoutParams(lp);
         
         return btn;
