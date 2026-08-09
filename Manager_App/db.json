@@ -143,15 +143,21 @@
                                  ],
                      "screenshots":  [
                                          "Elite_App_Marketplace_Screenshot0.png",
-                                         "Elite_App_Marketplace_Screenshot5.png"
+                                         "Elite_App_Marketplace_Screenshot5.png",
+                                         "129507.png",
+                                         "129505.png",
+                                         "129503.png",
+                                         "129501.png",
+                                         "129493.png",
+                                         "129497.png"
                                      ],
                      "tags":  [
 
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.72",
-                                          "file":  "Elite_App_Marketplace-Client_v1.0.72.apk"
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.72.apk",
+                                          "version":  "1.0.72"
                                       },
                                       {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.71.apk",
@@ -409,6 +415,10 @@
                                   "Floating"
                               ],
                      "versions":  [
+                                      {
+                                          "version":  "1.0.2",
+                                          "file":  "EliteGeminiWidget_v1.0.2.apk"
+                                      },
                                       {
                                           "file":  "EliteGeminiWidget_v1.0.1.apk",
                                           "version":  "1.0.1"
