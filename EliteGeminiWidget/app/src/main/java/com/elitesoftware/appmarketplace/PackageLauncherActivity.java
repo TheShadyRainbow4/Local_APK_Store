@@ -13,39 +13,36 @@ public class PackageLauncherActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Launch Package in Elite Frame");
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 100, 50, 50);
+        
+        android.widget.TextView title = new android.widget.TextView(this);
+        title.setText("Launch Package in Elite Frame");
+        title.setTextSize(20);
+        title.setPadding(0, 0, 0, 20);
+        layout.addView(title);
         
         final EditText input = new EditText(this);
         input.setHint("e.g. com.android.settings");
-        
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(50, 20, 50, 20);
         layout.addView(input);
         
-        builder.setView(layout);
-        
-        builder.setPositiveButton("Launch", (dialog, which) -> {
+        android.widget.Button launchBtn = new android.widget.Button(this);
+        launchBtn.setText("Launch");
+        launchBtn.setOnClickListener(v -> {
             String pkg = input.getText().toString().trim();
             if (!pkg.isEmpty()) {
                 Intent intent = new Intent(this, FloatingWidgetService.class);
                 intent.putExtra("package", pkg);
                 intent.putExtra("title", pkg);
                 startService(intent);
+                finish();
             } else {
                 Toast.makeText(this, "Package name cannot be empty", Toast.LENGTH_SHORT).show();
             }
-            finish();
         });
+        layout.addView(launchBtn);
         
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            dialog.cancel();
-            finish();
-        });
-        
-        builder.setOnCancelListener(dialog -> finish());
-        
-        builder.show();
+        setContentView(layout);
     }
 }
