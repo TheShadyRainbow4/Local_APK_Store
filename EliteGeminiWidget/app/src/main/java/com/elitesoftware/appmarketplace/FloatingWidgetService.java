@@ -163,8 +163,7 @@ public class FloatingWidgetService extends Service {
                             width > 0 ? width : 700, height > 0 ? height : 900, density,
                             mSurface,
                             android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | 
-                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY |
-                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
                     );
 
                     Intent launchIntent = null;
@@ -185,19 +184,23 @@ public class FloatingWidgetService extends Service {
                     }
                     if (launchIntent != null) {
                         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        android.app.ActivityOptions options = android.app.ActivityOptions.makeBasic();
-                        try {
-                            options.setLaunchDisplayId(virtualDisplay.getDisplay().getDisplayId());
-                            
-                            // Use PendingIntent to bypass strict background launch limits on Samsung/Android 10+
-                            android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
-                                FloatingWidgetService.this, 0, launchIntent, 
-                                android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
-                            );
-                            pendingIntent.send(FloatingWidgetService.this, 0, null, null, null, null, options.toBundle());
-                        } catch (Exception e) {
-                            android.widget.Toast.makeText(FloatingWidgetService.this, "Launch Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
-                        }
+                        final Intent finalIntent = launchIntent;
+                        
+                        // Delay launch to allow SurfaceFlinger to fully register the VirtualDisplay
+                        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                            android.app.ActivityOptions options = android.app.ActivityOptions.makeBasic();
+                            try {
+                                options.setLaunchDisplayId(virtualDisplay.getDisplay().getDisplayId());
+                                
+                                android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
+                                    FloatingWidgetService.this, 0, finalIntent, 
+                                    android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
+                                );
+                                pendingIntent.send(FloatingWidgetService.this, 0, null, null, null, null, options.toBundle());
+                            } catch (Exception e) {
+                                android.widget.Toast.makeText(FloatingWidgetService.this, "Launch Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        }, 500);
                     }
                 }
                 @Override
@@ -220,6 +223,7 @@ public class FloatingWidgetService extends Service {
                 public void onSurfaceTextureUpdated(android.graphics.SurfaceTexture surface) {
                 }
             });
+            textureView.setOpaque(false);
             contentView = textureView;
         } else {
             final WebView webView = new WebView(this);
