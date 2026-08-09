@@ -63,6 +63,24 @@
             </intent-filter>
         </activity>
 
+        <!-- Test App Launcher -->
+        <activity
+            android:name=".TestAppLauncherActivity"
+            android:label="Elite Test App"
+            android:icon="@mipmap/ic_launcher"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Test App Activity -->
+        <activity
+            android:name=".TestAppActivity"
+            android:label="Test App"
+            android:exported="true" />
+
         <service android:name=".FloatingWidgetService" android:enabled="true" android:exported="false" />
     </application>
 </manifest>

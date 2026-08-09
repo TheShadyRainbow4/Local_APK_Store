@@ -162,6 +162,8 @@ public class FloatingWidgetService extends Service {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
                     if (launchIntent == null && pkg.equals("com.android.settings")) {
                         launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                    } else if (pkg.equals("com.elitesoftware.appmarketplace.testapp")) {
+                        launchIntent = new Intent(FloatingWidgetService.this, TestAppActivity.class);
                     }
                     if (launchIntent != null) {
                         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -413,7 +415,7 @@ public class FloatingWidgetService extends Service {
             bg.setColors(new int[]{Color.argb(40, 255, 255, 255), Color.argb(10, 255, 255, 255)});
             btn.setTextColor(Color.WHITE);
         }
-        bg.setCornerRadius(2);
+        bg.setCornerRadius(6); // Slightly rounded buttons
         bg.setStroke(1, Color.argb(120, 255, 255, 255));
         
         btn.setBackground(bg);
