@@ -42,17 +42,23 @@ public class FloatingWidgetService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String url = "https://gemini.google.com/";
         String title = "Elite Gemini";
+        String pkg = null;
         
-        // Scalable Framework entry point
-        if (intent != null && intent.hasExtra("url")) {
-            url = intent.getStringExtra("url");
-            title = intent.getStringExtra("title");
+        if (intent != null) {
+            if (intent.hasExtra("url")) {
+                url = intent.getStringExtra("url");
+                title = intent.getStringExtra("title");
+            }
+            if (intent.hasExtra("package")) {
+                pkg = intent.getStringExtra("package");
+                title = intent.getStringExtra("title");
+            }
         }
-        createWindow(url, title);
+        createWindow(url, title, pkg);
         return START_STICKY;
     }
 
-    private void createWindow(String url, String titleText) {
+    private void createWindow(String url, String titleText, String pkg) {
         final LinearLayout mFloatingWidget = new LinearLayout(this);
         mFloatingWidget.setOrientation(LinearLayout.VERTICAL);
         mFloatingWidget.setBackgroundColor(Color.TRANSPARENT);
@@ -110,24 +116,67 @@ public class FloatingWidgetService extends Service {
         buttonContainer.addView(closeBtn);
         header.addView(buttonContainer);
 
-        // WebView
-        final WebView webView = new WebView(this);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        webSettings.setUserAgentString("Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
-        webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(url);
+        View contentView = null;
+        if (pkg != null && !pkg.isEmpty()) {
+            final android.view.SurfaceView surfaceView = new android.view.SurfaceView(this);
+            surfaceView.getHolder().addCallback(new android.view.SurfaceHolder.Callback() {
+                android.hardware.display.VirtualDisplay virtualDisplay;
+                @Override
+                public void surfaceCreated(android.view.SurfaceHolder holder) {
+                    android.hardware.display.DisplayManager displayManager = (android.hardware.display.DisplayManager) getSystemService(android.content.Context.DISPLAY_SERVICE);
+                    virtualDisplay = displayManager.createVirtualDisplay(
+                            "EliteVirtualDisplay",
+                            700, 900, 160,
+                            holder.getSurface(),
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
+                    );
+
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
+                    if (launchIntent != null) {
+                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        android.app.ActivityOptions options = android.app.ActivityOptions.makeBasic();
+                        try {
+                            options.setLaunchDisplayId(virtualDisplay.getDisplay().getDisplayId());
+                            startActivity(launchIntent, options.toBundle());
+                        } catch (Exception e) {
+                            android.widget.Toast.makeText(FloatingWidgetService.this, "Launch Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                @Override
+                public void surfaceChanged(android.view.SurfaceHolder holder, int format, int width, int height) {
+                    if (virtualDisplay != null) {
+                        virtualDisplay.resize(width, height, 160);
+                    }
+                }
+                @Override
+                public void surfaceDestroyed(android.view.SurfaceHolder holder) {
+                    if (virtualDisplay != null) {
+                        virtualDisplay.release();
+                    }
+                }
+            });
+            contentView = surfaceView;
+        } else {
+            final WebView webView = new WebView(this);
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+            webSettings.setDatabaseEnabled(true);
+            CookieManager.getInstance().setAcceptCookie(true);
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+            webSettings.setUserAgentString("Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadUrl(url);
+            contentView = webView;
+        }
 
         final ImageView collapsedIcon = new ImageView(this);
         collapsedIcon.setImageResource(R.mipmap.ic_launcher);
         collapsedIcon.setVisibility(View.GONE);
 
         windowFrame.addView(header);
-        windowFrame.addView(webView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
+        windowFrame.addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
         
         mFloatingWidget.addView(windowFrame);
         mFloatingWidget.addView(collapsedIcon, new LinearLayout.LayoutParams(150, 150));
@@ -280,4 +329,5 @@ public class FloatingWidgetService extends Service {
         activeWindows.clear();
     }
 }
+
 
