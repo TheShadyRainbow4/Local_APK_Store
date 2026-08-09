@@ -319,9 +319,9 @@ public class FloatingWidgetService extends Service {
                         initialX = params.x; initialY = params.y;
                         initialTouchX = event.getRawX(); initialTouchY = event.getRawY();
                         isMoving = false;
-                        return true;
+                        return false; // let view process for clicks/long-clicks
                     case MotionEvent.ACTION_MOVE:
-                        if (Math.abs(event.getRawX() - initialTouchX) > 10 || Math.abs(event.getRawY() - initialTouchY) > 10) {
+                        if (!isMoving && (Math.abs(event.getRawX() - initialTouchX) > 10 || Math.abs(event.getRawY() - initialTouchY) > 10)) {
                             isMoving = true;
                             // Un-maximize if dragging
                             if (params.width == WindowManager.LayoutParams.MATCH_PARENT) {
@@ -337,20 +337,27 @@ public class FloatingWidgetService extends Service {
                                 initialTouchY = event.getRawY();
                             }
                         }
-                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
-                        mWindowManager.updateViewLayout(mFloatingWidget, params);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        if (!isMoving && v == collapsedIcon) {
-                            toggleCollapse.onClick(v);
+                        if (isMoving) {
+                            params.x = initialX + (int) (event.getRawX() - initialTouchX);
+                            params.y = initialY + (int) (event.getRawY() - initialTouchY);
+                            mWindowManager.updateViewLayout(mFloatingWidget, params);
+                            return true; // consume event
                         }
-                        return true;
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        if (isMoving) {
+                            return true;
+                        } else if (v == collapsedIcon) {
+                            toggleCollapse.onClick(v);
+                            return true;
+                        }
+                        return false;
                 }
                 return false;
             }
         };
         header.setOnTouchListener(dragListener);
+        titleView.setOnTouchListener(dragListener);
         collapsedIcon.setOnTouchListener(dragListener);
 
         // Maximize logic
@@ -406,11 +413,11 @@ public class FloatingWidgetService extends Service {
             bg.setColors(new int[]{Color.argb(220, 255, 100, 100), Color.argb(255, 180, 20, 20)});
             btn.setTextColor(Color.WHITE);
         } else {
-            bg.setColors(new int[]{Color.argb(120, 200, 220, 255), Color.argb(160, 100, 150, 200)});
+            bg.setColors(new int[]{Color.argb(90, 255, 255, 255), Color.argb(30, 255, 255, 255)});
             btn.setTextColor(Color.BLACK);
         }
         bg.setCornerRadius(2);
-        bg.setStroke(1, Color.argb(150, 255, 255, 255));
+        bg.setStroke(1, Color.argb(120, 255, 255, 255));
         
         btn.setBackground(bg);
         btn.setTypeface(null, Typeface.BOLD);

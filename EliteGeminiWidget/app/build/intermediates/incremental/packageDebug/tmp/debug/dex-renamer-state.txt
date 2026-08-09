@@ -1,4 +1,4 @@
-#Sun Aug 09 03:05:10 EDT 2026
+#Sun Aug 09 03:10:06 EDT 2026
 base.2=C\:\\Users\\Administrator\\Desktop\\Local_APK_Store\\EliteGeminiWidget\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\15\\classes.dex
 path.2=15/classes.dex
 base.1=C\:\\Users\\Administrator\\Desktop\\Local_APK_Store\\EliteGeminiWidget\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
