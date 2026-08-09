@@ -122,6 +122,15 @@
             </intent-filter>
         </activity>
 
+        <!-- Elite Window Framework API Receiver -->
+        <receiver
+            android:name=".WindowApiReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.elitesoftware.appmarketplace.LAUNCH_WINDOW" />
+            </intent-filter>
+        </receiver>
+
         <service android:name=".FloatingWidgetService" android:enabled="true" android:exported="false" />
     </application>
 </manifest>

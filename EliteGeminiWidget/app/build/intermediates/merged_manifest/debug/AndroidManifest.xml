@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elitesoftware.geminiwidget"
-    android:versionCode="10022"
-    android:versionName="1.0.22" >
+    android:versionCode="10023"
+    android:versionName="1.0.23" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -149,6 +149,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Elite Window Framework API Receiver -->
+        <receiver
+            android:name="com.elitesoftware.appmarketplace.WindowApiReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.elitesoftware.appmarketplace.LAUNCH_WINDOW" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="com.elitesoftware.appmarketplace.FloatingWidgetService"
