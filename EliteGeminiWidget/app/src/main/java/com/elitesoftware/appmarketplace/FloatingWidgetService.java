@@ -42,6 +42,8 @@ public class FloatingWidgetService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String url = "https://gemini.google.com/";
         String title = "Elite Gemini";
+        
+        // Scalable Framework entry point
         if (intent != null && intent.hasExtra("url")) {
             url = intent.getStringExtra("url");
             title = intent.getStringExtra("title");
@@ -55,11 +57,11 @@ public class FloatingWidgetService extends Service {
         mFloatingWidget.setOrientation(LinearLayout.VERTICAL);
         mFloatingWidget.setBackgroundColor(Color.TRANSPARENT);
 
-        // Windows Vista/7 Style Frame
+        // Windows Vista Aero Glass Style Frame
         GradientDrawable frameDrawable = new GradientDrawable();
-        frameDrawable.setColor(Color.argb(230, 240, 240, 240));
-        frameDrawable.setStroke(4, Color.argb(255, 150, 170, 200));
-        frameDrawable.setCornerRadius(16);
+        frameDrawable.setColor(Color.argb(120, 255, 255, 255)); // Semi-transparent glass body
+        frameDrawable.setStroke(2, Color.argb(180, 255, 255, 255)); // Bright glass edge
+        frameDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
 
         final LinearLayout windowFrame = new LinearLayout(this);
         windowFrame.setOrientation(LinearLayout.VERTICAL);
@@ -67,49 +69,48 @@ public class FloatingWidgetService extends Service {
         windowFrame.setPadding(8, 8, 8, 8);
         windowFrame.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
-        // Windows Vista/7 Style Titlebar
+        // Aero Titlebar
         GradientDrawable titleDrawable = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Color.argb(255, 180, 200, 230), Color.argb(255, 130, 160, 200)}
+                new int[]{Color.argb(160, 255, 255, 255), Color.argb(80, 200, 220, 255), Color.argb(120, 150, 190, 255)}
         );
-        titleDrawable.setCornerRadii(new float[]{12, 12, 12, 12, 0, 0, 0, 0});
+        titleDrawable.setCornerRadii(new float[]{16, 16, 16, 16, 0, 0, 0, 0});
         
         final LinearLayout header = new LinearLayout(this);
         header.setBackground(titleDrawable);
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setPadding(10, 5, 10, 5);
+        header.setPadding(15, 8, 15, 8);
 
         TextView titleView = new TextView(this);
         titleView.setText(titleText);
         titleView.setTextColor(Color.BLACK);
         titleView.setTypeface(null, Typeface.BOLD);
-        titleView.setShadowLayer(2, 1, 1, Color.WHITE);
+        titleView.setShadowLayer(3, 1, 1, Color.WHITE);
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         header.addView(titleView, titleParams);
 
         // Transparency Slider
         SeekBar alphaSlider = new SeekBar(this);
         alphaSlider.setMax(255);
-        alphaSlider.setProgress(230);
-        LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alphaSlider.setProgress(255);
+        LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT);
         header.addView(alphaSlider, sliderParams);
 
-        // Windows 10 style rectangular buttons (on the right)
+        // Vista Style Window Buttons
         LinearLayout buttonContainer = new LinearLayout(this);
         buttonContainer.setOrientation(LinearLayout.HORIZONTAL);
 
-        Button minBtn = createWin10Button("_");
-        Button resizeBtn = createWin10Button("\u25A1");
-        Button closeBtn = createWin10Button("X");
-        closeBtn.setTextColor(Color.RED);
+        Button minBtn = createVistaButton("_", false);
+        Button resizeBtn = createVistaButton("\u25A1", false);
+        Button closeBtn = createVistaButton("X", true);
 
         buttonContainer.addView(minBtn);
         buttonContainer.addView(resizeBtn);
         buttonContainer.addView(closeBtn);
         header.addView(buttonContainer);
 
-        // WebView with persistent data
+        // WebView
         final WebView webView = new WebView(this);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -139,7 +140,7 @@ public class FloatingWidgetService extends Service {
         }
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                700, 900, layoutFlag,
+                800, 1000, layoutFlag,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
@@ -150,12 +151,11 @@ public class FloatingWidgetService extends Service {
         mWindowManager.addView(mFloatingWidget, params);
         activeWindows.add(mFloatingWidget);
 
-        // Alpha Slider Listener
+        // Set entire window alpha
         alphaSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Adjust the background alpha of the window frame
-                frameDrawable.setAlpha(progress);
-                windowFrame.setBackground(frameDrawable);
+                // Controls the entire popup window opacity
+                mFloatingWidget.setAlpha(progress / 255.0f);
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -169,7 +169,7 @@ public class FloatingWidgetService extends Service {
         });
 
         // Collapse logic
-        final int[] oldSize = new int[]{700, 900};
+        final int[] oldSize = new int[]{800, 1000};
         View.OnClickListener toggleCollapse = v -> {
             if (windowFrame.getVisibility() == View.VISIBLE) {
                 oldSize[0] = params.width; oldSize[1] = params.height;
@@ -245,16 +245,29 @@ public class FloatingWidgetService extends Service {
         });
     }
 
-    private Button createWin10Button(String text) {
+    private Button createVistaButton(String text, boolean isClose) {
         Button btn = new Button(this);
         btn.setText(text);
-        btn.setBackgroundColor(Color.TRANSPARENT);
-        btn.setTextColor(Color.BLACK);
+        
+        GradientDrawable bg = new GradientDrawable();
+        if (isClose) {
+            bg.setColors(new int[]{Color.argb(200, 255, 100, 100), Color.argb(255, 200, 20, 20)});
+            btn.setTextColor(Color.WHITE);
+        } else {
+            bg.setColors(new int[]{Color.argb(150, 255, 255, 255), Color.argb(100, 150, 180, 220)});
+            btn.setTextColor(Color.BLACK);
+        }
+        bg.setCornerRadius(6);
+        bg.setStroke(1, Color.argb(200, 255, 255, 255));
+        
+        btn.setBackground(bg);
         btn.setTypeface(null, Typeface.BOLD);
-        btn.setPadding(20, 5, 20, 5);
+        btn.setPadding(15, 5, 15, 5);
+        
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(2, 0, 2, 0);
+        lp.setMargins(6, 0, 6, 0);
         btn.setLayoutParams(lp);
+        
         return btn;
     }
 
