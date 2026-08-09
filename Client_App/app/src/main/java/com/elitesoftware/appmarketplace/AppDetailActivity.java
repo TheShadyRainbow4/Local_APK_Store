@@ -48,8 +48,10 @@ public class AppDetailActivity extends AppCompatActivity {
         
         try {
             String appJsonStr = getIntent().getStringExtra("app_json");
-            String ip = getIntent().getStringExtra("server_ip");
             JSONObject app = new JSONObject(appJsonStr);
+            String ipTemp = getIntent().getStringExtra("server_ip");
+            if (ipTemp == null || ipTemp.isEmpty()) ipTemp = app.optString("_server_ip");
+            final String ip = ipTemp;
             
             TextView detailName = findViewById(R.id.detailName);
             TextView detailPackage = findViewById(R.id.detailPackage);
@@ -163,7 +165,7 @@ public class AppDetailActivity extends AppCompatActivity {
                             if(selectedIdx < 0) selectedIdx = 0;
                             
                             org.json.JSONObject verObj = finalVersionsArr.getJSONObject(selectedIdx);
-                            String apkUrl = "http://" + ip + ":8552/apks/" + verObj.getString("file");
+                            String apkUrl = "http://" + ip + ":8552/apks/" + verObj.getString("file").replace(" ", "%20");
                             selectedVer = verObj.getString("version");
                             
                             URL url = new URL(apkUrl);
@@ -408,3 +410,4 @@ public class AppDetailActivity extends AppCompatActivity {
         }).start();
     }
 }
+

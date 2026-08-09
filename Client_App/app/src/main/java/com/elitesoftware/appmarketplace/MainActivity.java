@@ -204,6 +204,13 @@ public class MainActivity extends AppCompatActivity {
                 if (installed) displayedAppsList.add(app);
             }
         }
+        
+        java.util.Collections.sort(displayedAppsList, (a, b) -> {
+            String nameA = a.optString("name", "").toLowerCase();
+            String nameB = b.optString("name", "").toLowerCase();
+            return nameA.compareTo(nameB);
+        });
+        
         adapter.notifyDataSetChanged();
     }
     
@@ -875,4 +882,5 @@ public class MainActivity extends AppCompatActivity {
         sendDisconnect();
     }
 }
+
 

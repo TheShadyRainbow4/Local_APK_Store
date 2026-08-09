@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.elitesoftware.appmarketplace.app-mergeDebugResources-26:/values-lv/values-lv.xml",
+            "outputFile": "com.elitesoftware.appmarketplace.app-mergeDebugResources-27:/values-lv/values-lv.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrator\\.gradle\\caches\\transforms-3\\932d3a5bfa228eca10b2b24a0d8c086c\\transformed\\core-1.9.0\\res\\values-lv\\values-lv.xml",

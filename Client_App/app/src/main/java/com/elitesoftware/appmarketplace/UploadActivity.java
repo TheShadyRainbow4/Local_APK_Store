@@ -50,10 +50,16 @@ public class UploadActivity extends AppCompatActivity {
         txtApkStatus = findViewById(R.id.txtApkStatus);
         txtScreenshotsStatus = findViewById(R.id.txtScreenshotsStatus);
 
-        String intentPkg = getIntent().getStringExtra("package_name");
+                String intentPkg = getIntent().getStringExtra("package_name");
         if (intentPkg != null && !intentPkg.isEmpty()) {
             editPackage.setText(intentPkg);
             editPackage.setEnabled(false); // Lock it so they only upload for this app
+            editName.setVisibility(View.GONE);
+            editVersion.setVisibility(View.GONE);
+            editCategory.setVisibility(View.GONE);
+            editDescription.setVisibility(View.GONE);
+            txtApkStatus.setVisibility(View.GONE);
+            findViewById(R.id.btnSelectApk).setVisibility(View.GONE);
         }
 
         findViewById(R.id.btnSelectApk).setOnClickListener(v -> {
@@ -255,3 +261,4 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 }
+
