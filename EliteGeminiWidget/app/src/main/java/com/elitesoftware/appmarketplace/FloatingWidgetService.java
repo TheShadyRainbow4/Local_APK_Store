@@ -95,34 +95,26 @@ public class FloatingWidgetService extends Service {
         titleView.setShadowLayer(3, 1, 1, Color.WHITE);
         titleView.setSingleLine(true);
         titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         header.addView(titleView, titleParams);
-
-        // Transparency Slider (now a flyout container)
-        LinearLayout sliderContainer = new LinearLayout(this);
-        sliderContainer.setOrientation(LinearLayout.HORIZONTAL);
-        sliderContainer.setBackgroundColor(Color.argb(200, 0, 0, 0));
-        sliderContainer.setPadding(10, 10, 10, 10);
-        sliderContainer.setVisibility(View.GONE); // Hidden by default
-
-        TextView sliderLabel = new TextView(this);
-        sliderLabel.setText("Opacity: ");
-        sliderLabel.setTextColor(Color.WHITE);
-        sliderContainer.addView(sliderLabel);
 
         SeekBar alphaSlider = new SeekBar(this);
         alphaSlider.setMax(255);
         alphaSlider.setProgress(255);
+        alphaSlider.setVisibility(View.GONE);
         LinearLayout.LayoutParams sliderParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-        sliderContainer.addView(alphaSlider, sliderParams);
+        header.addView(alphaSlider, sliderParams);
 
         // Toggle slider on title long press
         titleView.setOnLongClickListener(v -> {
-            if (sliderContainer.getVisibility() == View.VISIBLE) {
-                sliderContainer.setVisibility(View.GONE);
+            if (alphaSlider.getVisibility() == View.VISIBLE) {
+                alphaSlider.setVisibility(View.GONE);
+                titleParams.weight = 1.0f;
             } else {
-                sliderContainer.setVisibility(View.VISIBLE);
+                alphaSlider.setVisibility(View.VISIBLE);
+                titleParams.weight = 0.0f; // Give space to slider
             }
+            titleView.setLayoutParams(titleParams);
             return true;
         });
 
@@ -245,7 +237,6 @@ public class FloatingWidgetService extends Service {
         contentLayout.addView(grabHandle, grabParams);
 
         windowFrame.addView(header);
-        windowFrame.addView(sliderContainer); // Insert slider container just below header
         windowFrame.addView(contentLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
         
         mFloatingWidget.addView(windowFrame);
