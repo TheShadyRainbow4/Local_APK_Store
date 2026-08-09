@@ -150,6 +150,10 @@
                               ],
                      "versions":  [
                                       {
+                                          "version":  "1.0.71",
+                                          "file":  "Elite_App_Marketplace-Client_v1.0.71.apk"
+                                      },
+                                      {
                                           "file":  "Elite_App_Marketplace-Client_v1.0.70.apk",
                                           "version":  "1.0.70"
                                       },
@@ -402,8 +406,8 @@
                               ],
                      "versions":  [
                                       {
-                                          "version":  "1.0.1",
-                                          "file":  "EliteGeminiWidget_v1.0.1.apk"
+                                          "file":  "EliteGeminiWidget_v1.0.1.apk",
+                                          "version":  "1.0.1"
                                       },
                                       {
                                           "file":  "EliteGeminiWidget_v1.0.0.apk",
@@ -833,6 +837,28 @@
                                   ]
                  },
                  {
+                     "icon":  "com.samsung.android.snote_icon.png",
+                     "name":  "S Note",
+                     "package_name":  "com.samsung.android.snote",
+                     "versions":  [
+                                      {
+                                          "file":  "com.samsung.android.snote_5.2.04-15-520415000_minAPI23(armeabi-v7a)(nodpi)_apkmirror.com.apk",
+                                          "version":  "5.2.04-15"
+                                      }
+                                  ]
+                 },
+                 {
+                     "icon":  "com.samsung.android.snoteextended_icon.png",
+                     "name":  "Extension pack",
+                     "package_name":  "com.samsung.android.snoteextended",
+                     "versions":  [
+                                      {
+                                          "file":  "com.samsung.android.snoteextended_1.1.13-111300000_minAPI22(nodpi)_apkmirror.com.apk",
+                                          "version":  "1.1.13"
+                                      }
+                                  ]
+                 },
+                 {
                      "category":  "Unknown",
                      "description":  "Auto-discovered APK.",
                      "name":  "IOTHiddenMenu",
@@ -938,6 +964,17 @@
                                       {
                                           "file":  "NFC.Tools.ver.9.1.build.147.apk",
                                           "version":  "9.1"
+                                      }
+                                  ]
+                 },
+                 {
+                     "icon":  "com.webtoapp_icon.png",
+                     "name":  "WebToApp",
+                     "package_name":  "com.webtoapp",
+                     "versions":  [
+                                      {
+                                          "file":  "WebToApp-2.4.3.apk",
+                                          "version":  "2.4.3"
                                       }
                                   ]
                  },

@@ -3108,6 +3108,7 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAddScreenshots
 id btnBack
 id btnInstall
 id btnSearch

@@ -39,7 +39,7 @@ Write-Host "Building Android APK..."
 cd EliteGeminiWidget
 $env:JAVA_HOME = "C:\AndroidBuildTools\jdk-17"
 $env:ANDROID_HOME = "C:\AndroidBuildTools\android-sdk"
-& "C:\AndroidBuildTools\gradle-8.1.1\bin\gradle.bat" assembleDebug
+& "C:\AndroidBuildTools\gradle-8.1.1\bin\gradle.bat" clean assembleDebug
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: APK Build Failed! Aborting release." -ForegroundColor Red
     exit 1

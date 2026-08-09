@@ -59,6 +59,16 @@ public class AppDetailActivity extends AppCompatActivity {
             com.elitesoftware.appmarketplace.EliteProgressBar detailProgressBar = findViewById(R.id.detailProgressBar);
             ImageView detailIcon = findViewById(R.id.detailIcon);
             
+            Button btnAddScreenshots = findViewById(R.id.btnAddScreenshots);
+            if (btnAddScreenshots != null) {
+                btnAddScreenshots.setOnClickListener(v -> {
+                    Intent uploadIntent = new Intent(AppDetailActivity.this, UploadActivity.class);
+                    uploadIntent.putExtra("package_name", app.optString("package_name"));
+                    uploadIntent.putExtra("server_ip", ip);
+                    startActivity(uploadIntent);
+                });
+            }
+            
             detailName.setText(app.optString("name", "Unknown"));
             detailPackage.setText(app.optString("package_name", ""));
             detailCategory.setText(app.optString("category", "Uncategorized"));
@@ -371,6 +381,12 @@ public class AppDetailActivity extends AppCompatActivity {
     }
 
     private static java.util.HashMap<String, android.graphics.Bitmap> imageCache = new java.util.HashMap<>();
+    
+    public static void clearImageCache() {
+        if (imageCache != null) {
+            imageCache.clear();
+        }
+    }
     
     private void loadImageAsync(String urlStr, ImageView imageView) {
         if (imageCache.containsKey(urlStr)) {

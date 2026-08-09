@@ -394,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
     private void fetchAppsFromServer(String ip, String query) {
         executor.execute(() -> {
             try {
+                AppDetailActivity.clearImageCache();
                 String urlStr = "http://" + ip + ":8552/api/apps";
                 if (query != null && !query.isEmpty()) {
                     urlStr += "?q=" + java.net.URLEncoder.encode(query, "UTF-8");
@@ -874,3 +875,4 @@ public class MainActivity extends AppCompatActivity {
         sendDisconnect();
     }
 }
+

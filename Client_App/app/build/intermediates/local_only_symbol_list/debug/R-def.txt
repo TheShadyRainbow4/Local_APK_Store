@@ -12,6 +12,7 @@ drawable loading_bar_4
 drawable loading_bar_5
 drawable rounded_bg
 drawable settings
+id btnAddScreenshots
 id btnBack
 id btnInstall
 id btnSearch

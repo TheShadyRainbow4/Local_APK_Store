@@ -68,10 +68,6 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\drawable\\loading_bar_2.png"
     },
     {
-        "merged": "com.elitesoftware.appmarketplace.app-merged_res-28:/layout_list_item_app.xml.flat",
-        "source": "com.elitesoftware.appmarketplace.app-main-30:/layout/list_item_app.xml"
-    },
-    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-merged_res-28:\\raw_elite_cert_pfx.pfx.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.1.1\\com.elitesoftware.appmarketplace.app-main-30:\\raw\\elite_cert_pfx.pfx"
     },
