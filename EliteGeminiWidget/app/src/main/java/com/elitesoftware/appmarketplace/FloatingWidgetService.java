@@ -108,27 +108,29 @@ public class FloatingWidgetService extends Service {
         buttonContainer.setOrientation(LinearLayout.HORIZONTAL);
 
         Button minBtn = createVistaButton("_", false);
-        Button resizeBtn = createVistaButton("\u25A1", false);
+        Button maxBtn = createVistaButton("\u25A1", false);
         Button closeBtn = createVistaButton("X", true);
 
         buttonContainer.addView(minBtn);
-        buttonContainer.addView(resizeBtn);
+        buttonContainer.addView(maxBtn);
         buttonContainer.addView(closeBtn);
         header.addView(buttonContainer);
 
         View contentView = null;
         if (pkg != null && !pkg.isEmpty()) {
-            final android.view.SurfaceView surfaceView = new android.view.SurfaceView(this);
-            surfaceView.getHolder().addCallback(new android.view.SurfaceHolder.Callback() {
+            final android.view.TextureView textureView = new android.view.TextureView(this);
+            textureView.setSurfaceTextureListener(new android.view.TextureView.SurfaceTextureListener() {
                 android.hardware.display.VirtualDisplay virtualDisplay;
+                android.view.Surface mSurface;
                 @Override
-                public void surfaceCreated(android.view.SurfaceHolder holder) {
+                public void onSurfaceTextureAvailable(android.graphics.SurfaceTexture surface, int width, int height) {
+                    mSurface = new android.view.Surface(surface);
                     android.hardware.display.DisplayManager displayManager = (android.hardware.display.DisplayManager) getSystemService(android.content.Context.DISPLAY_SERVICE);
                     virtualDisplay = displayManager.createVirtualDisplay(
                             "EliteVirtualDisplay",
-                            700, 900, 160,
-                            holder.getSurface(),
-                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
+                            width > 0 ? width : 700, height > 0 ? height : 900, 160,
+                            mSurface,
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC
                     );
 
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pkg);
@@ -144,19 +146,26 @@ public class FloatingWidgetService extends Service {
                     }
                 }
                 @Override
-                public void surfaceChanged(android.view.SurfaceHolder holder, int format, int width, int height) {
-                    if (virtualDisplay != null) {
+                public void onSurfaceTextureSizeChanged(android.graphics.SurfaceTexture surface, int width, int height) {
+                    if (virtualDisplay != null && width > 0 && height > 0) {
                         virtualDisplay.resize(width, height, 160);
                     }
                 }
                 @Override
-                public void surfaceDestroyed(android.view.SurfaceHolder holder) {
+                public boolean onSurfaceTextureDestroyed(android.graphics.SurfaceTexture surface) {
                     if (virtualDisplay != null) {
                         virtualDisplay.release();
                     }
+                    if (mSurface != null) {
+                        mSurface.release();
+                    }
+                    return true;
+                }
+                @Override
+                public void onSurfaceTextureUpdated(android.graphics.SurfaceTexture surface) {
                 }
             });
-            contentView = surfaceView;
+            contentView = textureView;
         } else {
             final WebView webView = new WebView(this);
             WebSettings webSettings = webView.getSettings();
@@ -175,8 +184,20 @@ public class FloatingWidgetService extends Service {
         collapsedIcon.setImageResource(R.mipmap.ic_launcher);
         collapsedIcon.setVisibility(View.GONE);
 
+        // Grab Handle for Resizing
+        ImageView grabHandle = new ImageView(this);
+        grabHandle.setImageResource(android.R.drawable.ic_menu_sort_by_size);
+        LinearLayout.LayoutParams grabParams = new LinearLayout.LayoutParams(60, 60);
+        grabParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        
+        // Add content
+        LinearLayout contentLayout = new LinearLayout(this);
+        contentLayout.setOrientation(LinearLayout.VERTICAL);
+        contentLayout.addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
+        contentLayout.addView(grabHandle, grabParams);
+
         windowFrame.addView(header);
-        windowFrame.addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
+        windowFrame.addView(contentLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f));
         
         mFloatingWidget.addView(windowFrame);
         mFloatingWidget.addView(collapsedIcon, new LinearLayout.LayoutParams(150, 150));
@@ -270,8 +291,26 @@ public class FloatingWidgetService extends Service {
         header.setOnTouchListener(dragListener);
         collapsedIcon.setOnTouchListener(dragListener);
 
-        // Resize logic
-        resizeBtn.setOnTouchListener(new View.OnTouchListener() {
+        // Maximize logic
+        maxBtn.setOnClickListener(v -> {
+            if (params.width == WindowManager.LayoutParams.MATCH_PARENT) {
+                params.width = oldSize[0];
+                params.height = oldSize[1];
+                params.x = 100;
+                params.y = 100;
+            } else {
+                oldSize[0] = params.width;
+                oldSize[1] = params.height;
+                params.width = WindowManager.LayoutParams.MATCH_PARENT;
+                params.height = WindowManager.LayoutParams.MATCH_PARENT;
+                params.x = 0;
+                params.y = 0;
+            }
+            mWindowManager.updateViewLayout(mFloatingWidget, params);
+        });
+
+        // Resize logic (Grab Handle)
+        grabHandle.setOnTouchListener(new View.OnTouchListener() {
             private int initialWidth, initialHeight;
             private float initialTouchX, initialTouchY;
             @Override
@@ -297,23 +336,25 @@ public class FloatingWidgetService extends Service {
     private Button createVistaButton(String text, boolean isClose) {
         Button btn = new Button(this);
         btn.setText(text);
+        btn.setSingleLine(true);
+        btn.setTextSize(14);
         
         GradientDrawable bg = new GradientDrawable();
         if (isClose) {
-            bg.setColors(new int[]{Color.argb(200, 255, 100, 100), Color.argb(255, 200, 20, 20)});
+            bg.setColors(new int[]{Color.argb(100, 255, 100, 100), Color.argb(120, 200, 20, 20)}); // More transparent red
             btn.setTextColor(Color.WHITE);
         } else {
-            bg.setColors(new int[]{Color.argb(150, 255, 255, 255), Color.argb(100, 150, 180, 220)});
+            bg.setColors(new int[]{Color.argb(50, 255, 255, 255), Color.argb(80, 150, 180, 220)}); // Transparent
             btn.setTextColor(Color.BLACK);
         }
         bg.setCornerRadius(6);
-        bg.setStroke(1, Color.argb(200, 255, 255, 255));
+        bg.setStroke(1, Color.argb(100, 255, 255, 255));
         
         btn.setBackground(bg);
         btn.setTypeface(null, Typeface.BOLD);
-        btn.setPadding(15, 5, 15, 5);
+        btn.setPadding(0, 0, 0, 0);
         
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(70, 70); // Fixed size
         lp.setMargins(6, 0, 6, 0);
         btn.setLayoutParams(lp);
         
