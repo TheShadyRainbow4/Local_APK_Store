@@ -131,9 +131,9 @@ public class FloatingWidgetService extends Service {
         buttonContainer.setOrientation(LinearLayout.HORIZONTAL);
         buttonContainer.setPadding(0, 0, 0, 0);
 
-        Button minBtn = createVistaButton("_", false);
-        Button maxBtn = createVistaButton("\u25A1", false);
-        Button closeBtn = createVistaButton("X", true);
+        Button minBtn = createVistaButton("_", false, false);
+        Button maxBtn = createVistaButton("\u25A1", false, true);
+        Button closeBtn = createVistaButton("X", true, false);
 
         buttonContainer.addView(minBtn);
         buttonContainer.addView(maxBtn);
@@ -141,7 +141,28 @@ public class FloatingWidgetService extends Service {
         header.addView(buttonContainer);
 
         View contentView = null;
-        if (pkg != null && !pkg.isEmpty()) {
+        if ("elite_settings".equals(pkg) || "com.android.settings".equals(pkg)) {
+            // Custom Elite Settings View
+            LinearLayout settingsLayout = new LinearLayout(this);
+            settingsLayout.setOrientation(LinearLayout.VERTICAL);
+            settingsLayout.setPadding(20, 20, 20, 20);
+            settingsLayout.setBackgroundColor(Color.argb(230, 250, 250, 250));
+            
+            TextView settingsTitle = new TextView(this);
+            settingsTitle.setText("Elite Window Framework - Global Settings");
+            settingsTitle.setTextSize(18);
+            settingsTitle.setTypeface(null, Typeface.BOLD);
+            settingsTitle.setTextColor(Color.BLACK);
+            
+            TextView infoText = new TextView(this);
+            infoText.setText("Default Opacity: 100%\nSaved Logins: 0\nAero Theme: Enabled\nVirtual Display: Active");
+            infoText.setPadding(0, 20, 0, 0);
+            infoText.setTextColor(Color.DKGRAY);
+            
+            settingsLayout.addView(settingsTitle);
+            settingsLayout.addView(infoText);
+            contentView = settingsLayout;
+        } else if (pkg != null && !pkg.isEmpty()) {
             final android.view.TextureView textureView = new android.view.TextureView(this);
             textureView.setSurfaceTextureListener(new android.view.TextureView.SurfaceTextureListener() {
                 android.hardware.display.VirtualDisplay virtualDisplay;
@@ -311,6 +332,9 @@ public class FloatingWidgetService extends Service {
                                 initialY = (int) event.getRawY() - 30; // offset for touch
                                 params.x = initialX;
                                 params.y = initialY;
+                                // Need to update initialTouch to not jump immediately
+                                initialTouchX = event.getRawX();
+                                initialTouchY = event.getRawY();
                             }
                         }
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
@@ -371,30 +395,30 @@ public class FloatingWidgetService extends Service {
         });
     }
 
-    private Button createVistaButton(String text, boolean isClose) {
+    private Button createVistaButton(String text, boolean isClose, boolean isMax) {
         Button btn = new Button(this);
         btn.setText(text);
         btn.setSingleLine(true);
-        btn.setTextSize(14);
+        btn.setTextSize(isMax ? 12 : 14);
         
         GradientDrawable bg = new GradientDrawable();
         if (isClose) {
-            bg.setColors(new int[]{Color.argb(100, 255, 100, 100), Color.argb(120, 200, 20, 20)}); // More transparent red
+            bg.setColors(new int[]{Color.argb(220, 255, 100, 100), Color.argb(255, 180, 20, 20)});
             btn.setTextColor(Color.WHITE);
         } else {
-            bg.setColors(new int[]{Color.argb(50, 255, 255, 255), Color.argb(80, 150, 180, 220)}); // Transparent
+            bg.setColors(new int[]{Color.argb(120, 200, 220, 255), Color.argb(160, 100, 150, 200)});
             btn.setTextColor(Color.BLACK);
         }
-        bg.setCornerRadius(6);
-        bg.setStroke(1, Color.argb(100, 255, 255, 255));
+        bg.setCornerRadius(2);
+        bg.setStroke(1, Color.argb(150, 255, 255, 255));
         
         btn.setBackground(bg);
         btn.setTypeface(null, Typeface.BOLD);
         btn.setPadding(0, 0, 0, 0);
         
         // Make buttons rectangular like Vista
-        int width = isClose ? 85 : 65;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, 50);
+        int width = isClose ? 75 : 55;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, 42);
         lp.setMargins(0, 0, 0, 0); // No gaps between buttons in Vista
         btn.setLayoutParams(lp);
         
