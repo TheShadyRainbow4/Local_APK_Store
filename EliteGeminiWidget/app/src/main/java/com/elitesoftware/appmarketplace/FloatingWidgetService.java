@@ -153,11 +153,18 @@ public class FloatingWidgetService extends Service {
                     mSurface = new android.view.Surface(surface);
                     
                     android.hardware.display.DisplayManager displayManager = (android.hardware.display.DisplayManager) getSystemService(android.content.Context.DISPLAY_SERVICE);
+                    
+                    android.util.DisplayMetrics metrics = new android.util.DisplayMetrics();
+                    ((android.view.WindowManager) getSystemService(android.content.Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
+                    int density = metrics.densityDpi;
+
                     virtualDisplay = displayManager.createVirtualDisplay(
                             "EliteVirtualDisplay",
-                            width > 0 ? width : 700, height > 0 ? height : 900, 160,
+                            width > 0 ? width : 700, height > 0 ? height : 900, density,
                             mSurface,
-                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC | 
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY |
+                            android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION
                     );
 
                     Intent launchIntent = null;
@@ -181,7 +188,13 @@ public class FloatingWidgetService extends Service {
                         android.app.ActivityOptions options = android.app.ActivityOptions.makeBasic();
                         try {
                             options.setLaunchDisplayId(virtualDisplay.getDisplay().getDisplayId());
-                            startActivity(launchIntent, options.toBundle());
+                            
+                            // Use PendingIntent to bypass strict background launch limits on Samsung/Android 10+
+                            android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
+                                FloatingWidgetService.this, 0, launchIntent, 
+                                android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
+                            );
+                            pendingIntent.send(FloatingWidgetService.this, 0, null, null, null, null, options.toBundle());
                         } catch (Exception e) {
                             android.widget.Toast.makeText(FloatingWidgetService.this, "Launch Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
                         }
